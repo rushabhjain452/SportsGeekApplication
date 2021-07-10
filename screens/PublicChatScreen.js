@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage, chatRefreshDelay } from '../config';
+import { convertUTCDateToLocalDate } from '../helpers/dateConversion';
 
 const PublicChatScreen = () => {
 
@@ -52,8 +53,11 @@ const PublicChatScreen = () => {
           //   // createdAt: new Date().getTime(),
           //   system: true
           // });
+          // data.forEach((item) => item.createdAt = new Date(Date.UTC(2016, 5, 11, 17, 20, 0)));
+          data.forEach((item) => item.createdAt =  convertUTCDateToLocalDate(new Date(item.createdAt)));
           setMessages(data);
-          // console.log(data);
+          console.log('ABCDEF');
+          console.log(data[0]);
         } else {
           showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
         }

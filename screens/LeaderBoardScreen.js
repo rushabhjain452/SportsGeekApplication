@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, RefreshControl, ActivityIndicator } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // import Svg, { Ellipse } from "react-native-svg";
-import {
-  Avatar
-} from 'react-native-paper';
+// import {
+//   Avatar
+// } from 'react-native-paper';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Avatar } from "react-native-elements";
 import { useTheme } from 'react-native-paper';
 import axios from 'axios';
 
@@ -105,6 +106,23 @@ function LeaderBoard(props) {
               <View style={styles.ellipse1}>
                 <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>2</Text>
               </View>
+              {
+                data[1].profilePicture != '' ?
+                (<Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                        uri: data[1].profilePicture
+                    }}
+                />) :
+                (<Avatar
+                    size="medium"
+                    rounded
+                    title={data[1].firstName.substr(0, 1) + data[1].lastName.substr(0, 1)}
+                    // activeOpacity={0.7}
+                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                />)
+              }
               <Text style={styles.carditemusername}>{data[1].firstName + " " + data[1].lastName}</Text>
               <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[1].totalWinningPoints}</Text>
             </View>
@@ -117,6 +135,23 @@ function LeaderBoard(props) {
               <View style={styles.ellipse1}>
                 <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>1</Text>
               </View>
+              {
+                data[0].profilePicture != '' ?
+                (<Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                        uri: data[0].profilePicture
+                    }}
+                />) :
+                (<Avatar
+                    size="medium"
+                    rounded
+                    title={data[0].firstName.substr(0, 1) + data[0].lastName.substr(0, 1)}
+                    // activeOpacity={0.7}
+                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                />)
+              }
               <Text style={styles.carditemusername}>{data[0].firstName + " " + data[0].lastName}</Text>
               <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[0].totalWinningPoints}</Text>
             </View>
@@ -129,6 +164,23 @@ function LeaderBoard(props) {
               <View style={styles.ellipse1}>
                 <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>3</Text>
               </View>
+              {
+                data[2].profilePicture != '' ?
+                (<Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                        uri: data[2].profilePicture
+                    }}
+                />) :
+                (<Avatar
+                    size="medium"
+                    rounded
+                    title={data[2].firstName.substr(0, 1) + data[2].lastName.substr(0, 1)}
+                    // activeOpacity={0.7}
+                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                />)
+              }
               <Text style={styles.carditemusername}>{data[2].firstName + " " + data[2].lastName}</Text>
               <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[2].totalWinningPoints}</Text>
             </View>
@@ -159,9 +211,26 @@ function LeaderBoard(props) {
             <View style={[styles.card, mystyle]} key={item.userId}>
               <View style={styles.cardlist}>
                 <Text style={[styles.carditem, { marginLeft: 5, width: 30 }]}>{index + 1}</Text>
-                <View style={styles.ellipse1}>
+                {/* <View style={styles.ellipse1}>
                   <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}</Text>
-                </View>
+                </View> */}
+                {
+                  item.profilePicture != '' ?
+                  (<Avatar
+                      size="small"
+                      rounded
+                      source={{
+                          uri: item.profilePicture
+                      }}
+                  />) :
+                  (<Avatar
+                      size="small"
+                      rounded
+                      title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
+                      // activeOpacity={0.7}
+                      containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                  />)
+                }
                 <Text style={[styles.carditem, { width: '60%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
                 <Text style={[styles.carditem, { width: '20%' }]}>{item.totalWinningPoints}</Text>
               </View>

@@ -20,6 +20,7 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
+import { Avatar } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -440,11 +441,26 @@ const ContestScreen = (props) => {
                                 <View style={[styles.card, mystyle]} key={item.contestId}>
                                     <View style={styles.cardlist}>
                                         {/* <Card.Image style={styles.ellipse1} source={{uri: item.profilePicture}} /> */}
-                                        <View style={styles.ellipse1}>
-                                            {/* <Text>{item.firstName.toString().chatAt(0) + item.lastName.toString().chatAt(0)}</Text> */}
+                                        {/* <View style={styles.ellipse1}>
                                             <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}</Text>
-                                            {/* <Text>{typeof(item.firstName)}</Text> */}
-                                        </View>
+                                        </View> */}
+                                        {
+                                            item.profilePicture != '' ?
+                                            (<Avatar
+                                                size="small"
+                                                rounded
+                                                source={{
+                                                    uri: item.profilePicture
+                                                }}
+                                            />) :
+                                            (<Avatar
+                                                size="small"
+                                                rounded
+                                                title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
+                                                // activeOpacity={0.7}
+                                                containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                                            />)
+                                        }
                                         <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
                                         <Text style={[styles.carditem, { width: '17%' }]}>{item.teamShortName}</Text>
                                         <Text style={[styles.carditem, { width: '15%' }]}>{item.contestPoints}</Text>
