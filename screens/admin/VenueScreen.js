@@ -72,11 +72,11 @@ const VenueScreen = ({ navigation }) => {
     const addVenue = () => {
         if (venue != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: venue
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/venues', reqData, { headers })
+            axios.post(baseurl + '/venues', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -129,11 +129,11 @@ const VenueScreen = ({ navigation }) => {
     const updateVenue = () => {
         if (venue != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: venue
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/venues/' + venueId, reqData, { headers })
+            axios.put(baseurl + '/venues/' + venueId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
@@ -172,7 +172,7 @@ const VenueScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Venue Details</Text>

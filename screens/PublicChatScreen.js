@@ -46,13 +46,14 @@ const PublicChatScreen = () => {
         setLoading(false);
         if (response.status == 200) {
           const data = response.data;
-          data.push({
-            _id: 0,
-            text: 'Welcome to SportsGeek Public Chat',
-            // createdAt: new Date().getTime(),
-            system: true
-          });
+          // data.push({
+          //   _id: 0,
+          //   text: 'Welcome to SportsGeek Public Chat',
+          //   // createdAt: new Date().getTime(),
+          //   system: true
+          // });
           setMessages(data);
+          // console.log(data);
         } else {
           showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
         }
@@ -70,12 +71,12 @@ const PublicChatScreen = () => {
     // console.log(newMessage);
     // API call to insert chat in DB
     const headers = { 'Authorization': 'Bearer ' + token }
-    const reqData = {
+    const requestData = {
       userId: userId,
       message: newMessage.text
     };
     axios
-      .post(baseurl + '/public-chat', reqData, { headers })
+      .post(baseurl + '/public-chat', requestData, { headers })
       .then((response) => {
         setLoading(false);
         if (response.status == 201) {

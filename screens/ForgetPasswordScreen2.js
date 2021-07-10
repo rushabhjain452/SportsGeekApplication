@@ -82,7 +82,7 @@ const ForgetPasswordScreen2 = (props) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
-            <Spinner visible={waiting} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>

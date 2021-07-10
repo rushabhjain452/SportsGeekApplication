@@ -114,6 +114,7 @@ const ContestScreen = (props) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     setData(response.data);
+                    console.log(response.data);
                     let records = response.data;
                     let team1points = 0, team2points = 0;
                     // console.log(records);
@@ -246,16 +247,16 @@ const ContestScreen = (props) => {
                     showSweetAlert('warning', 'Insufficient Points', "Your have only " + parseInt(availablePoints) + " available points.");
                 }
                 else {
-                    const reqData = {
+                    const requestData = {
                         userId: userId,
                         matchId: matchId,
                         teamId: selectedTeamId,
                         contestPoints: parseInt(points),
                         winningPoints: 0
                     };
-                    console.log(reqData);
+                    console.log(requestData);
                     const headers = { 'Authorization': 'Bearer ' + token };
-                    axios.post(baseurl + '/contest', reqData, { headers })
+                    axios.post(baseurl + '/contest', requestData, { headers })
                         .then((response) => {
                             setWaiting(false);
                             if (response.status == 201) {
@@ -290,16 +291,16 @@ const ContestScreen = (props) => {
                     showSweetAlert('warning', 'Insufficient Points', "Your have only " + (balance) + " available points.");
                 }
                 else {
-                    const reqData = {
+                    const requestData = {
                         userId: userId,
                         matchId: matchId,
                         teamId: selectedTeamId,
                         contestPoints: parseInt(points),
                         winningPoints: 0
                     };
-                    console.log(reqData);
+                    console.log(requestData);
                     const headers = { 'Authorization': 'Bearer ' + token };
-                    axios.put(baseurl + '/contest/' + contestId, reqData, { headers })
+                    axios.put(baseurl + '/contest/' + contestId, requestData, { headers })
                         .then((response) => {
                             setWaiting(false);
                             if (response.status == 200) {
@@ -330,7 +331,7 @@ const ContestScreen = (props) => {
 
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <Spinner visible={waiting} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />

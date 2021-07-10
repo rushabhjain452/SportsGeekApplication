@@ -1,6 +1,6 @@
 import SweetAlert from 'react-native-sweet-alert';
 
-const showSweetAlert = (status, title, msg) => {
+const showSweetAlert = (status, title, msg, cb) => {
   SweetAlert.showAlertWithOptions({
     title: title,
     subTitle: msg,
@@ -8,6 +8,10 @@ const showSweetAlert = (status, title, msg) => {
     confirmButtonColor: '#000',
     style: status,
     cancellable: true
+  },
+  () => {
+    if(cb)
+      cb();
   });
 }
 

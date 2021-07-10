@@ -210,7 +210,7 @@ const UpdateMatchMinBet = (props) => {
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* {loading == true  && (<ActivityIndicator size="large" color="#19398A" />)} */}
             <View>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />

@@ -22,7 +22,6 @@
    DarkTheme as PaperDarkTheme
  } from 'react-native-paper';
  
- 
  import MainTabScreen from './screens/MainTabScreen';
  import ScheduleScreen from './screens/ScheduleScreen';
  import HelpScreen from './screens/HelpScreen';
@@ -32,7 +31,6 @@
  
  import RootStackScreen from './screens/RootStackScreen';
  
- import AsyncStorage from '@react-native-async-storage/async-storage';
  import ChangePasswordScreen from './screens/ChangePasswordScreen';
  import UpdateProfileScreen from './screens/UpdateProfileScreen';
  import RoleScreen from './screens/admin/RoleScreen';
@@ -60,10 +58,13 @@
  import ProfileScreen from './screens/ProfileScreen';
  import ChatHomeScreen from './screens/ChatHomeScreen';
  import RoomScreen from './screens/RoomScreen';
+
+ import AsyncStorage from '@react-native-async-storage/async-storage';
  // const baseurl = 'localhost:8080';
  
- const Drawer = createDrawerNavigator();
+//  const Drawer = createDrawerNavigator();
  const Stack = createStackNavigator();
+
  const App: () => Node = () => {
    // const [isLoading, setIsLoading] = React.useState(true);
    // const [userToken, setUserToken] = React.useState(null); 
@@ -149,6 +150,7 @@
            // isLoading: false,
          };
        case 'LOGIN': 
+         console.log(action.userId + ' ' + action.username + ' ' + action.role + ' ' + action.token);
          return {
            ...prevState,
            userId: action.userId,
@@ -278,7 +280,7 @@
      //   </PaperProvider>
      // </SafeAreaProvider>
  
-     <SafeAreaProvider>
+    <SafeAreaProvider>
        <PaperProvider theme={theme}>
            <AuthContext.Provider value={authContext}>
            <NavigationContainer theme={theme}>

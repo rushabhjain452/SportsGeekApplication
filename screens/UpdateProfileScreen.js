@@ -17,6 +17,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Avatar } from "react-native-elements";
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
 import axios from 'axios';
@@ -26,14 +27,16 @@ const UpdateProfileScreen = ({ navigation }) => {
     const [userId, setUserId] = useState(0);
     // const [data, setData] = useState([]);
 
+    const [avatarPath, setAvatarPath] = useState('');
+    const [profilePicture, setProfilePicture] = useState('');
+    const [isProfilePictureChanged, setIsProfilePictureChanged] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [shortName, setShortName] = useState('');
     const [genderId, setGenderId] = useState(0);
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(true);
     const [mobileNumber, setMobileNumber] = useState(0);
-    const [isProfilePictureSelected, setIsProfilePictureSelected] = useState(false);
-    const [profilePicture, setProfilePicture] = useState('');
 
     const [genderData, setGenderData] = useState([]);
     const [token, setToken] = useState('');
@@ -75,8 +78,12 @@ const UpdateProfileScreen = ({ navigation }) => {
                     setEmail(response.data.email);
                     setFirstName(response.data.firstName);
                     setLastName(response.data.lastName);
+                    setShortName(response.data.firstName.substr(0, 1) + response.data.lastName.substr(0, 1));
                     setMobileNumber(response.data.mobileNumber);
                     setGenderId(response.data.genderId);
+                    setAvatarPath(response.data.profilePicture);
+                    setProfilePicture(response.data.profilePicture);
+                    // console.log(response.data);
                 } else {
                     showSweetAlert('error', 'Network Error', errorMessage);
                 }
@@ -87,16 +94,46 @@ const UpdateProfileScreen = ({ navigation }) => {
             });
     }
 
-    const photoUploadHandler = () => {
+    const validateImage = (image) => {
+        let result = true;
+        if (image.height != image.width) {
+            result = false;
+            showSweetAlert('warning', 'Image validation failed!', 'Please select a square image.');
+        }
+        else if (image.mime != "image/jpeg" && image.mime != "image/png" && image.mime != "image/gif") {
+            result = false;
+            showSweetAlert('warning', 'Image validation failed!', 'Please select image of proper format. Only jpg, png and gif images are allowed.');
+        }
+        else if (image.size > 10485760) {
+            result = false;
+            showSweetAlert('warning', 'Image validation failed!', 'Please select image having size less than 10 MB.');
+        }
+        return result;
+    }
+
+    const photoSelectHandler = () => {
         ImagePicker.openPicker({
             width: 300,
-            height: 400,
+            height: 300,
             cropping: true
-        }).then(image => {
-            console.log(image);
-
+        }).then((image) => {
+            if (validateImage(image)) {
+                console.log("Image path : " + image.path);
+                setAvatarPath(image.path);
+                setProfilePicture(image);
+                console.log(image);
+                setIsProfilePictureChanged(true);
+            }
+        }).catch((error) => {
+            showSweetAlert('warning', 'Image not selected', 'Image not selected for Profile Picture.');
         });
     }
+
+    const photoRemoveHandler = () => {
+        setAvatarPath('');
+        setProfilePicture('');
+        setIsProfilePictureChanged(true);
+    };
 
     const updateProfileHandler = () => {
         if (firstName.length < 3) {
@@ -116,15 +153,27 @@ const UpdateProfileScreen = ({ navigation }) => {
         }
         else {
             setLoading(true);
+            // Submitting Form Data (with Profile Picture)
+            const formData = new FormData();
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('email', email);
+            formData.append('mobileNumber', mobileNumber);
+            formData.append('genderId', genderId);
+            formData.append('updateProfilePicture', isProfilePictureChanged);
+            if (isProfilePictureChanged && profilePicture != '') {
+                let picturePath = profilePicture.path;
+                let pathParts = picturePath.split('/');
+                formData.append('profilePicture', {
+                    name: pathParts[pathParts.length - 1],
+                    type: profilePicture.mime,
+                    uri: profilePicture.path
+                });
+            } else {
+                formData.append('profilePicture', null);
+            }
             const headers = { 'Authorization': 'Bearer ' + token };
-            const requestData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                mobileNumber: mobileNumber,
-                genderId: genderId
-            };
-            axios.put(baseurl + '/users/' + userId, requestData, { headers })
+            axios.put(baseurl + '/users/' + userId, formData, { headers })
                 .then((response) => {
                     setLoading(false);
                     console.log(response.status);
@@ -136,8 +185,9 @@ const UpdateProfileScreen = ({ navigation }) => {
                     }
                 })
                 .catch((error) => {
-                    // console.log(error.response.status);
-                    // console.log(error.response.data);
+                    console.log(error);
+                    console.log(error.response.status);
+                    console.log(error.response.data);
                     setLoading(false);
                     showSweetAlert('error', 'Network Error', errorMessage);
                 });
@@ -146,7 +196,7 @@ const UpdateProfileScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Update Profile</Text>
@@ -156,7 +206,38 @@ const UpdateProfileScreen = ({ navigation }) => {
                 style={styles.footer}
             >
                 <ScrollView keyboardShouldPersistTaps='handled'>
-
+                    <View style={styles.avatarContainer}>
+                        {
+                            avatarPath != '' ?
+                                (<Avatar
+                                    size="large"
+                                    rounded
+                                    source={{
+                                        uri: avatarPath
+                                    }}
+                                />) :
+                                (<Avatar
+                                    size="large"
+                                    rounded
+                                    title={shortName}
+                                    activeOpacity={0.7}
+                                    containerStyle={{ color: 'red', backgroundColor: '#adadad', marginTop: 10 }}
+                                />)
+                        }
+                    </View>
+                    <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={() => { photoSelectHandler() }}>
+                        <Text style={styles.buttonTextStyle}>
+                            {profilePicture == '' ? "Select Profile Picture" : "Change Profile Picture"}
+                        </Text>
+                    </TouchableOpacity>
+                    {avatarPath != '' &&
+                        (<TouchableOpacity
+                            style={styles.removeButtonStyle}
+                            onPress={() => { photoRemoveHandler() }}>
+                            <Text style={styles.buttonTextStyle}>Remove Profile Picture</Text>
+                        </TouchableOpacity>)}
                     <Text style={[styles.text_footer, { marginTop: 10 }]}>First Name</Text>
                     <View style={styles.action}>
                         <FontAwesome
@@ -319,7 +400,7 @@ const UpdateProfileScreen = ({ navigation }) => {
                         : null
                     }
 
-                    <Text style={[styles.text_footer, { marginTop: 35 }]}>Profile Picture</Text>
+                    {/* <Text style={[styles.text_footer, { marginTop: 35 }]}>Profile Picture</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="camera-retro"
@@ -343,7 +424,7 @@ const UpdateProfileScreen = ({ navigation }) => {
                                 />
                             </Animatable.View>
                             : null}
-                    </View>
+                    </View> */}
                     <View style={styles.button}>
                         <TouchableOpacity
                             onPress={() => { updateProfileHandler() }}
@@ -454,10 +535,24 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         borderRadius: 30,
-        marginLeft: 80,
-        marginRight: 35,
-        //   marginTop: 15,
-        width: '50%'
+        width: 200,
+        alignSelf: 'center',
+        // marginLeft: 80,
+        // marginRight: 35,
+        marginTop: 10,
+        marginBottom: 15
+    },
+    removeButtonStyle: {
+        backgroundColor: '#19398A',
+        borderWidth: 0,
+        color: '#FFFFFF',
+        borderColor: '#307ecc',
+        height: 40,
+        alignItems: 'center',
+        borderRadius: 30,
+        width: 200,
+        alignSelf: 'center',
+        marginBottom: 20
     },
     buttonTextStyle: {
         color: '#FFFFFF',
@@ -470,5 +565,9 @@ const styles = StyleSheet.create({
     errorMsg: {
         color: '#FF0000',
         fontSize: 14,
-    }
+    },
+    avatarContainer: {
+        display: 'flex',
+        alignItems: 'center'
+    },
 });

@@ -24,8 +24,8 @@ import { baseurl, errorMessage } from '../config';
 
 const SignUpScreen = ({ navigation }) => {
 
-    // const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/4190b851-0e15-454d-84f3-1387c972555b.jpg?alt=media&token=e9924ea4-c2d9-4782-bc2d-0fe734431c86'; 
-    const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/69bba4a0-c114-4379-9854-e4381a3130bc.png?alt=media&token=e9924ea4-c2d9-4782-bc2d-0fe734431c86';
+    // const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/4190b851-0e15-454d-84f3-1387c972555b.jpg?alt=media'; 
+    const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/69bba4a0-c114-4379-9854-e4381a3130bc.png?alt=media';
 
     // Initial points for User
     const availablePoints = 500;
@@ -89,21 +89,6 @@ const SignUpScreen = ({ navigation }) => {
         );
     }
 
-    const photoSelectHandler = () => {
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping: true
-        }).then((image) => {
-            if (validateImage(image)) {
-                setAvatarPath(image.path);
-                setProfilePicture(image);
-            }
-        }).catch((error) => {
-            showSweetAlert('warning', 'Image not selected', 'Image not selected for Profile Picture.');
-        });
-    }
-
     const validateImage = (image) => {
         let result = true;
         if (image.height != image.width) {
@@ -119,6 +104,22 @@ const SignUpScreen = ({ navigation }) => {
             showSweetAlert('warning', 'Image validation failed!', 'Please select image having size less than 10 MB.');
         }
         return result;
+    }
+
+    const photoSelectHandler = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping: true
+        }).then((image) => {
+            if (validateImage(image)) {
+                console.log("Image path : " + image.path);
+                setAvatarPath(image.path);
+                setProfilePicture(image);
+            }
+        }).catch((error) => {
+            showSweetAlert('warning', 'Image not selected', 'Image not selected for Profile Picture.');
+        });
     }
 
     const photoRemoveHandler = () => {
@@ -216,7 +217,7 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>

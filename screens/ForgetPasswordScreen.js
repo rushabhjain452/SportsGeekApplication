@@ -52,11 +52,11 @@ const ForgetPasswordScreen = () => {
         }
         else {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 email: email,
                 mobileNumber: mobileNumber
             };
-            axios.post(baseurl + '/users/forget-password', reqData)
+            axios.post(baseurl + '/users/forget-password', requestData)
                 .then((response) => {
                     setLoading(false);
                     console.log(response.data);
@@ -101,12 +101,12 @@ const ForgetPasswordScreen = () => {
         }
         else {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 userId: userId,
                 otp: otp,
                 password: password
             };
-            axios.put(baseurl + '/users/forget-password', reqData)
+            axios.put(baseurl + '/users/forget-password', requestData)
                 .then((response) => {
                     setLoading(false);
                     console.log(response.data);
@@ -140,7 +140,7 @@ const ForgetPasswordScreen = () => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Forget Password!</Text>
             </View>

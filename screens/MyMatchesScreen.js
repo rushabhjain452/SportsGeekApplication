@@ -52,7 +52,8 @@ function UpcomingMatches() {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
@@ -134,7 +135,7 @@ function LiveMatches({ navigation }) {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
@@ -171,7 +172,6 @@ function LiveMatches({ navigation }) {
       <View style={{ height: 100 }}></View>
     </ScrollView>
   );
-  return (<Text>Hello</Text>)
 }
 
 function Results({ navigation }) {
@@ -216,7 +216,8 @@ function Results({ navigation }) {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
@@ -264,7 +265,6 @@ function Results({ navigation }) {
       <View style={{ marginTop: 100 }}></View>
     </ScrollView>
   );
-  return (<Text>Hello</Text>)
 }
 
 const MyMatchesScreen = () => {

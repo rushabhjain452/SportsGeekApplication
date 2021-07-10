@@ -155,7 +155,7 @@ const UpdateActiveTournamentScreen = ({ navigation }) => {
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* <Image
         source={{
           uri: 'https://myheadphonewebsite.000webhostapp.com/images/loading/loading1.gif',

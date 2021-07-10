@@ -68,11 +68,11 @@ const RoleScreen = ({ navigation }) => {
     const addRole = () => {
         if (role != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: role
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/roles', reqData, { headers })
+            axios.post(baseurl + '/roles', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -124,11 +124,11 @@ const RoleScreen = ({ navigation }) => {
     const updateRole = () => {
         if (role != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: role
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/roles/' + roleId, reqData, { headers })
+            axios.put(baseurl + '/roles/' + roleId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
