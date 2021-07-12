@@ -236,19 +236,25 @@
      }
    }), []);
  
-   useEffect(() => {
-     setTimeout(async() => {
-       // setIsLoading(false);
-       let token = null;
-       try {
-         token = await AsyncStorage.getItem('token');
-       } catch(e) {
-         console.log(e);
-       }
-       // console.log('user token: ', userToken);
-       dispatch({ type: 'RETRIEVE_TOKEN', token: token });
-     }, 1000);
-   }, []);
+  // useEffect(() => {
+  //   setTimeout(async() => {
+  //     // setIsLoading(false);
+  //     let token = null;
+  //     try {
+  //       token = await AsyncStorage.getItem('token');
+  //     } catch(e) {
+  //       console.log(e);
+  //     }
+  //     // console.log('user token: ', userToken);
+  //     dispatch({ type: 'RETRIEVE_TOKEN', token: token });
+  //   }, 1000);
+  // }, []);
+
+  useEffect(async () => {
+    let token = null;
+    token = await AsyncStorage.getItem('token');
+    dispatch({ type: 'RETRIEVE_TOKEN', token: token });
+  }, []);
  
    // if( loginState.isLoading ) {
    //   return(

@@ -26,8 +26,7 @@ import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 
 import { AuthContext } from '../components/context';
-import { log } from 'react-native-reanimated';
-// import { FlatList, ScrollView } from 'react-native-gesture-handler';
+// import { log } from 'react-native-reanimated';
 // import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
@@ -209,7 +208,7 @@ const UpdateMatchMinBet = (props) => {
     }
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
+        <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* {loading == true  && (<ActivityIndicator size="large" color="#19398A" />)} */}
             <View>

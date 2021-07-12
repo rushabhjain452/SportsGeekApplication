@@ -55,7 +55,7 @@ function UpcomingMatches() {
   };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {/* {!data && (<Text style={styles.text_header}>Sorry, there are no upcoming matches.</Text>)} */}
       {(!data || (data && data.length < 1)) && (<Text style={styles.text_header}>Sorry, you have not placed future contests on any upcoming matches.</Text>)}
@@ -138,7 +138,7 @@ function LiveMatches({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {(!data || (data && data.length < 1)) && (<Text style={styles.text_header}>Sorry, there are no live matches running now.</Text>)}
       {
@@ -219,7 +219,7 @@ function Results({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {(!result || (result && result.length < 1)) && (<Text style={styles.text_header}>Sorry, there are no results.</Text>)}
       {

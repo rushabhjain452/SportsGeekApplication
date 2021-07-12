@@ -63,7 +63,7 @@ function UpdateMatchScheduleScreen({ navigation }) {
   }
 
   return (
-    <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Text style={styles.text_header}>Old Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {data.length == [] && (<Text style={{ fontSize: 20, fontWeight: 'bold', margin: 20 }}>Sorry, there are no matches pending for setting Winner...</Text>)}

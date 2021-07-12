@@ -28,7 +28,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import axios from 'axios';
-import { log } from 'react-native-reanimated';
+// import { log } from 'react-native-reanimated';
 
 const UpdateActiveTournamentScreen = ({ navigation }) => {
 
@@ -154,7 +154,7 @@ const UpdateActiveTournamentScreen = ({ navigation }) => {
         );
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* <Image
         source={{

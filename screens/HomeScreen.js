@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
   const [index, setIndex] = React.useState(0)
   const isCarousel = React.useRef(null)
   return (
-    <ScrollView keyboardShouldPersistTaps='handled'>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.container}>
         <Carousel
           layout="tinder"

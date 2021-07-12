@@ -118,7 +118,8 @@ const UpdateProfileScreen = ({ navigation }) => {
             cropping: true
         }).then((image) => {
             if (validateImage(image)) {
-                console.log("Image path : " + image.path);
+                // console.log("Image path : " + image.path);
+                // console.log(image);
                 setAvatarPath(image.path);
                 setProfilePicture(image);
                 console.log(image);
@@ -205,7 +206,7 @@ const UpdateProfileScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <View style={styles.avatarContainer}>
                         {
                             avatarPath != '' ?

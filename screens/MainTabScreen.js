@@ -29,11 +29,17 @@ const MainTabScreen = () => {
 
   const [role, setRole] = useState('');
 
+  const [badge, setBadge] = useState(0);
+
   useEffect(async () => {
     const role = await AsyncStorage.getItem('role');
     console.log(role);
     setRole(role);
   }, []);
+
+  const changeBadge = (badge) => {
+    setBadge(badge);
+  }
 
   // const getHomeTab = async () => {
   //   try {
@@ -105,7 +111,7 @@ const MainTabScreen = () => {
         />)
       }
       <Tab.Screen
-        name="Fantasy"
+        name="Fantasy5"
         component={FantasyStackScreen}
         options={{
           tabBarLabel: 'Fantasy',
@@ -121,6 +127,7 @@ const MainTabScreen = () => {
         options={{
           tabBarLabel: 'Chats',
           tabBarColor: '#19398A',
+          tabBarBadge: badge === 0 ? false : badge,
           tabBarIcon: ({ color }) => (
             <Icon name="chatbubbles" color={color} size={26} />
           ),
@@ -183,6 +190,7 @@ const HomeStackScreen = ({ navigation }) => (
     }} />
   </HomeStack.Navigator>
 );
+
 const AdminStackScreen = ({ navigation }) => (
   <AdminStack.Navigator screenOptions={{
     headerStyle: {
@@ -201,6 +209,7 @@ const AdminStackScreen = ({ navigation }) => (
     }} />
   </AdminStack.Navigator>
 );
+
 const FantasyStackScreen = ({ navigation }) => (
   <FantasyStack.Navigator screenOptions={{
     headerStyle: {
@@ -222,6 +231,7 @@ const FantasyStackScreen = ({ navigation }) => (
     }} />
   </FantasyStack.Navigator>
 );
+
 const ChatStackScreen = ({ navigation }) => (
   <ChatStack.Navigator screenOptions={{
     headerStyle: {
@@ -234,15 +244,16 @@ const ChatStackScreen = ({ navigation }) => (
   }}>
     <ChatStack.Screen name="Chat" component={ChatScreen} options={{
       title: 'Chats',
-      headerRight: () => (
-        <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
-      ),
       headerLeft: () => (
         <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+      ),
+      headerRight: () => (
+        <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
       )
     }} />
   </ChatStack.Navigator>
 );
+
 const LeaderStackScreen = ({ navigation }) => (
   <LeaderStack.Navigator screenOptions={{
     headerStyle: {
@@ -261,6 +272,7 @@ const LeaderStackScreen = ({ navigation }) => (
     }} />
   </LeaderStack.Navigator>
 );
+
 const MyMatchesStackScreen = ({ navigation }) => (
   <MyMatchesStack.Navigator screenOptions={{
     headerStyle: {
@@ -279,6 +291,7 @@ const MyMatchesStackScreen = ({ navigation }) => (
     }} />
   </MyMatchesStack.Navigator>
 );
+
 const ProfileStackScreen = ({ navigation }) => (
   <ProfileStack.Navigator screenOptions={{
     headerStyle: {

@@ -29,7 +29,7 @@ import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
 
 import { AuthContext } from '../components/context';
-import { log } from 'react-native-reanimated';
+// import { log } from 'react-native-reanimated';
 // import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
@@ -331,7 +331,7 @@ const ContestScreen = (props) => {
     }
 
     return (
-        <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
@@ -458,7 +458,7 @@ const ContestScreen = (props) => {
                                                 rounded
                                                 title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
                                                 // activeOpacity={0.7}
-                                                containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                                                containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
                                             />)
                                         }
                                         <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>

@@ -234,7 +234,7 @@ const GenderScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Gender Name</Text>
                     <View style={styles.action}>
                         <FontAwesome

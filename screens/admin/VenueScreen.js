@@ -181,7 +181,7 @@ const VenueScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Venue Name</Text>
                     <View style={styles.action}>
                         <FontAwesome

@@ -147,7 +147,7 @@ const SignInScreen = ({ navigation }) => {
                     backgroundColor: colors.background
                 }]}
             >
-                <ScrollView>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <Text style={[styles.text_footer, {
                         color: colors.text
                     }]}>Username</Text>

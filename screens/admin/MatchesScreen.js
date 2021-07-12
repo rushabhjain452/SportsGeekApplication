@@ -373,7 +373,7 @@ const MatchesScreen = (props) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Match Id</Text>
                     <View style={styles.action}>
                         <TextInput

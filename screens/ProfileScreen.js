@@ -89,7 +89,7 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
         <View style={styles.userInfoSection}>
           <View style={{ flexDirection: 'row', marginTop: 15 }}>
@@ -107,7 +107,7 @@ const ProfileScreen = ({ navigation }) => {
                   rounded
                   title={shortName}
                   activeOpacity={0.7}
-                  containerStyle={{ color: 'red', backgroundColor: '#adadad', marginTop: 10 }}
+                  containerStyle={{ color: 'red', backgroundColor: '#1ABC9C', marginTop: 10 }}
                 />)
             }
             <View style={{ marginLeft: 20 }}>

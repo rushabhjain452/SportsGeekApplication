@@ -153,7 +153,7 @@ const AssignRoleToUserScreen = ({ navigation }) => {
         );
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled'>
+        <ScrollView keyboardShouldPersistTaps="handled">
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.container}>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />

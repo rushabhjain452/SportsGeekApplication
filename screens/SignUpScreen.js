@@ -225,7 +225,7 @@ const SignUpScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <View style={styles.avatarContainer}>
                         <Avatar
                             size="large"

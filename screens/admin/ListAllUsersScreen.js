@@ -63,7 +63,7 @@ const ListAllUsersScreen = ({ navigation }) => {
     }
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>

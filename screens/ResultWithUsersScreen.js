@@ -96,7 +96,7 @@ function ResultWithUsersScreen(props) {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <TouchableOpacity style={styles2.rect}>
         <Text style={styles2.date}>{formatDate(matchData.startDatetime)}</Text>

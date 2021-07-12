@@ -96,7 +96,7 @@ function LeaderBoard(props) {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <View style={styles.rectStackRow}>
         {
@@ -120,7 +120,7 @@ function LeaderBoard(props) {
                     rounded
                     title={data[1].firstName.substr(0, 1) + data[1].lastName.substr(0, 1)}
                     // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[1].firstName + " " + data[1].lastName}</Text>
@@ -149,7 +149,7 @@ function LeaderBoard(props) {
                     rounded
                     title={data[0].firstName.substr(0, 1) + data[0].lastName.substr(0, 1)}
                     // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[0].firstName + " " + data[0].lastName}</Text>
@@ -178,7 +178,7 @@ function LeaderBoard(props) {
                     rounded
                     title={data[2].firstName.substr(0, 1) + data[2].lastName.substr(0, 1)}
                     // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[2].firstName + " " + data[2].lastName}</Text>
@@ -228,7 +228,7 @@ function LeaderBoard(props) {
                       rounded
                       title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
                       // activeOpacity={0.7}
-                      containerStyle={{ color: 'green', backgroundColor: '#34a0a4' }}
+                      containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
                   />)
                 }
                 <Text style={[styles.carditem, { width: '60%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
