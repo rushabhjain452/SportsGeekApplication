@@ -32,7 +32,7 @@ const PublicChatScreen = () => {
     intervalRef.current = setInterval(() => {
       if (token) {
         // refreshMessages(token);
-        console.log('After 10 seconds');
+        // console.log('After 10 seconds');
       }
     }, chatRefreshDelay);
     // Unmount

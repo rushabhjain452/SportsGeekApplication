@@ -5,13 +5,15 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // import {
 //   Avatar
 // } from 'react-native-paper';
-import showSweetAlert from '../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Avatar } from "react-native-elements";
 import { useTheme } from 'react-native-paper';
 import axios from 'axios';
+
+import showSweetAlert from '../helpers/showSweetAlert';
+import getColor from '../helpers/getColor';
+import { baseurl, errorMessage } from '../config';
 
 function LeaderBoard(props) {
 
@@ -228,7 +230,7 @@ function LeaderBoard(props) {
                       rounded
                       title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
                       // activeOpacity={0.7}
-                      containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
+                      containerStyle={{ color: 'green', backgroundColor: getColor(item.firstName) }}
                   />)
                 }
                 <Text style={[styles.carditem, { width: '60%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>

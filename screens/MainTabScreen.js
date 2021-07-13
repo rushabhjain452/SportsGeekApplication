@@ -3,6 +3,11 @@ import { TouchableOpacity } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Avatar } from "react-native-elements";
+import axios from 'axios';
+
+import { baseurl } from '../config';
+import getColor from '../helpers/getColor';
 
 import HomeScreen from './HomeScreen';
 import LeaderBoardScreen from './LeaderBoardScreen';
@@ -33,53 +38,13 @@ const MainTabScreen = () => {
 
   useEffect(async () => {
     const role = await AsyncStorage.getItem('role');
-    console.log(role);
+    // console.log(role);
     setRole(role);
   }, []);
 
   const changeBadge = (badge) => {
     setBadge(badge);
   }
-
-  // const getHomeTab = async () => {
-  //   try {
-  //     const role = await AsyncStorage.getItem('role');
-  //     console.log(role);
-  //     if(role == 'User'){
-  //       return(
-  //         <Tab.Screen
-  //           name="Home"
-  //           component={HomeStackScreen}
-  //           options={{
-  //             tabBarLabel: 'Home',
-  //             tabBarColor: '#19398A',
-  //             tabBarIcon: ({ color }) => (
-  //               <Icon name="ios-home" color={color} size={26} />
-  //             ),
-  //           }}
-  //         />
-  //       );
-  //     }
-  //     else if(role == 'Admin'){
-  //       return(
-  //         <Tab.Screen
-  //           name="Admin Panel"
-  //           component={AdminStackScreen}
-  //           options={{
-  //             tabBarLabel: 'Admin Panel',
-  //             tabBarColor: '#19398A',
-  //             tabBarIcon: ({ color }) => (
-  //               <Icon name="ios-home" color={color} size={26} />
-  //             ),
-  //           }}
-  //         />
-  //       );
-  //     }
-  //   } catch(e) {
-  //     console.log(e);
-  //   }
-  //   return <></>;
-  // }
 
   return (
     <Tab.Navigator
@@ -185,7 +150,7 @@ const HomeStackScreen = ({ navigation }) => (
     <HomeStack.Screen name="Home" component={HomeScreen} options={{
       title: 'SportsGeek',
       headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       )
     }} />
   </HomeStack.Navigator>
@@ -204,7 +169,7 @@ const AdminStackScreen = ({ navigation }) => (
     <AdminStack.Screen name="Home" component={AdminScreen} options={{
       title: 'SportsGeek',
       headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       )
     }} />
   </AdminStack.Navigator>
@@ -222,11 +187,11 @@ const FantasyStackScreen = ({ navigation }) => (
   }}>
     <FantasyStack.Screen name="Fantasy" component={ScheduleScreen} options={{
       title: 'Fantasy',
+      headerLeft: () => (
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
+      ),
       headerRight: () => (
         <Icon.Button name="information-circle-outline" size={30} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
-      ),
-      headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
       )
     }} />
   </FantasyStack.Navigator>
@@ -245,7 +210,7 @@ const ChatStackScreen = ({ navigation }) => (
     <ChatStack.Screen name="Chat" component={ChatScreen} options={{
       title: 'Chats',
       headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       ),
       headerRight: () => (
         <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
@@ -267,7 +232,7 @@ const LeaderStackScreen = ({ navigation }) => (
     <LeaderStack.Screen name="LeaderBoard" component={LeaderBoardScreen} options={{
       title: 'LeaderBoard',
       headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       )
     }} />
   </LeaderStack.Navigator>
@@ -286,24 +251,70 @@ const MyMatchesStackScreen = ({ navigation }) => (
     <MyMatchesStack.Screen name="My Matches" component={MyMatchesScreen} options={{
       title: 'My Matches',
       headerLeft: () => (
-        <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>
+        <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       )
     }} />
   </MyMatchesStack.Navigator>
 );
 
-const ProfileStackScreen = ({ navigation }) => (
-  <ProfileStack.Navigator screenOptions={{
-    headerStyle: {
-      backgroundColor: '#19398A',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold'
+// const ProfileStackScreen = ({ navigation }) => (
+//   <ProfileStack.Navigator screenOptions={{
+//     headerStyle: {
+//       backgroundColor: '#19398A',
+//     },
+//     headerTintColor: '#fff',
+//     headerTitleStyle: {
+//       fontWeight: 'bold'
+//     }
+//   }}>
+//     <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{
+//       title: 'Profile'
+//     }} />
+//   </ProfileStack.Navigator>
+// );
+
+const UserAvatar = (props) => {
+  const [avatarPath, setAvatarPath] = useState('');
+  const [shortName, setShortName] = useState('');
+
+  useEffect(async () => {
+    const userId = await AsyncStorage.getItem('userId');
+    const token = await AsyncStorage.getItem('token');
+    if(userId && token){
+      fetchUserData(userId, token);
     }
-  }}>
-    <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{
-      title: 'Profile'
-    }} />
-  </ProfileStack.Navigator>
-);
+  }, []);
+
+  const fetchUserData = (userId, token) => {
+    const headers = { 'Authorization': 'Bearer ' + token };
+    axios.get(baseurl + '/users/' + userId, { headers })
+      .then((response) => {
+        if (response.status == 200) {
+          setAvatarPath(response.data.profilePicture);
+          setShortName(response.data.firstName.substr(0, 1) + response.data.lastName.substr(0, 1));
+        }
+      });
+  }
+
+  return (
+    avatarPath != '' ?
+    (<Avatar
+      {...props}
+      size="small"
+      rounded
+      source={{
+        uri: avatarPath
+      }}
+      containerStyle={{ marginLeft: 10 }}
+    />) :
+      shortName != '' ?
+      (<Avatar
+      {...props}
+        size="small"
+        rounded
+        title={shortName}
+        containerStyle={{ marginLeft: 10, backgroundColor: getColor(props.shortName) }}
+      />) :
+      <Icon.Button {...props} name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A"></Icon.Button>
+  );
+}

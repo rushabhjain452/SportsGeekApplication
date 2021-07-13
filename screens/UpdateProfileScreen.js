@@ -173,7 +173,10 @@ const UpdateProfileScreen = ({ navigation }) => {
             } else {
                 formData.append('profilePicture', null);
             }
-            const headers = { 'Authorization': 'Bearer ' + token };
+            const headers = { 
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
             axios.put(baseurl + '/users/' + userId, formData, { headers })
                 .then((response) => {
                     setLoading(false);

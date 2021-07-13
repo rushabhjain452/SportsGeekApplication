@@ -15,7 +15,7 @@
    DarkTheme as NavigationDarkTheme
  } from '@react-navigation/native';
  import { createDrawerNavigator } from '@react-navigation/drawer';
- import { createStackNavigator } from '@react-navigation/stack';
+ import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
  import { 
    Provider as PaperProvider, 
    DefaultTheme as PaperDefaultTheme,
@@ -287,52 +287,67 @@
      // </SafeAreaProvider>
  
     <SafeAreaProvider>
-       <PaperProvider theme={theme}>
-           <AuthContext.Provider value={authContext}>
-           <NavigationContainer theme={theme}>
-             { loginState.token !== null ? (
-               <Stack.Navigator screenOptions={{headerShown: false}}>
-                 <Stack.Screen name="Home" component={MainTabScreen} />
-                 <Stack.Screen name="changePasswordScreen" component={ChangePasswordScreen} />
-                 <Stack.Screen name="GenderScreen" component={GenderScreen} />
-                 <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
-                 <Stack.Screen name="ContestScreen" component={ContestScreen} />
-                 <Stack.Screen name="RoleScreen" component={RoleScreen} />
-                 <Stack.Screen name="PlayerTypeSCreen" component={PlayerTypeScreen} />
-                 <Stack.Screen name="VenueScreen" component={VenueScreen} />
-                 <Stack.Screen name="TournamentScreen" component={TournamentScreen} />
-                 <Stack.Screen name="TeamScreen" component={TeamScreen} />
-                 <Stack.Screen name="UpdateMatchScheduleScreen" component={UpdateMatchScheduleScreen} />
-                 <Stack.Screen name="UpdateMatchResultScreen" component={UpdateMatchResultScreen} />
-                 <Stack.Screen name="UserAccountApproval" component={UserAccountApproval} />
-                 <Stack.Screen name="ListAllUsersScreen" component={ListAllUsersScreen} />
-                 <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
-                 <Stack.Screen name="MatchesScreen" component={MatchesScreen} />
-                 <Stack.Screen name="RechargeScreen" component={RechargeScreen} />
-                 <Stack.Screen name="AssignRoleToUser" component={AssignRoleToUserScreen} />
-                 <Stack.Screen name="DeleteScreen" component={DeleteScreen} />
-                 <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
-                 <Stack.Screen name="HelpScreen" component={HelpScreen} />
-                 <Stack.Screen name="ResultWithUsersScreen" component={ResultWithUsersScreen} />
-                 <Stack.Screen name="ForgetPasswordScreen2" component={ForgetPasswordScreen2} />
-                 <Stack.Screen name="UpdateMatchMinBetSchedule" component={UpdateMatchMinBetSchedule} />
-                 <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} />
-                 <Stack.Screen name="UpdateMatchMinBet" component={UpdateMatchMinBet} />
-                 <Stack.Screen name="UsersContestForLiveMatch" component={UsersContestsForLiveMatch} />
-                 <Stack.Screen name="UpdateActiveTournamentScreen" component={UpdateActiveTournamentScreen} />
-                 <Stack.Screen name="MatchesScheduleScreenForUpdate" component={MatchesScheduleScreenForUpdate} />
-                 <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-                 <Stack.Screen name="ChatHomeScreen" component={ChatHomeScreen} />
-                 <Stack.Screen name="RoomScreen" component={RoomScreen} />
-               </Stack.Navigator>
-             )
-           :
-             <RootStackScreen/>
-           }
-           </NavigationContainer>
-         </AuthContext.Provider>
-       </PaperProvider>
-     </SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <AuthContext.Provider value={authContext}>
+          <NavigationContainer theme={theme}>
+            { loginState.token !== null ? (
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Home" component={MainTabScreen} />
+                <Stack.Screen name="changePasswordScreen" component={ChangePasswordScreen} />
+                <Stack.Screen name="GenderScreen" component={GenderScreen} />
+                <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
+                <Stack.Screen 
+                  name="ContestScreen" 
+                  component={ContestScreen}
+                  options={{
+                    title: 'Contest',
+                    headerLeft: (props) => (
+                      <HeaderBackButton
+                        {...props}
+                        onPress={() => {
+                          // Do something
+                          console.log('Back button pressed...');
+                        }}
+                      />
+                    )
+                  }}
+                />
+                <Stack.Screen name="RoleScreen" component={RoleScreen} />
+                <Stack.Screen name="PlayerTypeSCreen" component={PlayerTypeScreen} />
+                <Stack.Screen name="VenueScreen" component={VenueScreen} />
+                <Stack.Screen name="TournamentScreen" component={TournamentScreen} />
+                <Stack.Screen name="TeamScreen" component={TeamScreen} />
+                <Stack.Screen name="UpdateMatchScheduleScreen" component={UpdateMatchScheduleScreen} />
+                <Stack.Screen name="UpdateMatchResultScreen" component={UpdateMatchResultScreen} />
+                <Stack.Screen name="UserAccountApproval" component={UserAccountApproval} />
+                <Stack.Screen name="ListAllUsersScreen" component={ListAllUsersScreen} />
+                <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
+                <Stack.Screen name="MatchesScreen" component={MatchesScreen} />
+                <Stack.Screen name="RechargeScreen" component={RechargeScreen} />
+                <Stack.Screen name="AssignRoleToUser" component={AssignRoleToUserScreen} />
+                <Stack.Screen name="DeleteScreen" component={DeleteScreen} />
+                <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
+                <Stack.Screen name="HelpScreen" component={HelpScreen} />
+                <Stack.Screen name="ResultWithUsersScreen" component={ResultWithUsersScreen} />
+                <Stack.Screen name="ForgetPasswordScreen2" component={ForgetPasswordScreen2} />
+                <Stack.Screen name="UpdateMatchMinBetSchedule" component={UpdateMatchMinBetSchedule} />
+                <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} />
+                <Stack.Screen name="UpdateMatchMinBet" component={UpdateMatchMinBet} />
+                <Stack.Screen name="UsersContestForLiveMatch" component={UsersContestsForLiveMatch} />
+                <Stack.Screen name="UpdateActiveTournamentScreen" component={UpdateActiveTournamentScreen} />
+                <Stack.Screen name="MatchesScheduleScreenForUpdate" component={MatchesScheduleScreenForUpdate} />
+                <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+                <Stack.Screen name="ChatHomeScreen" component={ChatHomeScreen} />
+                <Stack.Screen name="RoomScreen" component={RoomScreen} />
+              </Stack.Navigator>
+            )
+            :
+            <RootStackScreen/>
+          }
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </PaperProvider>
+    </SafeAreaProvider>
    );
  };
  

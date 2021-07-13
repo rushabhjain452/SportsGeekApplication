@@ -59,7 +59,7 @@ function UpdateMatchScheduleScreen({ navigation }) {
 
   const handleCardClick = (matchId) => {
     // showSweetAlert('success', 'Match result update', 'Match Id : ' + matchId);
-    navigation.navigate('UpdateMatchResultScreen', { matchId: matchId });
+    navigation.navigate('UpdateMatchResultScreen', { matchId: matchId, setParentRefreshing: setRefreshing });
   }
 
   return (

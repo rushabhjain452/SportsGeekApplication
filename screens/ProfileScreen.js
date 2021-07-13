@@ -8,13 +8,14 @@ import {
 } from 'react-native-paper';
 import { Avatar } from "react-native-elements";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import ChangePasswordScreen from './ChangePasswordScreen';
-import { AuthContext } from '../components/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import showSweetAlert from '../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../config';
 import axios from 'axios';
+
+import { AuthContext } from '../components/context';
+// import ChangePasswordScreen from './ChangePasswordScreen';
+import showSweetAlert from '../helpers/showSweetAlert';
+import getColor from '../helpers/getColor';
+import { baseurl, errorMessage } from '../config';
 
 const ProfileScreen = ({ navigation }) => {
 
@@ -96,18 +97,18 @@ const ProfileScreen = ({ navigation }) => {
             {
               data.profilePicture ?
                 (<Avatar
-                  size="medium"
+                  size="large"
                   rounded
                   source={{
                     uri: data.profilePicture
                   }}
                 />) :
                 (<Avatar
-                  size="medium"
+                  size="large"
                   rounded
                   title={shortName}
                   activeOpacity={0.7}
-                  containerStyle={{ color: 'red', backgroundColor: '#1ABC9C', marginTop: 10 }}
+                  containerStyle={{ color: 'red', backgroundColor: getColor(shortName), marginTop: 10 }}
                 />)
             }
             <View style={{ marginLeft: 20 }}>
@@ -177,11 +178,12 @@ const ProfileScreen = ({ navigation }) => {
   );
 };
 
-function updatePassword() {
-  return (
-    <ChangePasswordScreen />
-  );
-}
+// function updatePassword() {
+//   return (
+//     <ChangePasswordScreen />
+//   );
+// }
+
 export default ProfileScreen;
 
 const styles = StyleSheet.create({

@@ -23,9 +23,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import { Avatar } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { useTheme } from 'react-native-paper';
+
 import showSweetAlert from '../helpers/showSweetAlert';
+import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
 
 import { AuthContext } from '../components/context';
@@ -108,6 +109,8 @@ const ContestScreen = (props) => {
     // BetOnTeam data
     const fetchData = (token, matchData) => {
         const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
+        console.log(baseurl + '/matches/' + matchId + '/contest');
         axios.get(baseurl + '/matches/' + matchId + '/contest', { headers })
             .then((response) => {
                 setLoading(false);
@@ -115,7 +118,7 @@ const ContestScreen = (props) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     setData(response.data);
-                    console.log(response.data);
+                    // console.log(response.data);
                     let records = response.data;
                     let team1points = 0, team2points = 0;
                     // console.log(records);
@@ -171,6 +174,7 @@ const ContestScreen = (props) => {
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
+
     // User data
     const fetchUserData = (userId, token) => {
         const headers = { 'Authorization': 'Bearer ' + token };
@@ -330,6 +334,7 @@ const ContestScreen = (props) => {
         }
     }
 
+    console.log(data);
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
@@ -337,7 +342,7 @@ const ContestScreen = (props) => {
             <View>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
-                    <Text style={styles.text_header}>Place Contest</Text>
+                    <Text style={styles.text_header}>&lt;- Place Contest</Text>
                 </View>
                 <Animatable.View
                     animation="fadeInUpBig"
@@ -382,8 +387,9 @@ const ContestScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, {
                         color: colors.text
-                    }]}>Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
-            </Text>
+                    }]}>
+                        Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
+                    </Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="money"
@@ -434,7 +440,7 @@ const ContestScreen = (props) => {
                     <Text style={styles.text_header1}>User Participated in this Contest</Text>
                     {data.length == 0 && (<Text style={{ marginTop: 20, fontSize: 15 }}>No users have placed contest on this match.</Text>)}
                     {
-                        data.length > 0 && data.map((item, index) => {
+                        data && data.length > 0 && data.map((item, index) => {
                             {/* console.log(item.username + ' ' + userId); */ }
                             const mystyle = item.username == username ? styles.bgDark : styles.bgLight;
                             return (
@@ -446,20 +452,20 @@ const ContestScreen = (props) => {
                                         </View> */}
                                         {
                                             item.profilePicture != '' ?
-                                            (<Avatar
-                                                size="small"
-                                                rounded
-                                                source={{
-                                                    uri: item.profilePicture
-                                                }}
-                                            />) :
-                                            (<Avatar
-                                                size="small"
-                                                rounded
-                                                title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
-                                                // activeOpacity={0.7}
-                                                containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
-                                            />)
+                                                (<Avatar
+                                                    size="small"
+                                                    rounded
+                                                    source={{
+                                                        uri: item.profilePicture
+                                                    }}
+                                                />) :
+                                                (<Avatar
+                                                    size="small"
+                                                    rounded
+                                                    title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
+                                                    // activeOpacity={0.7}
+                                                    containerStyle={{ color: 'green', backgroundColor: getColor(item.firstName) }}
+                                                />)
                                         }
                                         <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
                                         <Text style={[styles.carditem, { width: '17%' }]}>{item.teamShortName}</Text>
