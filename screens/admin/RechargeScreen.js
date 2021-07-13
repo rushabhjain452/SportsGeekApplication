@@ -14,9 +14,7 @@ import {
     Image,
     Alert
 } from 'react-native';
-import {
-    Dropdown
-} from 'sharingan-rn-modal-dropdown';
+import { Dropdown } from 'sharingan-rn-modal-dropdown';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -166,12 +164,12 @@ const RechargeScreen = ({ navigation }) => {
             //     setLoading(false);
             //     showSweetAlert('error', 'Error', 'Error in processing recharge.Please try again after sometime.');
             // });
-            const reqData = {
+            const requestData = {
                 userId: userId,
                 points: points
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/recharge', reqData, { headers })
+            axios.post(baseurl + '/recharge', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -207,8 +205,8 @@ const RechargeScreen = ({ navigation }) => {
         );
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+        <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* <Image
         source={{
           uri: 'https://myheadphonewebsite.000webhostapp.com/images/loading/loading1.gif',

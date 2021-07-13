@@ -52,9 +52,10 @@ function UpcomingMatches() {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
+
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {/* {!data && (<Text style={styles.text_header}>Sorry, there are no upcoming matches.</Text>)} */}
       {(!data || (data && data.length < 1)) && (<Text style={styles.text_header}>Sorry, you have not placed future contests on any upcoming matches.</Text>)}
@@ -134,10 +135,10 @@ function LiveMatches({ navigation }) {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {(!data || (data && data.length < 1)) && (<Text style={styles.text_header}>Sorry, there are no live matches running now.</Text>)}
       {
@@ -171,7 +172,6 @@ function LiveMatches({ navigation }) {
       <View style={{ height: 100 }}></View>
     </ScrollView>
   );
-  return (<Text>Hello</Text>)
 }
 
 function Results({ navigation }) {
@@ -216,9 +216,10 @@ function Results({ navigation }) {
         setRefreshing(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
-  }
+  };
+
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {(!result || (result && result.length < 1)) && (<Text style={styles.text_header}>Sorry, there are no results.</Text>)}
       {
@@ -264,7 +265,6 @@ function Results({ navigation }) {
       <View style={{ marginTop: 100 }}></View>
     </ScrollView>
   );
-  return (<Text>Hello</Text>)
 }
 
 const MyMatchesScreen = () => {

@@ -20,15 +20,17 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
+import { Avatar } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { useTheme } from 'react-native-paper';
+
 import showSweetAlert from '../helpers/showSweetAlert';
+import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
 
 import { AuthContext } from '../components/context';
-import { log } from 'react-native-reanimated';
+// import { log } from 'react-native-reanimated';
 // import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
@@ -107,6 +109,8 @@ const ContestScreen = (props) => {
     // BetOnTeam data
     const fetchData = (token, matchData) => {
         const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
+        console.log(baseurl + '/matches/' + matchId + '/contest');
         axios.get(baseurl + '/matches/' + matchId + '/contest', { headers })
             .then((response) => {
                 setLoading(false);
@@ -114,6 +118,7 @@ const ContestScreen = (props) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     setData(response.data);
+                    // console.log(response.data);
                     let records = response.data;
                     let team1points = 0, team2points = 0;
                     // console.log(records);
@@ -169,6 +174,7 @@ const ContestScreen = (props) => {
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
+
     // User data
     const fetchUserData = (userId, token) => {
         const headers = { 'Authorization': 'Bearer ' + token };
@@ -246,16 +252,16 @@ const ContestScreen = (props) => {
                     showSweetAlert('warning', 'Insufficient Points', "Your have only " + parseInt(availablePoints) + " available points.");
                 }
                 else {
-                    const reqData = {
+                    const requestData = {
                         userId: userId,
                         matchId: matchId,
                         teamId: selectedTeamId,
                         contestPoints: parseInt(points),
                         winningPoints: 0
                     };
-                    console.log(reqData);
+                    console.log(requestData);
                     const headers = { 'Authorization': 'Bearer ' + token };
-                    axios.post(baseurl + '/contest', reqData, { headers })
+                    axios.post(baseurl + '/contest', requestData, { headers })
                         .then((response) => {
                             setWaiting(false);
                             if (response.status == 201) {
@@ -290,16 +296,16 @@ const ContestScreen = (props) => {
                     showSweetAlert('warning', 'Insufficient Points', "Your have only " + (balance) + " available points.");
                 }
                 else {
-                    const reqData = {
+                    const requestData = {
                         userId: userId,
                         matchId: matchId,
                         teamId: selectedTeamId,
                         contestPoints: parseInt(points),
                         winningPoints: 0
                     };
-                    console.log(reqData);
+                    console.log(requestData);
                     const headers = { 'Authorization': 'Bearer ' + token };
-                    axios.put(baseurl + '/contest/' + contestId, reqData, { headers })
+                    axios.put(baseurl + '/contest/' + contestId, requestData, { headers })
                         .then((response) => {
                             setWaiting(false);
                             if (response.status == 200) {
@@ -328,14 +334,15 @@ const ContestScreen = (props) => {
         }
     }
 
+    console.log(data);
     return (
-        <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <Spinner visible={waiting} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+        <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
-                    <Text style={styles.text_header}>Place Contest</Text>
+                    <Text style={styles.text_header}>&lt;- Place Contest</Text>
                 </View>
                 <Animatable.View
                     animation="fadeInUpBig"
@@ -380,8 +387,9 @@ const ContestScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, {
                         color: colors.text
-                    }]}>Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
-            </Text>
+                    }]}>
+                        Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
+                    </Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="money"
@@ -432,18 +440,33 @@ const ContestScreen = (props) => {
                     <Text style={styles.text_header1}>User Participated in this Contest</Text>
                     {data.length == 0 && (<Text style={{ marginTop: 20, fontSize: 15 }}>No users have placed contest on this match.</Text>)}
                     {
-                        data.length > 0 && data.map((item, index) => {
+                        data && data.length > 0 && data.map((item, index) => {
                             {/* console.log(item.username + ' ' + userId); */ }
                             const mystyle = item.username == username ? styles.bgDark : styles.bgLight;
                             return (
                                 <View style={[styles.card, mystyle]} key={item.contestId}>
                                     <View style={styles.cardlist}>
                                         {/* <Card.Image style={styles.ellipse1} source={{uri: item.profilePicture}} /> */}
-                                        <View style={styles.ellipse1}>
-                                            {/* <Text>{item.firstName.toString().chatAt(0) + item.lastName.toString().chatAt(0)}</Text> */}
+                                        {/* <View style={styles.ellipse1}>
                                             <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}</Text>
-                                            {/* <Text>{typeof(item.firstName)}</Text> */}
-                                        </View>
+                                        </View> */}
+                                        {
+                                            item.profilePicture != '' ?
+                                                (<Avatar
+                                                    size="small"
+                                                    rounded
+                                                    source={{
+                                                        uri: item.profilePicture
+                                                    }}
+                                                />) :
+                                                (<Avatar
+                                                    size="small"
+                                                    rounded
+                                                    title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
+                                                    // activeOpacity={0.7}
+                                                    containerStyle={{ color: 'green', backgroundColor: getColor(item.firstName) }}
+                                                />)
+                                        }
                                         <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
                                         <Text style={[styles.carditem, { width: '17%' }]}>{item.teamShortName}</Text>
                                         <Text style={[styles.carditem, { width: '15%' }]}>{item.contestPoints}</Text>

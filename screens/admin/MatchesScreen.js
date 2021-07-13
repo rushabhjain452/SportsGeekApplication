@@ -226,7 +226,7 @@ const MatchesScreen = (props) => {
             showSweetAlert('warning', 'Invalid Input', 'Please select match date time.');
         }
         else {
-            const reqData = {
+            const requestData = {
                 matchId: matchId,
                 tournamentId: tournamentId,
                 name: matchName,
@@ -237,7 +237,7 @@ const MatchesScreen = (props) => {
                 minimumPoints: contestPoints
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/matches', reqData, { headers })
+            axios.post(baseurl + '/matches', requestData, { headers })
                 .then((response) => {
                     // setLoading(false);
                     if (response.status == 201) {
@@ -315,7 +315,7 @@ const MatchesScreen = (props) => {
             // .catch((error) => {
             //     showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
             // });
-            const reqData = {
+            const requestData = {
                 tournamentId: tournamentId,
                 name: matchName,
                 startDatetime: startDateTime,
@@ -325,7 +325,7 @@ const MatchesScreen = (props) => {
                 minimumPoints: contestPoints
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/matches/' + matchId, reqData, { headers })
+            axios.put(baseurl + '/matches/' + matchId, requestData, { headers })
                 .then((response) => {
                     // setLoading(false);
                     if (response.status == 200) {
@@ -373,7 +373,7 @@ const MatchesScreen = (props) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Match Id</Text>
                     <View style={styles.action}>
                         <TextInput

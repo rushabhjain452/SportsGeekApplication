@@ -30,7 +30,7 @@ import axios from 'axios';
 const UpdateMatchResultScreen = (props) => {
 
     const navigation = useNavigation();
-    const { matchId } = props.route.params;
+    const { matchId, setParentRefreshing } = props.route.params;
 
     const [selectedTeamId, setSelectedTeamId] = useState(0);
 
@@ -116,6 +116,8 @@ const UpdateMatchResultScreen = (props) => {
                     setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Match result updated successfully', "Points will be allocated to the winners shortly.");
+                        setParentRefreshing(true);
+                        navigation.goBack();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Something went wrong. Please try again after sometime...');
@@ -146,8 +148,8 @@ const UpdateMatchResultScreen = (props) => {
         );
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+        <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.container}>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>

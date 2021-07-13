@@ -108,8 +108,8 @@ const UserAccountApproval = ({ navigation }) => {
         );
 
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <Spinner visible={waiting} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+        <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
@@ -119,7 +119,6 @@ const UserAccountApproval = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView>
                     {/* <View style={[styles.card]}>
             <SwipeList rowData={
                 data.map((item) => ({
@@ -149,8 +148,6 @@ const UserAccountApproval = ({ navigation }) => {
                             </View>
                         ))
                     }
-
-                </ScrollView>
             </Animatable.View>
         </ScrollView>
     );

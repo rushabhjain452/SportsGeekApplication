@@ -58,12 +58,12 @@ const ChangePasswordScreen = ({ navigation }) => {
         else {
             setLoading(true);
             const headers = { 'Authorization': 'Bearer ' + token };
-            const reqData = {
+            const requestData = {
                 userId: userId,
                 oldPassword: oldPassword,
                 newPassword: newPassword
             };
-            axios.put(baseurl + '/users/update-password', reqData, { headers })
+            axios.put(baseurl + '/users/update-password', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
@@ -92,7 +92,7 @@ const ChangePasswordScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Change Password</Text>
@@ -101,7 +101,7 @@ const ChangePasswordScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <Text style={[styles.text_footer, {
                         marginTop: 35
                     }]}>Old Password</Text>

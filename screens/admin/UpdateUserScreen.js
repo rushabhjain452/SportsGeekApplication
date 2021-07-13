@@ -169,7 +169,7 @@ const UpdateUserScreen = (props) => {
             // .catch((error) => {
             //     showSweetAlert('warning', 'Network Error', 'Something went wrong. Please try again after sometime...');
             // });
-            const reqData = {
+            const requestData = {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
@@ -177,7 +177,7 @@ const UpdateUserScreen = (props) => {
                 genderId: genderId,
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/users/' + userId, reqData, { headers })
+            axios.put(baseurl + '/users/' + userId, requestData, { headers })
                 .then((response) => {
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Profile Updated Successfully...!');
@@ -195,7 +195,7 @@ const UpdateUserScreen = (props) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={waiting} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Update Profile</Text>
@@ -204,7 +204,7 @@ const UpdateUserScreen = (props) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled'>
+                <ScrollView keyboardShouldPersistTaps="handled">
 
                     <Text style={[styles.text_footer, { marginTop: 10 }]}>First Name</Text>
                     <View style={styles.action}>

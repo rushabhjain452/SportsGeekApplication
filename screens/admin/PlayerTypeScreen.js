@@ -68,11 +68,11 @@ const PlayerTypeScreen = ({ navigation }) => {
 
     const addPlayerType = () => {
         if (playerType != '') {
-            const reqData = {
+            const requestData = {
                 typeName: playerType
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/player-types', reqData, { headers })
+            axios.post(baseurl + '/player-types', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -146,11 +146,11 @@ const PlayerTypeScreen = ({ navigation }) => {
             // .catch((error) => {
             //     showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
             // });
-            const reqData = {
+            const requestData = {
                 typeName: playerType
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/player-types/' + playerTypeId, reqData, { headers })
+            axios.put(baseurl + '/player-types/' + playerTypeId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
@@ -189,7 +189,7 @@ const PlayerTypeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>PlayerType Details</Text>
@@ -198,7 +198,7 @@ const PlayerTypeScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>PlayerType Name</Text>
                     <View style={styles.action}>
                         <FontAwesome

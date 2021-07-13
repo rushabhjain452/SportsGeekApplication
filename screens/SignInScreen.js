@@ -102,17 +102,17 @@ const SignInScreen = ({ navigation }) => {
             // Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
             //     {text: 'Okay'}
             // ]);
-            showSweetAlert('error', 'Wrong Input!', 'Username or password field cannot be empty.');
+            showSweetAlert('warning', 'Wrong Input!', 'Username or password field cannot be empty.');
             return;
         }
 
         // New API
         setLoading(true);
-        const reqData = {
+        const requestData = {
             username: data.username,
             password: data.password
         };
-        axios.post(baseurl + '/users/authenticate', reqData)
+        axios.post(baseurl + '/users/authenticate', requestData)
             .then((response) => {
                 setLoading(false);
                 if (response.status == 200) {
@@ -137,7 +137,7 @@ const SignInScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Welcome!</Text>
             </View>
@@ -147,7 +147,7 @@ const SignInScreen = ({ navigation }) => {
                     backgroundColor: colors.background
                 }]}
             >
-                <ScrollView>
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <Text style={[styles.text_footer, {
                         color: colors.text
                     }]}>Username</Text>
@@ -236,7 +236,7 @@ const SignInScreen = ({ navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.button}>
                         <TouchableOpacity
-                            onPress={() => { loginHandle(data.username, data.password) }}
+                            onPress={() => { loginHandle() }}
                             style={[styles.signIn, {
                                 borderColor: '#19398A',
                                 borderWidth: 1,

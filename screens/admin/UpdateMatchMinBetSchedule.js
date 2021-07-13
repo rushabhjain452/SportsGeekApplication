@@ -108,7 +108,7 @@ function UpdateMatchMinBetSchedule({ navigation }) {
 
 
   return (
-    <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Text style={styles.text_header}>Upcoming Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {

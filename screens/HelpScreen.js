@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 
 const HelpScreen = ({ navigation }) => {
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled'>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.heading}>Rules</Text>
       <Text style={styles.listitem}>1.Register by putting Rs 100.</Text>
       <Text style={styles.listitem}>2.You will get Rs 100 X 5 = 500 points.</Text>

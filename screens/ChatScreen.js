@@ -88,7 +88,8 @@ const Tab = createMaterialTopTabNavigator();
 //   );
 // }
 
-const ChatScreen = () => {
+const ChatScreen = ({params}) => {
+  console.log(params);
   return (
     <Tab.Navigator>
       <Tab.Screen name="Public Chat" component={PublicChatScreen} />

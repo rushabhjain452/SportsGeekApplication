@@ -65,7 +65,7 @@ const GenderScreen = ({ navigation }) => {
                 setLoading(false);
                 setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
-            })
+            });
     }
 
     // const [data, setData] = React.useState({
@@ -91,12 +91,12 @@ const GenderScreen = ({ navigation }) => {
         if (gender != '') {
             setLoading(true);
             // Axios
-            const reqData = {
+            const requestData = {
                 name: gender
             };
             const headers = { 'Authorization': 'Bearer ' + token }
             axios
-                .post(baseurl + '/genders', reqData, { headers })
+                .post(baseurl + '/genders', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -150,11 +150,11 @@ const GenderScreen = ({ navigation }) => {
     const updateGender = () => {
         if (gender != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: gender
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/genders/' + genderId, reqData, { headers })
+            axios.put(baseurl + '/genders/' + genderId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
@@ -225,7 +225,7 @@ const GenderScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Gender Details</Text>
@@ -234,7 +234,7 @@ const GenderScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Gender Name</Text>
                     <View style={styles.action}>
                         <FontAwesome

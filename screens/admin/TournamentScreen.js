@@ -70,11 +70,11 @@ const TournamentScreen = ({ navigation }) => {
     const addTournament = () => {
         if (tournament != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: tournament
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.post(baseurl + '/tournaments', reqData, { headers })
+            axios.post(baseurl + '/tournaments', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
@@ -127,11 +127,11 @@ const TournamentScreen = ({ navigation }) => {
     const updateTournament = () => {
         if (tournament != '') {
             setLoading(true);
-            const reqData = {
+            const requestData = {
                 name: tournament
             };
             const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/tournaments/' + tournamentId, reqData, { headers })
+            axios.put(baseurl + '/tournaments/' + tournamentId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
@@ -170,7 +170,7 @@ const TournamentScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} textContent='Loading...' textStyle={styles.spinnerTextStyle} />
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Tournament Details</Text>
@@ -179,7 +179,7 @@ const TournamentScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Tournament Name</Text>
                     <View style={styles.action}>
                         <FontAwesome

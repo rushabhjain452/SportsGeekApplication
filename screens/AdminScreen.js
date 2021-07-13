@@ -15,7 +15,7 @@ const AdminScreen = ({ navigation }) => {
   const isCarousel = React.useRef(null)
   const { colors } = useTheme();
   return (
-    <ScrollView keyboardShouldPersistTaps='handled'>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <Collapse>
         <CollapseHeader>
           <View style={styles.menuWrapper}>
