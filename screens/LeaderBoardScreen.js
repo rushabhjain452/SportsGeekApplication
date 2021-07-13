@@ -111,18 +111,18 @@ function LeaderBoard(props) {
               {
                 data[1].profilePicture != '' ?
                 (<Avatar
-                    size="medium"
-                    rounded
-                    source={{
-                        uri: data[1].profilePicture
-                    }}
+                  size="medium"
+                  rounded
+                  source={{
+                      uri: data[1].profilePicture
+                  }}
                 />) :
                 (<Avatar
-                    size="medium"
-                    rounded
-                    title={data[1].firstName.substr(0, 1) + data[1].lastName.substr(0, 1)}
-                    // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
+                  size="medium"
+                  rounded
+                  title={data[1].firstName.substr(0, 1) + data[1].lastName.substr(0, 1)}
+                  // activeOpacity={0.7}
+                  containerStyle={{ color: 'green', backgroundColor: getColor(data[1].firstName) }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[1].firstName + " " + data[1].lastName}</Text>
@@ -151,7 +151,7 @@ function LeaderBoard(props) {
                     rounded
                     title={data[0].firstName.substr(0, 1) + data[0].lastName.substr(0, 1)}
                     // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
+                    containerStyle={{ color: 'green', backgroundColor: getColor(data[0].firstName) }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[0].firstName + " " + data[0].lastName}</Text>
@@ -180,7 +180,7 @@ function LeaderBoard(props) {
                     rounded
                     title={data[2].firstName.substr(0, 1) + data[2].lastName.substr(0, 1)}
                     // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: '#1ABC9C' }}
+                    containerStyle={{ color: 'green', backgroundColor: getColor(data[2].firstName) }}
                 />)
               }
               <Text style={styles.carditemusername}>{data[2].firstName + " " + data[2].lastName}</Text>

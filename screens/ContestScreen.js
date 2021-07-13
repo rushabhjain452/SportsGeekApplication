@@ -110,7 +110,7 @@ const ContestScreen = (props) => {
     const fetchData = (token, matchData) => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
-        console.log(baseurl + '/matches/' + matchId + '/contest');
+        // console.log(baseurl + '/matches/' + matchId + '/contest');
         axios.get(baseurl + '/matches/' + matchId + '/contest', { headers })
             .then((response) => {
                 setLoading(false);
@@ -142,8 +142,8 @@ const ContestScreen = (props) => {
                     setTeam1BetPoints(team1points);
                     setTeam2BetPoints(team2points);
                 } else {
-                    console.log('Error 2');
-                    console.log(error);
+                    // console.log('Error 2');
+                    // console.log(error);
                     showSweetAlert('error', 'Network Error', errorMessage);
                 }
             })
@@ -151,8 +151,8 @@ const ContestScreen = (props) => {
                 setLoading(false);
                 setRefreshing(false);
                 setWaiting(false);
-                console.log('Error 2');
-                console.log(error);
+                // console.log('Error 2');
+                // console.log(error);
                 showSweetAlert('error', 'Network Error', errorMessage);
             });
     }
@@ -170,7 +170,7 @@ const ContestScreen = (props) => {
                 }
             })
             .catch((error) => {
-                console.log('Error 3');
+                // console.log('Error 3');
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
@@ -188,7 +188,7 @@ const ContestScreen = (props) => {
                 }
             })
             .catch((error) => {
-                console.log('Error 4');
+                // console.log('Error 4');
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
@@ -277,13 +277,13 @@ const ContestScreen = (props) => {
                                 showSweetAlert('success', 'Contest placed successfully', "Your contest for " + parseInt(points) + " points is placed successfully.");
                             }
                             else {
-                                console.log(response.status);
+                                // console.log(response.status);
                                 showSweetAlert('warning', 'Network Error', 'Something went wrong. Please check your internet connection or try again after sometime...');
                             }
                         })
                         .catch((error) => {
                             setWaiting(false);
-                            console.log(error);
+                            // console.log(error);
                             showSweetAlert('error', 'Network Error', errorMessage);
                         });
                 }
@@ -303,7 +303,7 @@ const ContestScreen = (props) => {
                         contestPoints: parseInt(points),
                         winningPoints: 0
                     };
-                    console.log(requestData);
+                    // console.log(requestData);
                     const headers = { 'Authorization': 'Bearer ' + token };
                     axios.put(baseurl + '/contest/' + contestId, requestData, { headers })
                         .then((response) => {
@@ -320,12 +320,12 @@ const ContestScreen = (props) => {
                                 showSweetAlert('success', 'Contest updated successfully', "Your contest is updated to " + parseInt(points) + " points.");
                             }
                             else {
-                                console.log(request.status);
+                                // console.log(request.status);
                                 showSweetAlert('warning', 'Network Error', 'Something went wrong. Please check your internet connection or try again after sometime...');
                             }
                         })
                         .catch((error) => {
-                            console.log(error);
+                            // console.log(error);
                             setWaiting(false);
                             showSweetAlert('error', 'Network Error', errorMessage);
                         });
@@ -334,7 +334,7 @@ const ContestScreen = (props) => {
         }
     }
 
-    console.log(data);
+    // console.log(data);
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
@@ -458,13 +458,14 @@ const ContestScreen = (props) => {
                                                     source={{
                                                         uri: item.profilePicture
                                                     }}
+                                                    containerStyle={{ marginLeft: 5 }}
                                                 />) :
                                                 (<Avatar
                                                     size="small"
                                                     rounded
                                                     title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
                                                     // activeOpacity={0.7}
-                                                    containerStyle={{ color: 'green', backgroundColor: getColor(item.firstName) }}
+                                                    containerStyle={{ color: 'green', marginLeft: 5, backgroundColor: getColor(item.firstName) }}
                                                 />)
                                         }
                                         <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>

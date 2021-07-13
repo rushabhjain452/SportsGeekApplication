@@ -279,6 +279,7 @@ const UserAvatar = (props) => {
 
   useEffect(async () => {
     const userId = await AsyncStorage.getItem('userId');
+    // console.log('userId : ' + userId);
     const token = await AsyncStorage.getItem('token');
     if(userId && token){
       fetchUserData(userId, token);
@@ -287,11 +288,15 @@ const UserAvatar = (props) => {
 
   const fetchUserData = (userId, token) => {
     const headers = { 'Authorization': 'Bearer ' + token };
+    // console.log(baseurl + '/users/' + userId);
     axios.get(baseurl + '/users/' + userId, { headers })
       .then((response) => {
         if (response.status == 200) {
-          setAvatarPath(response.data.profilePicture);
-          setShortName(response.data.firstName.substr(0, 1) + response.data.lastName.substr(0, 1));
+          // console.log(response.data);
+          if(response.data){
+            setAvatarPath(response.data.profilePicture);
+            setShortName(response.data.firstName.substr(0, 1) + response.data.lastName.substr(0, 1));
+          }
         }
       });
   }
@@ -313,7 +318,7 @@ const UserAvatar = (props) => {
         size="small"
         rounded
         title={shortName}
-        containerStyle={{ marginLeft: 10, backgroundColor: getColor(props.shortName) }}
+        containerStyle={{ marginLeft: 10, backgroundColor: getColor(shortName) }}
       />) :
       <Icon.Button {...props} name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A"></Icon.Button>
   );

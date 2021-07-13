@@ -11,7 +11,9 @@ import { convertUTCDateToLocalDate } from '../helpers/dateConversion';
 const PublicChatScreen = () => {
 
   const [messages, setMessages] = useState([]);
-  const [lastId, setLastId] = useState(0);
+  // const [lastId, setLastId] = useState(0);
+  let lastId = 0;
+  let lastResponseArrived = true;
 
   const [userId, setUserId] = useState(0);
 
@@ -31,32 +33,29 @@ const PublicChatScreen = () => {
     // Refresh messages at some interval
     intervalRef.current = setInterval(() => {
       if (token) {
-        // refreshMessages(token);
-        // console.log('After 10 seconds');
+        refreshMessages(token);
       }
     }, chatRefreshDelay);
     // Unmount
     return () => {
-      console.log('Interval cleared...');
+      // console.log('Interval cleared...');
       clearInterval(intervalRef.current);
     };
   }, []);
 
   const fetchMessages = (token) => {
     const headers = { 'Authorization': 'Bearer ' + token };
-    console.log(baseurl + '/public-chat/formatted/last-days/' + chatDays);
+    // setLoading(true);
     axios.get(baseurl + '/public-chat/formatted/last-days/' + chatDays, { headers })
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
           const data = response.data;
           if (data.length > 0) {
-            // console.log(data);
-            // console.log('Size : ' + data.length);
-            // console.log(data[0]._id);
-            setLastId(data[0]._id);
+            lastId = data[0]._id;
           }
-          data.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
+          // Required for Live AWS Database
+          // data.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
           data.push({
             _id: 0,
             text: 'Welcome to SportsGeek Public Chat',
@@ -68,33 +67,29 @@ const PublicChatScreen = () => {
         }
       })
       .catch((error) => {
-        // console.log(error);
         setLoading(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
   };
 
   const refreshMessages = (token) => {
-    console.log('Old data length : ' + messages.length);
-    if(messages.length > 0){
+    if(lastId && lastResponseArrived){
       const headers = { 'Authorization': 'Bearer ' + token };
-      console.log(baseurl + '/public-chat/formatted/after-id/' + lastId);
+      // setLoading(true);
+      lastResponseArrived = false;
       axios.get(baseurl + '/public-chat/formatted/after-id/' + lastId, { headers })
         .then((response) => {
           setLoading(false);
+          lastResponseArrived = true;
           if (response.status == 200) {
             const newData = response.data;
-            console.log('newData length : ' + newData.length);
             if (newData.length > 0) {
-              setLastId(newData[0]._id);
-              newData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
-              console.log('oldData : ');
-              console.log(messages);
-              console.log('newData : ');
-              console.log(newData);
-              // setMessages(data => [...data, ...newData]);
-              setMessages(data => newData.concat(data));
-              // console.log(data);
+              // setLastId(newData[0]._id);
+              lastId = newData[0]._id;
+              // Required for Live AWS Database
+              // newData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
+              // setMessages(data => [...newData, ...data]);
+              setMessages(data => newData.concat( data.filter(value => typeof(value._id) === 'number')) );
             }
           } else {
             showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
@@ -102,11 +97,9 @@ const PublicChatScreen = () => {
         })
         .catch((error) => {
           setLoading(false);
+          lastResponseArrived = true;
           showSweetAlert('error', 'Network Error', errorMessage);
         });
-    }else{
-      console.log('Messages : ');
-      console.log(messages)
     }
   };
 
@@ -123,7 +116,6 @@ const PublicChatScreen = () => {
     axios
       .post(baseurl + '/public-chat', requestData, { headers })
       .then((response) => {
-        setLoading(false);
         if (response.status == 201) {
           // showSweetAlert('success', 'Success', 'Message sent successfully.');
         }
@@ -137,6 +129,7 @@ const PublicChatScreen = () => {
     // To display chat is UI
     setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
   }
+
 
   if (userId != 0) {
     return (

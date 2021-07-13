@@ -108,7 +108,7 @@ const ProfileScreen = ({ navigation }) => {
                   rounded
                   title={shortName}
                   activeOpacity={0.7}
-                  containerStyle={{ color: 'red', backgroundColor: getColor(shortName), marginTop: 10 }}
+                  containerStyle={{ color: 'red', backgroundColor: getColor(shortName) }}
                 />)
             }
             <View style={{ marginLeft: 20 }}>
