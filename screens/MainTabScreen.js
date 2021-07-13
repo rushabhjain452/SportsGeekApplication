@@ -15,6 +15,7 @@ import ScheduleScreen from './ScheduleScreen';
 import RootStackScreen from './RootStackScreen';
 import AdminScreen from './AdminScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PlayerDetailofTeam from './PlayerDetailofTeam';
 
 const HomeStack = createStackNavigator();
 const AdminStack = createStackNavigator();
@@ -253,7 +254,7 @@ const LeaderStackScreen = ({ navigation }) => (
       fontWeight: 'bold'
     }
   }}>
-    <LeaderStack.Screen name="LeaderBoard" component={LeaderBoardScreen} options={{
+    <LeaderStack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} options={{
       title: 'LeaderBoard',
       headerLeft: () => (
         <Icon.Button name="person-circle" size={43} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => navigation.navigate('ProfileScreen')}></Icon.Button>

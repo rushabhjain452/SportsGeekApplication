@@ -60,6 +60,7 @@
  import ProfileScreen from './screens/ProfileScreen';
  import ChatHomeScreen from './screens/ChatHomeScreen';
  import RoomScreen from './screens/RoomScreen';
+import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
  // const baseurl = 'localhost:8080';
  
  const Drawer = createDrawerNavigator();
@@ -316,6 +317,7 @@
                  <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
                  <Stack.Screen name="ChatHomeScreen" component={ChatHomeScreen} />
                  <Stack.Screen name="RoomScreen" component={RoomScreen} />
+                 <Stack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} />
                </Stack.Navigator>
              )
            :
