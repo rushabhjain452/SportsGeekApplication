@@ -58,6 +58,7 @@
  import ProfileScreen from './screens/ProfileScreen';
  import ChatHomeScreen from './screens/ChatHomeScreen';
  import RoomScreen from './screens/RoomScreen';
+import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
 
  import AsyncStorage from '@react-native-async-storage/async-storage';
  // const baseurl = 'localhost:8080';
