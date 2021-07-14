@@ -283,7 +283,8 @@ const ContestScreen = (props) => {
                         })
                         .catch((error) => {
                             setWaiting(false);
-                            // console.log(error);
+                            console.log(error);
+                            console.log(error.response);
                             showSweetAlert('error', 'Network Error', errorMessage);
                         });
                 }
@@ -342,7 +343,7 @@ const ContestScreen = (props) => {
             <View>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
-                    <Text style={styles.text_header}>&lt;- Place Contest</Text>
+                    <Text style={styles.text_header}>Place Contest</Text>
                 </View>
                 <Animatable.View
                     animation="fadeInUpBig"
@@ -624,7 +625,6 @@ const styles = StyleSheet.create({
         borderColor: "#000000",
         borderRadius: 3,
         marginTop: 5,
-        // marginLeft: 8,
         display: "flex",
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -649,6 +649,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginTop: 4,
         justifyContent: "space-between",
+        alignContent: 'center',
     },
     ellipse1: {
         width: 30,
