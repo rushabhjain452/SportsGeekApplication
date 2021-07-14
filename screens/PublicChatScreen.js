@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Text, ActivityIndicator, StatusBar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -59,6 +59,7 @@ const PublicChatScreen = () => {
           data.push({
             _id: 0,
             text: 'Welcome to SportsGeek Public Chat',
+            createdAt: new Date(),
             system: true
           });
           setMessages(data);
