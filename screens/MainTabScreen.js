@@ -230,7 +230,7 @@ const LeaderStackScreen = ({ navigation }) => (
       fontWeight: 'bold'
     }
   }}>
-    <LeaderStack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} options={{
+    <LeaderStack.Screen name="LeaderBoard" component={LeaderBoardScreen} options={{
       title: 'LeaderBoard',
       headerLeft: () => (
         <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />

@@ -95,7 +95,7 @@ function PlayerDetailofTeam(props) {
   // }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps='handled' refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {/* <View style={styles.rectStackRow}> */}
         {/* {
@@ -156,7 +156,7 @@ function PlayerDetailofTeam(props) {
         data && data.map((item, index) => {
           const mystyle = item.userId == userId ? styles.bgDark : styles.bgLight; */}
           return (
-            <View style={[styles.card, mystyle]}>
+            <View style={[styles.card]}>
               <View style={styles.cardlist}>
                 <Text style={[styles.carditem, { marginLeft: 5, width: 30 }]}></Text>
                 <View style={styles.ellipse1}>

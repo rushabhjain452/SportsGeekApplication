@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, RefreshControl, ActivityIndicator } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, ScrollView } from "react-native";
+// import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // import Svg, { Ellipse } from "react-native-svg";
 // import {
 //   Avatar
@@ -46,13 +46,16 @@ function LeaderBoard(props) {
       .then((response) => {
         if (response.status == 200) {
           setData(response.data);
-          fetchContestData(response.data, token);
+          // fetchContestData(response.data, token);
+          setLoading(false);
+          setRefreshing(false);
         } else {
           setData([]);
           showSweetAlert('error', 'Network Error', errorMessage);
         }
       })
       .catch((error) => {
+        setLoading(false);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
   }
@@ -98,98 +101,9 @@ function LeaderBoard(props) {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />} >
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
-      <View style={styles.rectStackRow}>
-        {
-          data.length >= 2 &&
-          (
-            <View style={styles.rect}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>2</Text>
-              </View>
-              {
-                data[1].profilePicture != '' ?
-                (<Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                      uri: data[1].profilePicture
-                  }}
-                />) :
-                (<Avatar
-                  size="medium"
-                  rounded
-                  title={data[1].firstName.substr(0, 1) + data[1].lastName.substr(0, 1)}
-                  // activeOpacity={0.7}
-                  containerStyle={{ color: 'green', backgroundColor: getColor(data[1].firstName) }}
-                />)
-              }
-              <Text style={styles.carditemusername}>{data[1].firstName + " " + data[1].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[1].totalWinningPoints}</Text>
-            </View>
-          )
-        }
-        {
-          data.length >= 1 &&
-          (
-            <View style={styles.rect1}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>1</Text>
-              </View>
-              {
-                data[0].profilePicture != '' ?
-                (<Avatar
-                    size="medium"
-                    rounded
-                    source={{
-                        uri: data[0].profilePicture
-                    }}
-                />) :
-                (<Avatar
-                    size="medium"
-                    rounded
-                    title={data[0].firstName.substr(0, 1) + data[0].lastName.substr(0, 1)}
-                    // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: getColor(data[0].firstName) }}
-                />)
-              }
-              <Text style={styles.carditemusername}>{data[0].firstName + " " + data[0].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[0].totalWinningPoints}</Text>
-            </View>
-          )
-        }
-        {
-          data.length >= 3 &&
-          (
-            <View style={styles.rect2}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>3</Text>
-              </View>
-              {
-                data[2].profilePicture != '' ?
-                (<Avatar
-                    size="medium"
-                    rounded
-                    source={{
-                        uri: data[2].profilePicture
-                    }}
-                />) :
-                (<Avatar
-                    size="medium"
-                    rounded
-                    title={data[2].firstName.substr(0, 1) + data[2].lastName.substr(0, 1)}
-                    // activeOpacity={0.7}
-                    containerStyle={{ color: 'green', backgroundColor: getColor(data[2].firstName) }}
-                />)
-              }
-              <Text style={styles.carditemusername}>{data[2].firstName + " " + data[2].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[2].totalWinningPoints}</Text>
-            </View>
-          )
-        }
-      </View>
-      <View style={{ display: 'flex', flexDirection: 'row' }}>
+      {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
         <Text style={[styles.popular, { width: 100 }]}>Top Users</Text>
         <TouchableOpacity style={{ marginTop: 15 }} onPress={() => setRefreshing(true)}>
           <FontAwesome
@@ -198,50 +112,85 @@ function LeaderBoard(props) {
             size={20}
           />
         </TouchableOpacity>
+      </View> */}
+      <View style={styles.rectStackRow}>
+        { data.length >= 2 && <TopUser rank="2" data={data[1]} boxStyle={styles.box1} />}
+        { data.length >= 1 && <TopUser rank="1" data={data[0]} boxStyle={styles.box2} />}
+        { data.length >= 3 && <TopUser rank="3" data={data[2]} boxStyle={styles.box3} />}
       </View>
-      <View style={styles.rect3}>
-        <View style={styles.rankRow}>
-          <Text style={styles.rank}>Rank</Text>
-          <Text style={styles.user}>User</Text>
-          <Text style={styles.points}>Points</Text>
+      <View style={styles.listContainer}>
+        <View style={styles.headingRow}>
+          <Text style={styles.headingCol1}>Rank</Text>
+          <Text style={styles.headingCol2}>User</Text>
+          <Text style={styles.headingCol3}>Points</Text>
         </View>
-      </View>
-      {
-        data && data.map((item, index) => {
-          const mystyle = item.userId == userId ? styles.bgDark : styles.bgLight;
-          return (
-            <View style={[styles.card, mystyle]} key={item.userId}>
-              <View style={styles.cardlist}>
-                <Text style={[styles.carditem, { marginLeft: 5, width: 30 }]}>{index + 1}</Text>
-                {/* <View style={styles.ellipse1}>
-                  <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}</Text>
-                </View> */}
+        {
+          data && data.map((item, index) => {
+            const mystyle = item.userId == userId ? styles.bgDark : styles.bgLight;
+            return (
+              <View style={[styles.card, mystyle]} key={item.userId}>
+                <Text style={[styles.carditem, styles.rank]}>{index + 1}</Text>
                 {
                   item.profilePicture != '' ?
                   (<Avatar
                       size="small"
                       rounded
                       source={{
-                          uri: item.profilePicture
+                        uri: item.profilePicture
                       }}
                   />) :
                   (<Avatar
                       size="small"
                       rounded
                       title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
-                      // activeOpacity={0.7}
-                      containerStyle={{ color: 'green', backgroundColor: getColor(item.firstName) }}
+                      containerStyle={{ backgroundColor: getColor(item.firstName) }}
                   />)
                 }
-                <Text style={[styles.carditem, { width: '60%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
-                <Text style={[styles.carditem, { width: '20%' }]}>{item.totalWinningPoints}</Text>
+                <Text style={[styles.carditem, styles.name]}>{item.firstName + " " + item.lastName}</Text>
+                <Text style={[styles.carditem, styles.points]}>{item.availablePoints}</Text>
               </View>
-            </View>
-          )
-        })
-      }
-      <View style={{ marginTop: 50 }}></View>
+            )
+          })
+        }
+        {/* <View style={{ height: 50 }}></View> */}
+      </View>
     </ScrollView>
+  );
+}
+
+export default LeaderBoard;
+
+const TopUser = (props) => {
+  const data = props.data;
+  const rank = props.rank;
+  const avatarSize = rank == 3 ? 'medium' : 'large';
+
+  return (
+    <View style={[styles.box, props.boxStyle]}>
+      <View style={styles.ellipse}>
+        <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{rank}</Text>
+      </View>
+      {
+        data.profilePicture != '' ?
+        (<Avatar
+          size={avatarSize}
+          rounded
+          source={{
+              uri: data.profilePicture
+          }}
+          containerStyle={{ marginTop: 10 }}
+        />) :
+        (<Avatar
+          size={avatarSize}
+          rounded
+          title={data.firstName.substr(0, 1) + data.lastName.substr(0, 1)}
+          // activeOpacity={0.7}
+          containerStyle={{ marginTop: 10, backgroundColor: getColor(data.firstName) }}
+        />)
+      }
+      <Text style={styles.boxUsername}>{data.firstName + " " + data.lastName}</Text>
+      <Text style={styles.boxPoints}>{data.availablePoints}</Text>
+    </View>
   );
 }
 
@@ -252,240 +201,142 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(241,241,241,1)"
   },
   ellipse: {
-    top: 0,
-    left: 84,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8
-  },
-  loremIpsum: {
-    top: 6,
-    left: 95,
-    position: "absolute",
-    fontFamily: "comic-sans-ms-regular",
-    color: "#121212",
-    fontSize: 16
-  },
-  loremIpsum1: {
-    top: 6,
-    left: 95,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
-    color: "#121212",
-    fontSize: 20
-  },
-  rectStack: {
-    width: 115,
-    height: 140,
-    marginTop: 23
+    width: 40,
+    height: 40,
+    borderWidth: 2,
+    borderColor: '#19398A',
+    borderRadius: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#62B1F6',
+    position: 'absolute',
+    right: 5,
+    top: -20
   },
   rectStackRow: {
     display: "flex",
-    height: 164,
+    height: 170,
     flexDirection: "row",
     justifyContent: 'space-around',
-    marginTop: 30,
-    marginLeft: 10,
-    marginRight: 7,
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5,
+    alignItems: 'flex-end'
   },
-  rect: {
-    left: 0,
+  box: {
     width: '32%',
-    height: 130,
-    // position: "absolute",
     backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'green',
-    bottom: 0,
-    top: 20,
     borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
+    borderWidth: 2,
+    borderColor: '#19398A',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
-  rect1: {
-    width: '32%',
-    height: 150,
-    // position: "absolute",
-    backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'yellow',
-    left: 0,
-    bottom: 0,
-    borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
+  box1: {
+    height: 140
   },
-  rect2: {
-    left: 0,
-    width: '32%',
-    height: 110,
-    // position: "absolute",
-    backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'red',
-    bottom: 0,
-    top: 40,
-    borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
+  box2: {
+    height: 160
   },
-  ellipse1: {
-    top: 0,
-    left: 78,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8,
-    // marginLeft: 50
+  box3: {
+    height: 120
   },
-  loremIpsum2: {
-    top: 6,
-    left: 90,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
+  boxUsername: {
+    color: "#212121",
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  boxPoints: {
     color: "#121212",
-    fontSize: 18
-  },
-  rect1Stack: {
-    width: 109,
-    height: 164,
-    marginLeft: 9
-  },
-  ellipse2: {
-    top: 0,
-    left: 79,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8
-  },
-  loremIpsum3: {
-    top: 6,
-    left: 91,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
-    color: "#121212",
-    fontSize: 18
-  },
-  rect2Stack: {
-    width: 110,
-    height: 127,
-    marginLeft: 6,
-    marginTop: 37
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: 'center',
   },
   popular: {
-    // fontFamily: "times-new-roman-regular",
-    color: "rgba(147,147,147,1)",
+    color: '#000',
     fontSize: 18,
     marginTop: 10,
-    marginLeft: 19
+    marginLeft: 10
   },
-  rect3: {
-    width: '92%',
-    height: 37,
-    backgroundColor: "rgba(25,57,138,1)",
+  listContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: 10
+  },
+  headingRow: {
+    width: '100%',
+    height: 35,
+    // backgroundColor: "rgba(25,57,138,1)",
+    backgroundColor: '#1f4bb9',
     borderWidth: 0,
     borderColor: "#000000",
     borderRadius: 5,
+    display: 'flex',
     flexDirection: "row",
-    marginTop: 16,
-    marginLeft: 19
-  },
-  rank: {
+    marginTop: 5,
     fontFamily: "roboto-regular",
     color: "rgba(255,255,255,1)",
-    width: '25%'
+    color: '#000',
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold'
   },
-  user: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    // marginLeft: 50,
-    width: '30%'
-    // marginTop: 1
+  headingCol1: {
+    width: '20%',
+    color: '#000',
+    paddingLeft: 10
   },
-  points: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    marginLeft: 127,
-    width: '20%'
+  headingCol2: {
+    width: '60%',
+    color: '#000'
   },
-  rankRow: {
-    height: 18,
-    flexDirection: "row",
-    flex: 1,
-    marginRight: 57,
-    marginLeft: 7,
-    marginTop: 11
+  headingCol3: {
+    width: '20%',
+    color: '#000',
+    textAlign: 'right',
+    paddingRight: 8
   },
-  rect4: {
-    width: '92%',
-    height: 60,
-    backgroundColor: "rgba(255,255,255,1)",
-    borderWidth: 0,
-    borderColor: "#000000",
-    borderRadius: 8,
-    marginTop: 15,
-    marginLeft: 19
-  }, // styles for List display
   card: {
-    // width: '100%',
-    height: 50,
-    // backgroundColor: "#E6E6E6",
+    width: '100%',
+    height: 45,
     borderWidth: 1,
     borderColor: "#000000",
     borderRadius: 5,
-    marginTop: 10,
-    marginLeft: 15,
-    marginRight: 15,
+    marginTop: 7,
     display: "flex",
     flexDirection: 'row',
     justifyContent: 'space-between',
-    //  marginBottom:50
+    alignItems: 'center',
   },
   bgLight: {
     backgroundColor: "#E6E6E6",
   },
   bgDark: {
-    // backgroundColor: "#98FB98",
     backgroundColor: '#87CEFA'
-  },
-  cardlist: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 4,
-    justifyContent: "space-between",
-  },
-  ellipse1: {
-    width: 40,
-    height: 40,
-    //   marginTop: 0,
-    borderRadius: 100,
-    marginLeft: 5,
-    justifyContent: 'center',
-    backgroundColor: '#e9c46a',
-
   },
   carditem: {
     color: "#121212",
     fontSize: 18,
-    marginLeft: 3,
-    marginTop: 5,
     fontWeight: "bold",
     display: 'flex',
     justifyContent: 'space-between',
     //    textAlign: 'center'
   },
-  carditemusername: {
-    color: "#121212",
-    fontSize: 14,
-    marginLeft: 3,
-    marginTop: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontWeight: 'bold'
-    //    textAlign: 'center',
-    // borderBottomColor: 'green',
-    // borderBottomWidth: 2,
-    // height: 40,
+  rank: { 
+    width: 40,
+    textAlign: 'center'
+  },
+  name : { 
+    width: '65%', 
+    fontSize: 17,
+    paddingLeft: 7
+  },
+  points: {
+    textAlign: 'right',
+    paddingRight: 8
   },
 });
-
-export default LeaderBoard;

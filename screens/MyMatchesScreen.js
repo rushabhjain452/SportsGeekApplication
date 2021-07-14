@@ -62,7 +62,7 @@ function UpcomingMatches() {
       {
         data && data.map((item, index) => (
           <TouchableOpacity style={styles.rect} key={item.matchId} onPress={() => {
-            showSweetAlert('warning', 'Match not started', 'Sorry, this match has not started yet. You can place contest or see others contests from the Fantasy tab');
+            showSweetAlert('warning', 'Match not started', 'Sorry, this match has not started yet. You can update your contest or see others contests from the Fantasy tab');
           }}>
             <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
             <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
