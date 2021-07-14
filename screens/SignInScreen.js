@@ -139,7 +139,7 @@ const SignInScreen = ({ navigation }) => {
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome!</Text>
+                <Text style={styles.text_header}>SportsGeek Login!</Text>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"

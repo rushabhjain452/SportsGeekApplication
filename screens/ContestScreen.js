@@ -339,9 +339,9 @@ const ContestScreen = (props) => {
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+            <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
-                <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Place Contest</Text>
                 </View>

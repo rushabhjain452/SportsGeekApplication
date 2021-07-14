@@ -49,25 +49,11 @@ const UpdateUserScreen = (props) => {
     }, []);
 
     const fetchGenderData = () => {
-        // fetch(baseurl+'/genders')
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     if(json.code == 200){
-        //         setGenderData(json.data);
-        //         setGenderId(data.genderId);
-        //     }
-        //     else
-        //         showSweetAlert('error', 'Error', 'Error in fetching gender data. Please try again...');
-        // })
-        // .catch((error) => {
-        //     showSweetAlert('error', 'Error', 'Error in fetching gender data. Please try again...');
-        // });
         axios.get(baseurl + '/genders')
             .then(response => {
                 if (response.status == 200) {
                     setGenderData(response.data);
                     setGenderId(response.data.genderId);
-                    // console.log(genderId)
                 }
                 else {
                     showSweetAlert('error', 'Network Error', errorMessage);
@@ -79,31 +65,6 @@ const UpdateUserScreen = (props) => {
     }
 
     const fetchUserData = (userId, token) => {
-        // fetch(baseurl+'/user/'+userId, {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => {
-        //   return response.json();
-        // })
-        // .then((json) => {
-        //     if(json.code == 200)
-        //     {
-        //         // setData(json.data);
-        //         setEmail(json.data.email);
-        //         setFirstName(json.data.firstName);
-        //         setLastName(json.data.lastName);
-        //         setMobileNumber(json.data.mobileNumber);
-        //         setGenderId(json.data.genderId);
-        //     }
-        //     else
-        //       showSweetAlert('error', 'Error', 'Error in fetching data. Please try again...');
-        //     setWaiting(false);
-        // })
-        // .catch((error) => {
-        //     // showSweetAlert('error', 'Network Error', 'Error in fetching data. Please try again...');
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/' + userId, { headers })
             .then(response => {
@@ -142,42 +103,21 @@ const UpdateUserScreen = (props) => {
         }
         else {
             setWaiting(true);
-            // fetch(baseurl+'/user/'+userId, {
-            //     method: 'PUT',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + token
-            //     },
-            //     body: JSON.stringify({
-            //         firstName: firstName,
-            //         lastName: lastName,
-            //         email: email,
-            //         mobileNumber: mobileNumber,
-            //         genderId: genderId,
-            //     })
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     if(json.code == 201){
-            //         showSweetAlert('success', 'Success', 'Profile Updated Successfully...!');
-            //     }else{
-            //         showSweetAlert('warning', 'Updation Failed', 'Profile Updation failed...!');
-            //     }
-            //     setWaiting(false);
-            // })
-            // .catch((error) => {
-            //     showSweetAlert('warning', 'Network Error', 'Something went wrong. Please try again after sometime...');
-            // });
-            const requestData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                mobileNumber: mobileNumber,
-                genderId: genderId,
-            };
-            const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/users/' + userId, requestData, { headers })
+            // Submitting Form Data (with Profile Picture)
+            const formData = new FormData();
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('email', email);
+            formData.append('mobileNumber', mobileNumber);
+            formData.append('genderId', genderId);
+            formData.append('profilePicture', null);
+            // formData.append('updateProfilePicture', false);
+            const headers = { 
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
+
+            axios.put(baseurl + '/users/' + userId, formData, { headers })
                 .then((response) => {
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Profile Updated Successfully...!');
@@ -189,7 +129,7 @@ const UpdateUserScreen = (props) => {
                 })
                 .catch((error) => {
                     showSweetAlert('error', 'Network Error', errorMessage);
-                })
+                });
         }
     }
 
@@ -491,8 +431,8 @@ const styles = StyleSheet.create({
         marginLeft: 30
     },
     selectedRb: {
-        width: 15,
-        height: 15,
+        width: 12,
+        height: 12,
         borderRadius: 50,
         backgroundColor: '#19398A',
     },

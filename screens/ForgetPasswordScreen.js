@@ -457,22 +457,6 @@ const styles = StyleSheet.create({
     color_textPrivate: {
         color: 'grey'
     },
-    radioCircle: {
-        height: 20,
-        width: 20,
-        borderRadius: 100,
-        borderWidth: 2,
-        borderColor: '#3740ff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: 30
-    },
-    selectedRb: {
-        width: 15,
-        height: 15,
-        borderRadius: 50,
-        backgroundColor: '#19398A',
-    },
     errorMsg: {
         color: '#FF0000',
         fontSize: 14,

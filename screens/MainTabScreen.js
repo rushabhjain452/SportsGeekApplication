@@ -14,13 +14,13 @@ import LeaderBoardScreen from './LeaderBoardScreen';
 import ProfileScreen from './ProfileScreen';
 import FantasyScreen from './FantasyScreen';
 import ChatScreen from './ChatScreen';
-import DetailsScreen from './DetailsScreen';
 import MyMatchesScreen from './MyMatchesScreen';
 import ScheduleScreen from './ScheduleScreen';
 import RootStackScreen from './RootStackScreen';
 import AdminScreen from './AdminScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PlayerDetailofTeam from './PlayerDetailofTeam';
+import PublicChatScreen from './PublicChatScreen';
 
 const HomeStack = createStackNavigator();
 const AdminStack = createStackNavigator();
@@ -208,14 +208,14 @@ const ChatStackScreen = ({ navigation }) => (
       fontWeight: 'bold'
     }
   }}>
-    <ChatStack.Screen name="Chat" component={ChatScreen} options={{
+    <ChatStack.Screen name="Chat" component={PublicChatScreen} options={{
       title: 'Chats',
       headerLeft: () => (
         <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       ),
-      headerRight: () => (
-        <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
-      )
+      // headerRight: () => (
+      //   <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
+      // )
     }} />
   </ChatStack.Navigator>
 );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, TouchableOpacity, ScrollView, StatusBar } from "react-native";
 // import { ScrollView } from "react-native-gesture-handler";
 import {
   Avatar
@@ -97,6 +97,7 @@ function ResultWithUsersScreen(props) {
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <TouchableOpacity style={styles2.rect}>
         <Text style={styles2.date}>{formatDate(matchData.startDatetime)}</Text>

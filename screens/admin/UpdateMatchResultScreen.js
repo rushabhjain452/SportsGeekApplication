@@ -316,8 +316,8 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     selectedRb: {
-        width: 15,
-        height: 15,
+        width: 20,
+        height: 20,
         borderRadius: 50,
         backgroundColor: '#19398A',
     },
