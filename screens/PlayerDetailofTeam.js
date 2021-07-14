@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
 import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +11,7 @@ import { baseurl, errorMessage } from '../config';
 
 function PlayerDetailofTeam(props) {
 
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   const { playerTeamId } = props.route.params ?? "undefined";
 
   const [data, setData] = useState([]);
@@ -27,18 +27,6 @@ function PlayerDetailofTeam(props) {
       fetchData(playerTeamId, token);
   }
   }, [refreshing]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(, 10000);
-  // });
-
-  // const refreshData = () => {
-
-  // }
 
   const fetchData = (playerTeamId, token) => {
     const headers = { 'Authorization': 'Bearer ' + token }
@@ -69,6 +57,7 @@ function PlayerDetailofTeam(props) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Team Player List</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {

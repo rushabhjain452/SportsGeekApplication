@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-
+import { View, Text, Button, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const HelpScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.heading}>Rules</Text>
       <Text style={styles.listitem}>1.Register by putting Rs 100.</Text>
       <Text style={styles.listitem}>2.You will get Rs 100 X 5 = 500 points.</Text>
@@ -26,10 +27,10 @@ const HelpScreen = ({ navigation }) => {
       <Text style={styles.heading2}>Terms and Conditions</Text>
       <Text style={styles.listitem2}>All the players would be bound by the terms and conditions of the game. In case of any discrepancy or dispute, the organizer's decision will be final and binding :)</Text>
       <View style={{ marginTop: 20 }}></View>
-      <Button
+      {/* <Button
         title="Go Back"
         onPress={() => navigation.goBack()}
-      />
+      /> */}
       <View style={{ marginTop: 100 }}></View>
     </ScrollView>
   );

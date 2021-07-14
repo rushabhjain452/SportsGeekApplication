@@ -121,31 +121,6 @@ const PlayerTypeScreen = ({ navigation }) => {
 
     const updatePlayerType = () => {
         if (playerType != '') {
-            // fetch(baseurl+'/playertype/'+playerTypeId, {
-            //     method: 'PUT',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json' 
-            //     },
-            //     body: JSON.stringify({
-            //         typeName: playerType
-            //     })
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     if(json.code == 201){
-            //         showSweetAlert('success', 'Success', 'PlayerType updated successfully.');
-            //         displayPlayerType();
-            //     }
-            //     else
-            //         showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
-            //     setPlayerType('');
-            //     setBtnText('Add');
-            //     // setGenderId(0);
-            // })
-            // .catch((error) => {
-            //     showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
-            // });
             const requestData = {
                 typeName: playerType
             };
@@ -189,6 +164,7 @@ const PlayerTypeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
@@ -241,19 +217,6 @@ const PlayerTypeScreen = ({ navigation }) => {
                             }]}>{btnText}</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
                     {
                         data.map((item, index) => (
                             <View style={styles.card} key={item.playerTypeId} >

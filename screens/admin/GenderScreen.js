@@ -68,25 +68,6 @@ const GenderScreen = ({ navigation }) => {
             });
     }
 
-    // const [data, setData] = React.useState({
-    //     gender: '',
-    //     check_textInputChange: false,
-    // });
-
-    // const textInputChange = (val) => {
-    //     if( val.length !== 0 ) {
-    //         setData({
-    //             gender: val,
-    //             check_textInputChange: true
-    //         });
-    //     } else {
-    //         setData({
-    //             gender: val,
-    //             check_textInputChange: false
-    //         });
-    //     }
-    // }
-
     const addGender = () => {
         if (gender != '') {
             setLoading(true);
@@ -176,38 +157,6 @@ const GenderScreen = ({ navigation }) => {
         }
     }
 
-    // const getRowView = (item) => {
-    //     // return the view that will be the face of the row
-    //     return <Text>{item.name}</Text>
-    // }
-
-    // const getUpdateButton = (genderId, name) => {
-    //     // return your touchable view, it can be whatever 
-    //     // return <Button onPress={() => {}} style={{color: '#000'}} title="Update" color="#FFF" />
-    //     return (
-    //         <TouchableOpacity onPress={() => {editGender(genderId, name)}} style={{height: 25}}>
-    //              <View style={[styles.container2, {backgroundColor: '#37D1F8',}]}>
-    //                 <Text style={{fontWeight: 'bold'}}>
-    //                     Edit
-    //                 </Text>
-    //             </View>
-    //         </TouchableOpacity>
-    //     )
-    // }
-
-    // const getDeleteButton = (genderId) => {
-    //     // return <Button onPress={() => {}} style={{color: '#000'}} title="Delete" color="#F00" />
-    //     return (
-    //         <TouchableOpacity onPress={() => {deleteGender(genderId)}} style={{height: 25}}>
-    //             <View style={styles.container2}>
-    //                 <Text style={{fontWeight: 'bold'}}>
-    //                     Delete
-    //                 </Text>
-    //             </View>
-    //         </TouchableOpacity>
-    //     )
-    // }
-
     const getConfirmation = (genderId) =>
         Alert.alert(
             "Delete Confirmation",
@@ -227,6 +176,7 @@ const GenderScreen = ({ navigation }) => {
         <View style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Gender Details</Text>
             </View>
@@ -277,19 +227,6 @@ const GenderScreen = ({ navigation }) => {
                             }]}>{btnText}</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
                     {
                         data.map((item, index) => (
                             <View style={styles.card} key={item.genderId} >

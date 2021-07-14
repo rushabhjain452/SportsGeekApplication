@@ -46,27 +46,6 @@ const DeleteScreen = ({ navigation }) => {
 
     const displayUser = (token) => {
         let userStatus = 1;
-        // fetch(baseurl+'/user/userWithStatus'+'/'+userStatus, {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     if(json.code == 200)
-        //         setData(json.data);
-        //     else if(json.code == 400)
-        //         setData([]);
-        //     else
-        //         showSweetAlert('error', 'Error', 'Error in fetching data. Please try again...');
-        //     setLoading(false);
-        //     setRefreshing(false);
-        // })
-        // .catch((error) => {
-        //     showSweetAlert('error', 'Error', 'Error in fetching data. Please try again...');
-        //     setLoading(false);
-        //     setRefreshing(false);
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/user-with-status/' + userStatus, { headers })
             .then(response => {
@@ -89,28 +68,6 @@ const DeleteScreen = ({ navigation }) => {
 
     const updateUser = (userId) => {
         setLoading(true);
-        // fetch(baseurl+'/users/'+userId, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     setLoading(false);
-        //     setRefreshing(false);
-        //     if(json.code == 201){
-        //         showSweetAlert('success', 'Success', 'User deleted successfully...');
-        //         displayUser(token);
-        //     }
-        //     else
-        //         showSweetAlert('error', 'Error', 'Failed to update Status. Please try again...');
-        // })
-        // .catch((error) => {
-        //     setLoading(false);
-        //     setRefreshing(false);
-        //     showSweetAlert('error', 'Error', 'Failed to update Status. Please try again...');
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.delete(baseurl + '/users/' + userId, { headers })
             .then((response) => {
@@ -150,6 +107,7 @@ const DeleteScreen = ({ navigation }) => {
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Delete User</Text>
             </View>
@@ -158,19 +116,6 @@ const DeleteScreen = ({ navigation }) => {
                 style={styles.footer}
             >
                 <ScrollView>
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
                     {
                         data.length > 0 && data.map((item, index) => (
                             <View style={styles.card} key={item.userId} >

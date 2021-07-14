@@ -26,11 +26,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
+import { useNavigation } from '@react-navigation/native';
+
 
 const PlayerScreen = (props) => {
 
     const { updatePlayerId } = props.route.params ?? "undefined";
-
+    const navigation = useNavigation();
     const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/69bba4a0-c114-4379-9854-e4381a3130bc.png?alt=media&token=e9924ea4-c2d9-4782-bc2d-0fe734431c86';
 
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -311,6 +313,7 @@ const PlayerScreen = (props) => {
     };
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Player Details</Text>

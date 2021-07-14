@@ -30,37 +30,8 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
     fetchData(token);
   }, [refreshing]);
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(, 10000);
-  // });
-
-  // const refreshData = () => {
-
-  // }
 
   const fetchData = (token) => {
-    // console.log(token);
-    // fetch(baseurl+'/matches', {
-    //   headers: {
-    //     'Authorization': 'Bearer ' + token
-    //   }
-    // })
-    // .then((response) => response.json())
-    // .then((json) => {
-    //   // console.log(json.data);
-    //   setData(json.data);
-    //   setLoading(false);
-    //   setRefreshing(false);
-    // })
-    // .catch((error) => {
-    //   showSweetAlert('error', 'Network Error!', errorMessage);
-    //   setLoading(false);
-    //   setRefreshing(false);
-    // });
     const headers = { 'Authorization': 'Bearer ' + token }
     axios.get(baseurl + '/matches', { headers })
       .then(response => {
@@ -129,6 +100,7 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Matches Schedule</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {

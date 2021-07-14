@@ -27,17 +27,6 @@ function PlayerDetailScreenForUpdate({ navigation }) {
     fetchData(token);
   }, [refreshing]);
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(, 10000);
-  // });
-
-  // const refreshData = () => {
-
-  // }
 
   const fetchData = (token) => {
     const headers = { 'Authorization': 'Bearer ' + token }
@@ -108,36 +97,9 @@ function PlayerDetailScreenForUpdate({ navigation }) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                 <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Players List</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
-      {/* {
-        data && data.map((item, index) => (
-          <View style={styles.rect} key={item.matchId}>
-            <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
-              <TouchableOpacity onPress={() => { getConfirmation(item.matchId) }} style={{ textAlign: 'right' }} ><Text ><Icon name="delete-circle-outline" color="#19398A" size={40} /></Text></TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={() => { handleCardClick(item.matchId) }} >
-              <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View style={styles.ellipseRow}>
-                  <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
-                  <Text style={styles.mI}>{item.team1Short}</Text>
-                </View>
-                <View style={styles.loremIpsumColumn}>
-                  <Text style={styles.vs}>VS</Text>
-                </View>
-                <View style={styles.rightteam}>
-                  <Text style={styles.eng}>{item.team2Short}</Text>
-                  <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
-                </View>
-              </View>
-              <View style={{ height: 40 }}>
-                <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        ))
-      } */}
       {
         data && data.map((item, index) => (
           <View style={styles.card} key={item.playerId} >

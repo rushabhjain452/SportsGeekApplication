@@ -64,6 +64,7 @@ const ListAllUsersScreen = ({ navigation }) => {
 
     return (
         <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
@@ -74,33 +75,6 @@ const ListAllUsersScreen = ({ navigation }) => {
                 style={styles.footer}
             >
                 <View>
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
-
-                    {/* data.map((item,index) => (
-                    <View style={styles.card} key={item.userId} >
-                        <View style={styles.cardlist}>  
-                            <View style={styles.ellipse1}>
-                                <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>{item.firstName.substr(0,1) + item.lastName.substr(0,1)}</Text>
-                            </View>
-                            <Text style={[styles.carditem, {width: '40%',paddingLeft:20}]}>{item.firstName +" "+ item.lastName}</Text>
-                            <Text style={[styles.carditem, {width: '35%',paddingLeft:20}]}>{item.username}</Text>
-                           <TouchableOpacity onPress={() => {updateUser(item.userId)}} style={{width:'10%'}}><Text style={[styles.carditem]}><Icon name="account-check" color="#19398A" size={30}/></Text></TouchableOpacity> 
-                        </View>
-                    </View>
-                )) */}
-
                     {
                         data.map((item, index) => (
                             <TouchableOpacity key={item.userId} onPress={() => { navigation.navigate('UpdateUserScreen', { userId: item.userId }); }}>

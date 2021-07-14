@@ -22,7 +22,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
@@ -45,22 +45,6 @@ const UpdateMatchResultScreen = (props) => {
     // const [refreshing, setRefreshing] = useState(false);
     const [token, setToken] = useState('');
 
-    // const showConfirmAlert = (status, title, msg) => {
-    //     SweetAlert.showAlertWithOptions({
-    //             title: title,
-    //             subTitle: msg,
-    //             confirmButtonTitle: 'OK',
-    //             confirmButtonColor: '#000',
-    //             otherButtonTitle: 'Cancel',
-    //             otherButtonColor: '#0f0',
-    //             style: status,
-    //             cancellable: false
-    //         },
-    //         (callback) => {
-    //             console.log(callback)
-    //         }
-    //     )
-    // }
 
     useEffect(async () => {
         const token = await AsyncStorage.getItem('token');
@@ -88,14 +72,6 @@ const UpdateMatchResultScreen = (props) => {
             })
     }
 
-    // const onRefresh = React.useCallback(() => {
-    //     setRefreshing(true);
-    //     // fetchData();
-    //     // fetchMatchData();
-    //     // fetchUserData(userId);
-    //     // setLoading(false);
-    //     // setRefreshing(false);
-    // }, []);
 
     const { colors } = useTheme();
 
@@ -151,6 +127,7 @@ const UpdateMatchResultScreen = (props) => {
         <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Update Match Result</Text>

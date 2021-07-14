@@ -109,6 +109,7 @@ const UserAccountApproval = ({ navigation }) => {
 
     return (
         <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
@@ -119,19 +120,6 @@ const UserAccountApproval = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
                     {data.length == 0 && (<Text style={{ fontSize: 20, fontWeight: 'bold' }}>No users approval pending...</Text>)}
                     {
                         data.length > 0 && data.map((item, index) => (

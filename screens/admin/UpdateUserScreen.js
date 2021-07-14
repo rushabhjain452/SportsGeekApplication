@@ -20,11 +20,13 @@ import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 const UpdateUserScreen = (props) => {
 
     const { userId } = props.route.params;
-
+    const navigation = useNavigation();
     const [data, setData] = useState([]);
 
     const [firstName, setFirstName] = useState('');
@@ -135,6 +137,7 @@ const UpdateUserScreen = (props) => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
@@ -307,32 +310,6 @@ const UpdateUserScreen = (props) => {
                         </Animatable.View>
                         : null
                     }
-
-                    {/* <Text style={[styles.text_footer, {marginTop: 35}]}>Profile Picture</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="camera-retro"
-                    color="#05375a"
-                    size={20}
-                />
-                <TouchableOpacity
-                    style={styles.buttonStyle}
-                    activeOpacity={0.5}
-                    onPress={() => {photoUploadHandler()}}>
-                <Text style={styles.buttonTextStyle}>Upload Photo</Text>
-                </TouchableOpacity>
-                {data.check_textInputChange ? 
-                <Animatable.View
-                    animation="bounceIn"
-                >
-                    <Feather 
-                        name="check-circle"
-                        color="green"
-                        size={20}
-                    />
-                </Animatable.View>
-                : null}
-            </View> */}
                     <View style={styles.button}>
                         <TouchableOpacity
                             onPress={() => { updateProfileHandler() }}

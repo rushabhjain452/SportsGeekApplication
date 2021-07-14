@@ -104,16 +104,6 @@ function LeaderBoard(props) {
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />} >
       <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
-      {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
-        <Text style={[styles.popular, { width: 100 }]}>Top Users</Text>
-        <TouchableOpacity style={{ marginTop: 15 }} onPress={() => setRefreshing(true)}>
-          <FontAwesome
-            name="refresh"
-            color={colors.text}
-            size={20}
-          />
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.rectStackRow}>
         { data.length >= 2 && <TopUser rank="2" data={data[1]} boxStyle={styles.box1} />}
         { data.length >= 1 && <TopUser rank="1" data={data[0]} boxStyle={styles.box2} />}

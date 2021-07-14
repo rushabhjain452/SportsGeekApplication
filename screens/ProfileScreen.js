@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, SafeAreaView, StyleSheet, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, StyleSheet, ScrollView, RefreshControl, ActivityIndicator,TouchableOpacity } from 'react-native';
 import {
   Title,
   Caption,
@@ -90,6 +90,7 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
         <View style={styles.userInfoSection}>

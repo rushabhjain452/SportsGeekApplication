@@ -266,6 +266,7 @@ const TeamScreen = ({ navigation }) => {
     }
     return (
         <View style={styles.container}>
+                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Team Details</Text>
@@ -362,19 +363,6 @@ const TeamScreen = ({ navigation }) => {
                             }]}>{btnText}</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* <View style={[styles.card]}>
-            <SwipeList rowData={
-                data.map((item) => ({
-                    id: item.genderId,
-                    rowView: getRowView(item),
-                    leftSubView: getUpdateButton(item.genderId, item.name), //optional
-                    rightSubView: getDeleteButton(item.genderId), //optional
-                    style: styles.row, //optional but recommended to style your rows
-                    useNativeDriver: false 
-                }))
-            }
-             />
-            </View> */}
                     {
                         data.map((item, index) => (
                             <View style={styles.card} key={item.teamId} >
