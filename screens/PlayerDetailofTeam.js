@@ -1,380 +1,132 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, RefreshControl, ActivityIndicator } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-// import Svg, { Ellipse } from "react-native-svg";
-import {
-  Avatar
-} from 'react-native-paper';
+import React, { Component, useState, useEffect } from "react";
+import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
+import { Card, ListItem, Button } from 'react-native-elements';
+import { TouchableOpacity } from "react-native-gesture-handler";
+// import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useTheme } from 'react-native-paper';
-import axios from 'axios';
 
 function PlayerDetailofTeam(props) {
 
+  // const navigation = useNavigation();
+  const { playerTeamId } = props.route.params ?? "undefined";
+
   const [data, setData] = useState([]);
-  const [contestData, setContestData] = useState([]);
-  const [userId, setUserId] = useState(0);
-  const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState('');
-  const { colors } = useTheme();
 
-  // useEffect(async () => {
-  //   const token = await AsyncStorage.getItem('token');
-  //   setToken(token);
-  //   const userId = await AsyncStorage.getItem('userId');
-  //   setUserId(userId);
-  //   fetchData(token);
-  // }, [refreshing]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(async () => {
+    const token = await AsyncStorage.getItem('token');
+    setToken(token);
+    if (playerTeamId != undefined) {
+      fetchData(playerTeamId, token);
+  }
+  }, [refreshing]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const interval = setInterval(, 10000);
+  // });
+
+  // const refreshData = () => {
+
+  // }
+
+  const fetchData = (playerTeamId, token) => {
+    const headers = { 'Authorization': 'Bearer ' + token }
+    axios.get(baseurl + '/players/team/'+playerTeamId, { headers })
+      .then(response => {
+        setLoading(false);
+        setRefreshing(false);
+        if (response.status == 200) {
+          setData(response.data);
+        }
+        else {
+          showSweetAlert('error', 'Network Error', errorMessage);
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        setRefreshing(false);
+        showSweetAlert('error', 'Network Error', errorMessage);
+      })
+  }
 
   const onRefresh = React.useCallback(() => {
+    // console.log('After refresh : ');
     setRefreshing(true);
-    // console.log('Refreshing...');
     // fetchData(token);
+    // wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  // const fetchData = (token) => {
-  //   console.log('fetchData');
-  //   const headers = { 'Authorization': 'Bearer ' + token };
-  //   axios.get(baseurl + '/users/statistics', { headers })
-  //     .then((response) => {
-  //       if (response.status == 200) {
-  //         setData(response.data);
-  //         fetchContestData(response.data, token);
-  //       } else {
-  //         setData([]);
-  //         showSweetAlert('error', 'Network Error', errorMessage);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       showSweetAlert('error', 'Network Error', errorMessage);
-  //     });
-  // }
-
-  // const fetchContestData = (data, token) => {
-  //   console.log('fetchContestData');
-  //   const headers = { 'Authorization': 'Bearer ' + token };
-  //   axios.get(baseurl + '/users/future-contest', { headers })
-  //     .then((response) => {
-  //       setLoading(false);
-  //       setRefreshing(false);
-  //       if (response.status == 200) {
-  //         setContestData(response.data);
-  //         let contestData = response.data;
-  //         data.forEach((item) => {
-  //           let obj = contestData.find(o => o.userId == item.userId);
-  //           if (obj)
-  //             item.totalWinningPoints += obj.contestPoints;
-  //         });
-  //         // setData(data);
-  //         data.sort((obj1, obj2) => {
-  //           if (obj1.totalWinningPoints < obj2.totalWinningPoints) {
-  //             return 1;
-  //           }
-  //           else if (obj1.totalWinningPoints > obj2.totalWinningPoints) {
-  //             return -1;
-  //           }
-  //           return 0;
-  //         });
-  //         console.log(data);
-  //         setData(data);
-  //         console.log('setData');
-  //       } else {
-  //         setContestData([]);
-  //         showSweetAlert('error', 'Network Error', errorMessage);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setLoading(false);
-  //       setRefreshing(false);
-  //       showSweetAlert('error', 'Network Error', errorMessage);
-  //     });
-  // }
-
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <Text style={styles.text_header}>Team Player List</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
-      {/* <View style={styles.rectStackRow}> */}
-        {/* {
-          data.length >= 2 &&
-          (
-            <View style={styles.rect}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>2</Text>
+      {
+        data && data.map((item, index) => (
+          <View style={styles.card} key={item.playerId} >
+            <View style={styles.cardlist}>
+              <View>
+                <Card.Image style={styles.ellipse1} source={{ uri: item.profilePicture }} />
+                {/* <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>{(item.name).substr(0,1)}</Text> */}
               </View>
-              <Text style={styles.carditemusername}>{data[1].firstName + " " + data[1].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[1].totalWinningPoints}</Text>
+              {/* <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.team}</Text> */}
+              <Text style={[styles.carditem, { width: '50%', paddingLeft: 10 }]}>{item.name}</Text>
+              <Text style={[styles.carditem, { width: '50%', paddingLeft: 10 }]}>{item.playerType}</Text>
+              {/* <TouchableOpacity onPress={() => { handleCardClick(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => { getConfirmation(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="delete-circle-outline" color="#19398A" size={30} /></Text></TouchableOpacity> */}
             </View>
-          )
-        } */}
-        {/* {
-          data.length >= 1 &&
-          (
-            <View style={styles.rect1}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>1</Text>
-              </View>
-              <Text style={styles.carditemusername}>{data[0].firstName + " " + data[0].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[0].totalWinningPoints}</Text>
-            </View>
-          )
-        } */}
-        {/* {
-          data.length >= 3 &&
-          (
-            <View style={styles.rect2}>
-              <View style={styles.ellipse1}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>3</Text>
-              </View>
-              <Text style={styles.carditemusername}>{data[2].firstName + " " + data[2].lastName}</Text>
-              <Text style={[styles.carditem, { textAlign: 'center' }]}>{data[2].totalWinningPoints}</Text>
-            </View>
-          )
-        } */}
-      {/* </View> */}
-      <View style={{ display: 'flex', flexDirection: 'row' }}>
-      <Text style={styles.text_header}>Team:</Text>
-        {/* <TouchableOpacity style={{ marginTop: 15 }} onPress={() => setRefreshing(true)}>
-          <FontAwesome
-            name="refresh"
-            color={colors.text}
-            size={20}
-          />
-        </TouchableOpacity> */}
-      </View>
-      {/* <View style={styles.rect3}>
-        <View style={styles.rankRow}>
-          <Text style={styles.rank}></Text>
-          <Text style={styles.user}>Name</Text>
-          <Text style={styles.points}>Points</Text>
-        </View>
-      </View> */}
-      {/* {
-        data && data.map((item, index) => {
-          const mystyle = item.userId == userId ? styles.bgDark : styles.bgLight; */}
-          return (
-            <View style={[styles.card]}>
-              <View style={styles.cardlist}>
-                <Text style={[styles.carditem, { marginLeft: 5, width: 30 }]}></Text>
-                <View style={styles.ellipse1}>
-                  <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}></Text>
-                </View>
-                <Text style={[styles.carditem, { width: '60%', fontSize: 17 }]}></Text>
-                <Text style={[styles.carditem, { width: '20%' }]}></Text>
-              </View>
-            </View>
-          )
-        {/* })
-      } */}
-      <View style={{ marginTop: 50 }}></View>
+          </View>
+        ))
+      }
+      <View style={{ height: 20 }}></View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flex: 1,
-    backgroundColor: "rgba(241,241,241,1)"
-  },
-  ellipse: {
-    top: 0,
-    left: 84,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8
-  },
-  loremIpsum: {
-    top: 6,
-    left: 95,
-    position: "absolute",
-    fontFamily: "comic-sans-ms-regular",
-    color: "#121212",
-    fontSize: 16
-  },
-  loremIpsum1: {
-    top: 6,
-    left: 95,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
-    color: "#121212",
-    fontSize: 20
-  },
-  rectStack: {
-    width: 115,
-    height: 140,
-    marginTop: 23
-  },
-  rectStackRow: {
-    display: "flex",
-    height: 164,
-    flexDirection: "row",
-    justifyContent: 'space-around',
-    marginTop: 30,
-    marginLeft: 10,
-    marginRight: 7,
-  },
-  rect: {
-    left: 0,
-    width: '32%',
-    height: 130,
-    // position: "absolute",
-    backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'green',
-    bottom: 0,
-    top: 20,
-    borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
-  },
-  rect1: {
-    width: '32%',
-    height: 150,
-    // position: "absolute",
-    backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'yellow',
-    left: 0,
-    bottom: 0,
-    borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
-  },
-  rect2: {
-    left: 0,
-    width: '32%',
-    height: 110,
-    // position: "absolute",
-    backgroundColor: "rgba(255,255,255,1)",
-    // backgroundColor: 'red',
-    bottom: 0,
-    top: 40,
-    borderRadius: 10,
-    borderColor: '#000',
-    borderWidth: 1
-  },
-  ellipse1: {
-    top: 0,
-    left: 78,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8,
-    // marginLeft: 50
-  },
-  loremIpsum2: {
-    top: 6,
-    left: 90,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
-    color: "#121212",
-    fontSize: 18
-  },
-  rect1Stack: {
-    width: 109,
-    height: 164,
-    marginLeft: 9
-  },
-  ellipse2: {
-    top: 0,
-    left: 79,
-    width: 31,
-    height: 34,
-    position: "absolute",
-    opacity: 0.8
-  },
-  loremIpsum3: {
-    top: 6,
-    left: 91,
-    position: "absolute",
-    fontFamily: "times-new-roman-regular",
-    color: "#121212",
-    fontSize: 18
-  },
-  rect2Stack: {
-    width: 110,
-    height: 127,
-    marginLeft: 6,
-    marginTop: 37
-  },
-  popular: {
-    // fontFamily: "times-new-roman-regular",
-    color: "rgba(147,147,147,1)",
-    fontSize: 18,
-    marginTop: 10,
-    marginLeft: 19
-  },
-  rect3: {
-    width: '92%',
-    height: 37,
-    backgroundColor: "rgba(25,57,138,1)",
-    borderWidth: 0,
-    borderColor: "#000000",
-    borderRadius: 5,
-    flexDirection: "row",
-    marginTop: 16,
-    marginLeft: 19
-  },
-  rank: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    width: '25%'
-  },
-  user: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    // marginLeft: 50,
-    width: '30%'
-    // marginTop: 1
-  },
-  points: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    marginLeft: 127,
-    width: '20%'
-  },
-  rankRow: {
-    height: 18,
-    flexDirection: "row",
-    flex: 1,
-    marginRight: 57,
-    marginLeft: 7,
-    marginTop: 11
-  },
-  rect4: {
-    width: '92%',
-    height: 60,
-    backgroundColor: "rgba(255,255,255,1)",
-    borderWidth: 0,
-    borderColor: "#000000",
-    borderRadius: 8,
-    marginTop: 15,
-    marginLeft: 19
-  }, // styles for List display
-  card: {
-    // width: '100%',
-    height: 50,
-    // backgroundColor: "#E6E6E6",
     borderWidth: 1,
     borderColor: "#000000",
-    borderRadius: 5,
-    marginTop: 10,
-    marginLeft: 15,
-    marginRight: 15,
-    display: "flex",
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    //  marginBottom:50
+    backgroundColor: "rgba(255,255,255,1)"
   },
-  bgLight: {
+  rect: {
+    width: '95%',
+    height: 150,
     backgroundColor: "#E6E6E6",
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 11,
   },
-  bgDark: {
-    // backgroundColor: "#98FB98",
-    backgroundColor: '#87CEFA'
+  carditem: {
+    color: "#121212",
+    fontSize: 20,
+    marginLeft: 3,
+    marginTop: 5,
+    fontWeight: "bold",
+    display: 'flex',
+    //    backgroundColor:'red'
+    //    justifyContent: 'space-between',  
+    //    textAlign: 'center'
+  },
+  ellipse: {
+    width: 61,
+    height: 61,
+    marginTop: 0,
+    borderRadius: 30,
+    marginLeft: 7
   },
   cardlist: {
     display: "flex",
@@ -382,44 +134,186 @@ const styles = StyleSheet.create({
     marginTop: 4,
     justifyContent: "space-between",
   },
+  mI: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 20,
+    marginLeft: 11,
+    marginTop: 20,
+    fontWeight: "bold"
+  },
+  date: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 18,
+    textAlign: "center",
+    paddingTop: 7,
+    paddingLeft: '30%'
+  },
+  vs: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    // marginTop: 22,
+    // marginLeft: 33,
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 20,
+  },
+  time: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 16,
+    marginTop: 18,
+    marginLeft: 13
+  },
+  loremIpsumColumn: {
+    // width: 95,
+    // marginLeft: 15,
+    display: 'flex',
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // height: 150,
+    marginTop: 10,
+    // textAlign: "center",
+    // alignSelf: "center"
+    // flex: 2
+  },
+  eng: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 20,
+    marginLeft: 20,
+    marginTop: 20,
+    fontWeight: "bold"
+  },
   ellipse1: {
     width: 40,
     height: 40,
     //   marginTop: 0,
     borderRadius: 100,
-    marginLeft: 5,
+    marginLeft: 10,
     justifyContent: 'center',
-    backgroundColor: '#e9c46a',
-
+    //   backgroundColor: '#e9c46a'
   },
-  carditem: {
+  ellipseRow: {
+    // height: 95,
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 10,
+    marginLeft: 10,
+    // alignSelf: "flex-start"
+    // flex: 4
+  },
+  rect1: {
+    width: 407,
+    height: 142,
+    backgroundColor: "#E6E6E6",
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderRadius: 10,
+    marginTop: 12,
+    marginLeft: 10
+  },
+  ellipse2: {
+    width: 61,
+    height: 61,
+    marginTop: 15,
+    borderRadius: 30
+  },
+  mI3: {
+    fontFamily: "roboto-regular",
     color: "#121212",
     fontSize: 18,
-    marginLeft: 3,
-    marginTop: 5,
-    fontWeight: "bold",
-    display: 'flex',
-    justifyContent: 'space-between',
-    //    textAlign: 'center'
+    marginLeft: 11,
+    marginTop: 37,
+    fontWeight: "bold"
   },
-  carditemusername: {
+  loremIpsum3: {
+    fontFamily: "roboto-regular",
     color: "#121212",
-    fontSize: 14,
-    marginLeft: 3,
-    marginTop: 10,
+    fontSize: 16
+  },
+  vs1: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    marginTop: 22,
+    marginLeft: 33
+  },
+  loremIpsum4: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 16,
+    marginTop: 18,
+    marginLeft: 19
+  },
+  loremIpsum3Column: {
+    width: 95,
+    marginLeft: 23
+  },
+  eng1: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 18,
+    marginLeft: 20,
+    marginTop: 37,
+    fontWeight: "bold"
+  },
+  ellipse3: {
+    width: 61,
+    height: 61,
+    marginLeft: 18,
+    marginTop: 17,
+    borderRadius: 30
+  },
+  ellipse2Row: {
+    height: 95,
+    flexDirection: "row",
+    marginTop: 26,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  iplSchedule2021: {
+    fontFamily: "roboto-regular",
+    color: "rgba(00,00,00,1)",
+    fontSize: 24,
+    textAlign: "center",
+    marginTop: -336,
+  },
+  rightteam: {
+    // flex: 4
     display: 'flex',
-    justifyContent: 'space-between',
-    fontWeight: 'bold'
-    //    textAlign: 'center',
-    // borderBottomColor: 'green',
-    // borderBottomWidth: 2,
-    // height: 40,
+    flexDirection: "row",
+    marginTop: 10,
+    marginRight: 10,
+  },
+  container2: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   },
   text_header: {
     color: '#000',
     fontWeight: 'bold',
     fontSize: 20,
     textAlign: "center",
+  },
+  card: {
+    width: '100%',
+    height: 65,
+    backgroundColor: "#E6E6E6",
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderRadius: 3,
+    marginTop: 5,
+    // marginLeft: 8,
+    display: "flex",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 3
   }
 });
 

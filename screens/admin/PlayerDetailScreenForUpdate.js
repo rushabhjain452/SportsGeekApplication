@@ -1,17 +1,15 @@
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import ContestScreen from "./ContestScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
-import showSweetAlert from '../helpers/showSweetAlert';
-import formatDate from '../helpers/formatDate';
-import { baseurl, errorMessage } from '../config';
-
-function ScheduleScreen({ navigation }) {
+function PlayerDetailScreenForUpdate({ navigation }) {
 
   // const navigation = useNavigation();
 
@@ -21,7 +19,7 @@ function ScheduleScreen({ navigation }) {
 
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const noOfFutureBets = 5;
+  //   const noOfFutureBets = 5;
 
   useEffect(async () => {
     const token = await AsyncStorage.getItem('token');
@@ -42,53 +40,27 @@ function ScheduleScreen({ navigation }) {
   // }
 
   const fetchData = (token) => {
-    axios.get(baseurl + '/matches/upcoming', {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
-      .then((response) => {
+    const headers = { 'Authorization': 'Bearer ' + token }
+    axios.get(baseurl + '/players', { headers })
+      .then(response => {
         setLoading(false);
         setRefreshing(false);
         if (response.status == 200) {
           setData(response.data);
-        } else {
+        }
+        else {
           showSweetAlert('error', 'Network Error', errorMessage);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setLoading(false);
         setRefreshing(false);
-        // const response = error.message;
         showSweetAlert('error', 'Network Error', errorMessage);
-      });
+      })
   }
 
-  const handleCardClick = (index, startDatetime, matchId) => {
-    // Alert.alert(item.team1 + ' vs ' + item.team2);
-    // Alert.alert(index.toString());
-    let startTimestamp = new Date(startDatetime);
-    // console.log("Type : " + typeof(startTimestamp));
-    // console.log("StartDatetime : " + startTimestamp);
-    let dt = new Date();
-    // console.log("Current Timestamp : " + dt.toLocaleString());
-    // console.log(dt > startTimestamp);
-    if (index > noOfFutureBets) {
-      showSweetAlert('warning', 'Out of Schedule', 'Sorry, Contests for this match are not opened yet.');
-    }
-    else if (dt > startTimestamp) {
-      showSweetAlert('warning', 'Timeout', 'Sorry, Contests for this match has been closed.');
-      fetchData(token);
-    }
-    else {
-      // showSweetAlert('success', 'Success', 'You can play this match.');
-      // props.setMatchId(matchId);      
-      navigation.navigate('ContestScreen', { matchId: matchId });
-    }
-  }
-
-  const handlePlayerDetailClick = (teamId) => {
-    navigation.navigate('PlayerDetailofTeam', { playerTeamId: teamId });
+  const handleCardClick = (playerId) => {
+    navigation.navigate('PlayerScreen', { updatePlayerId: playerId });
   }
 
   const onRefresh = React.useCallback(() => {
@@ -98,35 +70,89 @@ function ScheduleScreen({ navigation }) {
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  const deletePlayer = (id) => {
+    setLoading(true);
+    const headers = { 'Authorization': 'Bearer ' + token }
+    axios.delete(baseurl + '/players/' + id, { headers })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          showSweetAlert('success', 'Success', 'Match deleted successfully.');
+          fetchData(token);
+        }
+        else {
+          showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+      })
+  }
+
+
+  const getConfirmation = (playerId) =>
+    Alert.alert(
+      "Delete Confirmation",
+      "Do you really want to delete the Player ?",
+      [
+        {
+          text: "Cancel"
+        },
+        {
+          text: "OK",
+          onPress: () => { deletePlayer(playerId) }
+        }
+      ]
+    );
+
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <Text style={styles.text_header}>Upcoming Matches</Text>
+    <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <Text style={styles.text_header}>Players List</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
+      {/* {
+        data && data.map((item, index) => (
+          <View style={styles.rect} key={item.matchId}>
+            <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
+              <TouchableOpacity onPress={() => { getConfirmation(item.matchId) }} style={{ textAlign: 'right' }} ><Text ><Icon name="delete-circle-outline" color="#19398A" size={40} /></Text></TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => { handleCardClick(item.matchId) }} >
+              <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={styles.ellipseRow}>
+                  <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
+                  <Text style={styles.mI}>{item.team1Short}</Text>
+                </View>
+                <View style={styles.loremIpsumColumn}>
+                  <Text style={styles.vs}>VS</Text>
+                </View>
+                <View style={styles.rightteam}>
+                  <Text style={styles.eng}>{item.team2Short}</Text>
+                  <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
+                </View>
+              </View>
+              <View style={{ height: 40 }}>
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))
+      } */}
       {
         data && data.map((item, index) => (
-          <TouchableOpacity style={styles.rect} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
-            <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
-            <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-              <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}>
-              <View style={styles.ellipseRow}>
-                <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
-                <Text style={styles.mI}>{item.team1Short}</Text>
+          <View style={styles.card} key={item.playerId} >
+            <View style={styles.cardlist}>
+              <View>
+                <Card.Image style={styles.ellipse1} source={{ uri: item.profilePicture }} />
+                {/* <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>{(item.name).substr(0,1)}</Text> */}
               </View>
-              </TouchableOpacity>
-              <View style={styles.loremIpsumColumn}>
-                <Text style={styles.vs}>VS</Text>
-              </View>
-              <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}>
-              <View style={styles.rightteam}>
-                <Text style={styles.eng}>{item.team2Short}</Text>
-                <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
-              </View>
-              </TouchableOpacity>
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.team}</Text>
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.name}</Text>
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.playerType}</Text>
+              <TouchableOpacity onPress={() => { handleCardClick(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => { getConfirmation(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="delete-circle-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
             </View>
-            <View style={{ height: 40 }}>
-              <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
-            </View>
-          </TouchableOpacity>
+          </View>
         ))
       }
       <View style={{ height: 20 }}></View>
@@ -143,7 +169,7 @@ const styles = StyleSheet.create({
   },
   rect: {
     width: '95%',
-    height: 130,
+    height: 150,
     backgroundColor: "#E6E6E6",
     borderWidth: 1,
     borderColor: "#000000",
@@ -151,12 +177,29 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 11,
   },
+  carditem: {
+    color: "#121212",
+    fontSize: 20,
+    marginLeft: 3,
+    marginTop: 5,
+    fontWeight: "bold",
+    display: 'flex',
+    //    backgroundColor:'red'
+    //    justifyContent: 'space-between',  
+    //    textAlign: 'center'
+  },
   ellipse: {
     width: 61,
     height: 61,
     marginTop: 0,
     borderRadius: 30,
     marginLeft: 7
+  },
+  cardlist: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 4,
+    justifyContent: "space-between",
   },
   mI: {
     fontFamily: "roboto-regular",
@@ -171,7 +214,8 @@ const styles = StyleSheet.create({
     color: "#121212",
     fontSize: 18,
     textAlign: "center",
-    paddingTop: 7
+    paddingTop: 7,
+    paddingLeft: '30%'
   },
   vs: {
     fontFamily: "roboto-regular",
@@ -210,11 +254,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   ellipse1: {
-    width: 61,
-    height: 61,
-    marginLeft: 18,
-    marginTop: 0,
-    borderRadius: 30
+    width: 40,
+    height: 40,
+    //   marginTop: 0,
+    borderRadius: 100,
+    marginLeft: 10,
+    justifyContent: 'center',
+    //   backgroundColor: '#e9c46a'
   },
   ellipseRow: {
     // height: 95,
@@ -321,7 +367,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     textAlign: "center",
+  },
+  card: {
+    width: '100%',
+    height: 65,
+    backgroundColor: "#E6E6E6",
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderRadius: 3,
+    marginTop: 5,
+    // marginLeft: 8,
+    display: "flex",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 3
   }
 });
 
-export default ScheduleScreen;
+export default PlayerDetailScreenForUpdate;

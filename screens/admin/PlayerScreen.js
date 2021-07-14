@@ -27,7 +27,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const PlayerScreen = ({ navigation }) => {
+const PlayerScreen = (props) => {
+
+    const { updatePlayerId } = props.route.params ?? "undefined";
 
     const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/69bba4a0-c114-4379-9854-e4381a3130bc.png?alt=media&token=e9924ea4-c2d9-4782-bc2d-0fe734431c86';
 
@@ -51,6 +53,9 @@ const PlayerScreen = ({ navigation }) => {
         setToken(token);
         displayTeam(token);
         displayPlayerType(token);
+        if (updatePlayerId != undefined) {
+            fetchPlayerData(updatePlayerId, token);
+        }
         // setPlayerType('');
     }, []);
 
@@ -115,6 +120,31 @@ const PlayerScreen = ({ navigation }) => {
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
+
+    const fetchPlayerData = (playerId, token) => {
+        setBtnText('Update');
+        const headers = { 'Authorization': 'Bearer ' + token }
+        axios.get(baseurl + '/players/' + playerId, { headers })
+            .then(response => {
+                // setLoading(false);
+                if (response.status == 200) {
+                    setPlayerId(response.data.playerId);
+                    setTeamId(response.data.teamId);
+                    setPlayerTypeId(response.data.typeId);
+                    setPlayerName(response.data.name);
+                    setProfilePicture(response.data.profilePicture);
+                    setAvatarPath(response.data.profilePicture);
+                }
+                else {
+                    showSweetAlert('error', 'Network Error', errorMessage);
+                }
+            })
+            .catch(error => {
+                // setLoading(false);
+                showSweetAlert('error', 'Network Error', errorMessage);
+            })
+    }
+
     const photoSelectHandler = () => {
         ImagePicker.openPicker({
             width: 300,
@@ -157,10 +187,10 @@ const PlayerScreen = ({ navigation }) => {
             showSweetAlert('warning', 'Invalid Input!', 'Please enter Player Id.');
         }
         else if (teamId == 0) {
-            showSweetAlert('warning', 'Invalid Input!', 'Please enter Team name greater than 3 characters to proceed.');
+            showSweetAlert('warning', 'Invalid Input!', 'Please Select Team .');
         }
         else if (playerName.length < 3) {
-            showSweetAlert('warning', 'Invalid Input!', 'Please enter Short name greater than 2 characters to proceed.');
+            showSweetAlert('warning', 'Invalid Input!', 'Please enter Player name greater than 2 characters to proceed.');
         }
         else if (!profilePicture) {
             showSweetAlert('warning', 'Invalid Input!', 'Please Select Profile Picture.');
@@ -213,6 +243,66 @@ const PlayerScreen = ({ navigation }) => {
             }
     }
 
+    const updatePlayer = () => {
+        if (playerId == 0) {
+            showSweetAlert('warning', 'Invalid Input', 'Please enter valid Player Id.');
+        }
+        else if (teamId == 0) {
+            showSweetAlert('warning', 'Invalid Input', 'Please Select valid Team.');
+        }
+        else if (playerName.length < 3) {
+            showSweetAlert('warning', 'Invalid Input', 'Please enter Player name greater than 3 characters to proceed.');
+        }
+        else if (playerTypeId == 0) {
+            showSweetAlert('warning', 'Invalid Input', 'Please Select Valid Player Type.');
+        }else if (!profilePicture) {
+            showSweetAlert('warning', 'Invalid Input!', 'Please Select Player logo.');
+        }
+        else {
+        const formData = new FormData();
+            formData.append('teamId', teamId);
+            formData.append('name', playerName);
+            formData.append('typeId', playerTypeId);
+            if (profilePicture == null) {
+                formData.append('profilePicture', null);
+            } else {
+                console.log("ProfilePicture:"+profilePicture.path);
+                let picturePath = profilePicture.path;
+                let pathParts = picturePath.split('/');
+                formData.append('profilePicture', {
+                    // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
+                    name: pathParts[pathParts.length - 1],
+                    type: profilePicture.mime,
+                    uri: profilePicture.path
+                });
+            }
+            const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
+            axios.put(baseurl + '/players/' + playerId, formData, { headers })
+                .then((response) => {
+                    // setLoading(false);
+                    if (response.status == 200) {
+                        setSuccess(true);
+                        showSweetAlert('success', 'Success', 'Player updated successfully..');
+                    }
+                    else {
+                        showSweetAlert('error', 'Error', 'Failed to update Player. Please try again...');
+                    }
+                    setPlayerId(0);
+                    setPlayerName('');
+                    setTeamId(0);
+                    setBtnText('Add');
+                    setAvatarPath(avatarPath);
+                    setProfilePicture(null);
+                    setPlayerTypeId(0);
+                })
+                .catch((error) => {
+                    // setLoading(false);
+                    console.log(error);
+                    showSweetAlert('error', 'Error', 'Failed to update Player. Please try again...');
+                })
+        }
+    }
+
     const onChangeSS = (value) => {
         setTeamId(value);
     };
@@ -237,7 +327,7 @@ const PlayerScreen = ({ navigation }) => {
                             style={styles.textInput}
                             autoCapitalize="none"
                             onChangeText={(val) => setPlayerId(val)}
-                            value={playerId}
+                            value={playerId  + ""}
                             maxLength={20}
                         />
                         {(playerId != 0) ?
@@ -324,7 +414,7 @@ const PlayerScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity
-                            onPress={addPlayer}
+                            onPress={(btnText == 'Add') ? addPlayer : updatePlayer}
                             style={[styles.signIn, {
                                 borderColor: '#19398A',
                                 borderWidth: 1,
