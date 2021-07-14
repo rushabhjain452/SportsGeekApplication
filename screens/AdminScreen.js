@@ -121,6 +121,12 @@ const AdminScreen = ({ navigation }) => {
                 <Text style={styles.menuItemText1}>Player</Text>
               </View>
             </TouchableRipple>
+            <TouchableRipple onPress={() => { navigation.navigate('PlayerDetailScreenForUpdate') }}>
+              <View style={styles.menuItem1}>
+                <Icon name="cricket" color="#19398A" size={25} />
+                <Text style={styles.menuItemText1}>Player Details</Text>
+              </View>
+            </TouchableRipple>
             <TouchableRipple onPress={() => { navigation.navigate('PlayerTypeSCreen') }}>
               <View style={styles.menuItem1}>
                 <Icon name="cricket" color="#19398A" size={25} />

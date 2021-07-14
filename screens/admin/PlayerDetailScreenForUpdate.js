@@ -6,13 +6,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../config';
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
-function PlayerDetailofTeam(props) {
+function PlayerDetailScreenForUpdate({ navigation }) {
 
   // const navigation = useNavigation();
-  const { playerTeamId } = props.route.params ?? "undefined";
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,12 +19,12 @@ function PlayerDetailofTeam(props) {
 
   const [refreshing, setRefreshing] = React.useState(false);
 
+  //   const noOfFutureBets = 5;
+
   useEffect(async () => {
     const token = await AsyncStorage.getItem('token');
     setToken(token);
-    if (playerTeamId != undefined) {
-      fetchData(playerTeamId, token);
-  }
+    fetchData(token);
   }, [refreshing]);
 
   // useEffect(() => {
@@ -40,9 +39,9 @@ function PlayerDetailofTeam(props) {
 
   // }
 
-  const fetchData = (playerTeamId, token) => {
+  const fetchData = (token) => {
     const headers = { 'Authorization': 'Bearer ' + token }
-    axios.get(baseurl + '/players/team/'+playerTeamId, { headers })
+    axios.get(baseurl + '/players', { headers })
       .then(response => {
         setLoading(false);
         setRefreshing(false);
@@ -60,6 +59,10 @@ function PlayerDetailofTeam(props) {
       })
   }
 
+  const handleCardClick = (playerId) => {
+    navigation.navigate('PlayerScreen', { updatePlayerId: playerId });
+  }
+
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
@@ -67,10 +70,74 @@ function PlayerDetailofTeam(props) {
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  const deletePlayer = (id) => {
+    setLoading(true);
+    const headers = { 'Authorization': 'Bearer ' + token }
+    axios.delete(baseurl + '/players/' + id, { headers })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200) {
+          showSweetAlert('success', 'Success', 'Match deleted successfully.');
+          fetchData(token);
+        }
+        else {
+          showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+      })
+  }
+
+
+  const getConfirmation = (playerId) =>
+    Alert.alert(
+      "Delete Confirmation",
+      "Do you really want to delete the Player ?",
+      [
+        {
+          text: "Cancel"
+        },
+        {
+          text: "OK",
+          onPress: () => { deletePlayer(playerId) }
+        }
+      ]
+    );
+
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <Text style={styles.text_header}>Team Player List</Text>
+      <Text style={styles.text_header}>Players List</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
+      {/* {
+        data && data.map((item, index) => (
+          <View style={styles.rect} key={item.matchId}>
+            <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
+              <TouchableOpacity onPress={() => { getConfirmation(item.matchId) }} style={{ textAlign: 'right' }} ><Text ><Icon name="delete-circle-outline" color="#19398A" size={40} /></Text></TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => { handleCardClick(item.matchId) }} >
+              <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={styles.ellipseRow}>
+                  <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
+                  <Text style={styles.mI}>{item.team1Short}</Text>
+                </View>
+                <View style={styles.loremIpsumColumn}>
+                  <Text style={styles.vs}>VS</Text>
+                </View>
+                <View style={styles.rightteam}>
+                  <Text style={styles.eng}>{item.team2Short}</Text>
+                  <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
+                </View>
+              </View>
+              <View style={{ height: 40 }}>
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))
+      } */}
       {
         data && data.map((item, index) => (
           <View style={styles.card} key={item.playerId} >
@@ -79,11 +146,11 @@ function PlayerDetailofTeam(props) {
                 <Card.Image style={styles.ellipse1} source={{ uri: item.profilePicture }} />
                 {/* <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>{(item.name).substr(0,1)}</Text> */}
               </View>
-              {/* <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.team}</Text> */}
-              <Text style={[styles.carditem, { width: '50%', paddingLeft: 10 }]}>{item.name}</Text>
-              <Text style={[styles.carditem, { width: '50%', paddingLeft: 10 }]}>{item.playerType}</Text>
-              {/* <TouchableOpacity onPress={() => { handleCardClick(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
-              <TouchableOpacity onPress={() => { getConfirmation(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="delete-circle-outline" color="#19398A" size={30} /></Text></TouchableOpacity> */}
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.team}</Text>
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.name}</Text>
+              <Text style={[styles.carditem, { width: '23%', paddingLeft: 10 }]}>{item.playerType}</Text>
+              <TouchableOpacity onPress={() => { handleCardClick(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => { getConfirmation(item.playerId) }} style={{ paddingLeft: 3 }}><Text style={[styles.carditem]}><Icon name="delete-circle-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
             </View>
           </View>
         ))
@@ -317,4 +384,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PlayerDetailofTeam;
+export default PlayerDetailScreenForUpdate;

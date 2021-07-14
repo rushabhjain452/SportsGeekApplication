@@ -61,6 +61,7 @@
 import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
 
  import AsyncStorage from '@react-native-async-storage/async-storage';
+import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUpdate';
  // const baseurl = 'localhost:8080';
  
 //  const Drawer = createDrawerNavigator();
@@ -340,6 +341,8 @@ import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
                 <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
                 <Stack.Screen name="ChatHomeScreen" component={ChatHomeScreen} />
                 <Stack.Screen name="RoomScreen" component={RoomScreen} />
+                <Stack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} />
+                <Stack.Screen name="PlayerDetailScreenForUpdate" component={PlayerDetailScreenForUpdate} />
               </Stack.Navigator>
             )
             :
