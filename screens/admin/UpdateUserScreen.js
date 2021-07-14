@@ -56,7 +56,6 @@ const UpdateUserScreen = (props) => {
                 if (response.status == 200) {
                     setGenderData(response.data);
                     setGenderId(response.data.genderId);
-                    // console.log(genderId)
                 }
                 else {
                     showSweetAlert('error', 'Network Error', errorMessage);
@@ -106,15 +105,21 @@ const UpdateUserScreen = (props) => {
         }
         else {
             setWaiting(true);
-            const requestData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                mobileNumber: mobileNumber,
-                genderId: genderId,
-            };
-            const headers = { 'Authorization': 'Bearer ' + token }
-            axios.put(baseurl + '/users/' + userId, requestData, { headers })
+            // Submitting Form Data (with Profile Picture)
+            const formData = new FormData();
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('email', email);
+            formData.append('mobileNumber', mobileNumber);
+            formData.append('genderId', genderId);
+            formData.append('profilePicture', null);
+            // formData.append('updateProfilePicture', false);
+            const headers = { 
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token
+            }
+
+            axios.put(baseurl + '/users/' + userId, formData, { headers })
                 .then((response) => {
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Profile Updated Successfully...!');
@@ -126,7 +131,7 @@ const UpdateUserScreen = (props) => {
                 })
                 .catch((error) => {
                     showSweetAlert('error', 'Network Error', errorMessage);
-                })
+                });
         }
     }
 
@@ -403,8 +408,8 @@ const styles = StyleSheet.create({
         marginLeft: 30
     },
     selectedRb: {
-        width: 15,
-        height: 15,
+        width: 12,
+        height: 12,
         borderRadius: 50,
         backgroundColor: '#19398A',
     },

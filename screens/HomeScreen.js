@@ -14,6 +14,7 @@ const HomeScreen = ({ navigation }) => {
   const isCarousel = React.useRef(null)
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
+      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       <Text style={styles.text_header}>Live Cricket Score</Text>
       <TouchableOpacity style={styles.rect}>
         <Text style={styles.date}>Date</Text>

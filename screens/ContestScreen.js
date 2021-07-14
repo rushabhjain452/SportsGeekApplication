@@ -283,7 +283,8 @@ const ContestScreen = (props) => {
                         })
                         .catch((error) => {
                             setWaiting(false);
-                            // console.log(error);
+                            console.log(error);
+                            console.log(error.response);
                             showSweetAlert('error', 'Network Error', errorMessage);
                         });
                 }
@@ -338,6 +339,7 @@ const ContestScreen = (props) => {
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+            <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
             <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
@@ -625,7 +627,6 @@ const styles = StyleSheet.create({
         borderColor: "#000000",
         borderRadius: 3,
         marginTop: 5,
-        // marginLeft: 8,
         display: "flex",
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -650,6 +651,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginTop: 4,
         justifyContent: "space-between",
+        alignContent: 'center',
     },
     ellipse1: {
         width: 30,

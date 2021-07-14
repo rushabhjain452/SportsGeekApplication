@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
     radioCircle: {
         height: 20,
         width: 20,
-        borderRadius: 100,
+        borderRadius: 50,
         borderWidth: 2,
         borderColor: '#3740ff',
         alignItems: 'center',
@@ -660,8 +660,8 @@ const styles = StyleSheet.create({
         marginLeft: 30
     },
     selectedRb: {
-        width: 15,
-        height: 15,
+        width: 12,
+        height: 12,
         borderRadius: 50,
         backgroundColor: '#19398A',
     },

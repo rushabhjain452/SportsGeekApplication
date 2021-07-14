@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, ScrollView } from "react-native";
+import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, ScrollView, StatusBar } from "react-native";
 // import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // import Svg, { Ellipse } from "react-native-svg";
 // import {
@@ -102,6 +102,7 @@ function LeaderBoard(props) {
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />} >
+      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <View style={styles.rectStackRow}>
         { data.length >= 2 && <TopUser rank="2" data={data[1]} boxStyle={styles.box1} />}

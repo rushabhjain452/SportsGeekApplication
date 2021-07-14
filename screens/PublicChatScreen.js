@@ -134,6 +134,7 @@ const PublicChatScreen = () => {
   if (userId != 0) {
     return (
       <>
+        <StatusBar backgroundColor='#19398A' barStyle="light-content" />
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
         <GiftedChat
           messages={messages}

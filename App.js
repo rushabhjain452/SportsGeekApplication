@@ -49,7 +49,6 @@
  import DeleteScreen from './screens/admin/DeleteScreen';
  import UpdateUserScreen from './screens/admin/UpdateUserScreen';
  import ResultWithUsersScreen from './screens/ResultWithUsersScreen';
- import ForgetPasswordScreen2 from './screens/ForgetPasswordScreen2';
  import UpdateMatchMinBet from './screens/admin/UpdateMatchMinBet';
  import UpdateMatchMinBetSchedule from './screens/admin/UpdateMatchMinBetSchedule';
  import UsersContestsForLiveMatch from './screens/UsersContestsForLiveMatch';
@@ -331,7 +330,6 @@ import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUp
                 <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
                 <Stack.Screen name="HelpScreen" component={HelpScreen} />
                 <Stack.Screen name="ResultWithUsersScreen" component={ResultWithUsersScreen} />
-                <Stack.Screen name="ForgetPasswordScreen2" component={ForgetPasswordScreen2} />
                 <Stack.Screen name="UpdateMatchMinBetSchedule" component={UpdateMatchMinBetSchedule} />
                 <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} />
                 <Stack.Screen name="UpdateMatchMinBet" component={UpdateMatchMinBet} />

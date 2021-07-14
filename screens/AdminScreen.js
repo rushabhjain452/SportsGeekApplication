@@ -16,6 +16,7 @@ const AdminScreen = ({ navigation }) => {
   const { colors } = useTheme();
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
+      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       <Collapse>
         <CollapseHeader>
           <View style={styles.menuWrapper}>

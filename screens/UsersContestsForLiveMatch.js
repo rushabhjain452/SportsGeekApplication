@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
+// import { ScrollView } from "react-native-gesture-handler";
 import {
   Avatar
 } from 'react-native-paper';
@@ -92,6 +92,7 @@ function UsersContestsForLiveMatch(props) {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <TouchableOpacity style={styles2.rect}>
         <Text style={styles2.date}>{formatDate(matchData.startDatetime)}</Text>
