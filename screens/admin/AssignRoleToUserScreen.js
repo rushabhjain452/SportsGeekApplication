@@ -156,6 +156,7 @@ const AssignRoleToUserScreen = ({ navigation }) => {
         <ScrollView keyboardShouldPersistTaps="handled">
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Assign Role to user</Text>
@@ -166,11 +167,6 @@ const AssignRoleToUserScreen = ({ navigation }) => {
                 >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>User Name</Text>
                     <View style={styles.action}>
-                        {/* <FontAwesome 
-                    name="mars"
-                    color="#05375a"
-                    size={20}
-                /> */}
                         <Dropdown
                             label="User Name"
                             data={userData}
@@ -181,11 +177,6 @@ const AssignRoleToUserScreen = ({ navigation }) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Role</Text>
                     <View style={styles.action}>
-                        {/* <FontAwesome 
-                    name="mars"
-                    color="#05375a"
-                    size={20}
-                /> */}
                         <Dropdown
                             label="Assign Role"
                             data={roleData}
@@ -224,10 +215,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#19398A',
     },
     container2: {
-        // height:50,
         flex: 1,
-        // paddingHorizontal: 20,
-        // paddingVertical: 5,
         paddingHorizontal: 30,
         marginRight: 20,
         color: '#19398A',
@@ -272,7 +260,6 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
-        // borderBottomWidth: 1
     },
     button: {
         alignItems: 'center',

@@ -19,7 +19,7 @@ import { baseurl, errorMessage } from '../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const ForgetPasswordScreen = () => {
 
     const navigation = useNavigation();
@@ -139,6 +139,7 @@ const ForgetPasswordScreen = () => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>

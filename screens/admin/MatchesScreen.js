@@ -24,11 +24,12 @@ import { baseurl, errorMessage } from '../../config';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const MatchesScreen = (props) => {
 
     const { updateMatchId } = props.route.params ?? "undefined";
-
+    const navigation = useNavigation();
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
     const [tournamentData, setTournamentData] = useState([]);
@@ -290,31 +291,6 @@ const MatchesScreen = (props) => {
             showSweetAlert('warning', 'Invalid Input', 'Please select match date time.');
         }
         else {
-            // fetch(baseurl+'/playertype/'+playerTypeId, {
-            //     method: 'PUT',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json' 
-            //     },
-            //     body: JSON.stringify({
-            //         typeName: playerType
-            //     })
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     if(json.code == 201){
-            //         showSweetAlert('success', 'Success', 'PlayerType updated successfully.');
-            //         displayPlayerType();
-            //     }
-            //     else
-            //         showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
-            //     setPlayerType('');
-            //     setBtnText('Add');
-            //     // setGenderId(0);
-            // })
-            // .catch((error) => {
-            //     showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
-            // });
             const requestData = {
                 tournamentId: tournamentId,
                 name: matchName,
@@ -364,6 +340,7 @@ const MatchesScreen = (props) => {
     };
     return (
         <View style={styles.container}>
+                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Add Match</Text>
@@ -463,11 +440,6 @@ const MatchesScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Venue</Text>
                     <View style={styles.action}>
-                        {/* <FontAwesome 
-                    name="mars"
-                    color="#05375a"
-                    size={20}
-                /> */}
                         <Dropdown
                             label="Venue Name"
                             data={venueData}
@@ -478,11 +450,6 @@ const MatchesScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Team 1</Text>
                     <View style={styles.action}>
-                        {/* <FontAwesome 
-                    name="mars"
-                    color="#05375a"
-                    size={20}
-                /> */}
                         <Dropdown
                             label="Team1"
                             data={team1Data}
@@ -493,11 +460,6 @@ const MatchesScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Team 2</Text>
                     <View style={styles.action}>
-                        {/* <FontAwesome 
-                    name="mars"
-                    color="#05375a"
-                    size={20}
-                /> */}
                         <Dropdown
                             label="Team1"
                             data={team2Data}

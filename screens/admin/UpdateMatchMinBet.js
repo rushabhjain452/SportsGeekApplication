@@ -20,7 +20,7 @@ import { Card } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
@@ -82,28 +82,6 @@ const UpdateMatchMinBet = (props) => {
     }, []);
 
     const fetchMatchData = (token) => {
-        // console.log("MatchId : " + matchId);
-        // fetch(baseurl+'/matches/'+matchId, {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     setLoading(false);
-        //     if(json.code == 404){
-        //         setMatchData([]);
-        //     }else if(json.code == 200){
-        //         setMatchData(json.data);
-        //         // console.log('Match Data'+ json.data.minimumBet);
-        //         setPoints(json.data.minimumBet);
-        //         // fetchData(token, json.data);
-        //     } 
-        // })
-        // .catch((error) => {
-        //     setLoading(false);
-        //     showSweetAlert('error', 'Network Error!', errorMessage);
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/matches/' + matchId, { headers })
             .then(response => {
@@ -127,21 +105,8 @@ const UpdateMatchMinBet = (props) => {
     const contestHandler = () => {
         let current_datetime = new Date();
         let str = matchData.startDatetime;
-        // let match_datetime = new Date(str);
-        // console.log('MatchDatetime : ' + str);
-        // console.log('Match Date : ' + match_datetime.toISOString());
-        // console.log('Match Date toString : ' + match_datetime.toString());
-        // console.log('Formatted : ' + match_datetime.getDate() + '/' + ( match_datetime.getMonth()+1) + '/' + match_datetime.getFullYear());
-        // console.log('UTC : ' + match_datetime.getUTCDate() + '/' + (match_datetime.getUTCMonth()+1) + '/' + match_datetime.getUTCFullYear() + '  ' + match_datetime.getUTCHours() + ':' + match_datetime.getUTCMinutes() + ':' + match_datetime.getUTCSeconds());
-        // console.log('Current Date : ' + current_datetime.toISOString());
-        // console.log('Type : ' + typeof(match_datetime));
-        // new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, milliseconds]]]]])
         let matchDate = new Date(str);
         let match_date = new Date(matchDate.getUTCFullYear(), matchDate.getUTCMonth(), matchDate.getUTCDate(), matchDate.getUTCHours(), matchDate.getUTCMinutes(), matchDate.getUTCSeconds());
-        // console.log('MatchDatetime : ' + match_date.toString());
-        // console.log('CurrentDatetime : ' + current_datetime.toString());
-        // console.log(match_date - current_datetime);
-        // console.log(match_date < current_datetime);
         if (points < 1) {
             showSweetAlert('warning', 'Invalid Contest Points', "Please enter valid value for Contest points.");
         }
@@ -153,42 +118,6 @@ const UpdateMatchMinBet = (props) => {
         }
         else {
             setLoading(true);
-            // fetch(baseurl+'/matches/updateMinBet/'+matchId+'/'+points, {
-            //     method: 'PUT',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + token
-            //     }
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     // console.log('JSON : ' + json);
-            //     // console.log('Code : ' + json.code);
-            //     setLoading(false);
-            //     if(json.code == 201){
-            //         // setAvailablePoints((availablePoints) => parseInt(availablePoints) + parseInt(oldPoints) - parseInt(points));
-            //         // // console.log('After update : ' + typeof(oldPoints));
-            //         // setOldPoints(points);
-            //         // setBetTeamId(json.data.betTeamId);
-            //         // // console.log('Update success : BetTeamId = ' + json.data.betTeamId);
-            //         // fetchData(token, matchData);
-            //         // fetchUserData(userId, token);
-            //         // showSweetAlert('success', 'Contest updated successfully', "Your contest is updated from " + oldPoints + " points to " + points + " points.");
-            //         showSweetAlert('success', 'Success', "Minimum Bet Updated Successfully");
-            //     }
-            //     else{
-            //         // console.log('code : ' + json.code);
-            //         // console.log('Data : ' + json.data);
-            //         showSweetAlert('warning', 'Server Error', 'Something went wrong. Please try again after sometime...');
-            //     }
-            //     // setWaiting(false);
-            // })
-            // .catch((error) => {
-            //     setLoading(false);
-            //     showSweetAlert('warning', 'Network Error', 'Something went wrong. Please try again after sometime...');
-            //     // setWaiting(false);
-            // });
             const headers = { 'Authorization': 'Bearer ' + token }
             axios.put(baseurl + '/matches/' + matchId + '/update-min-points/' + points, {}, { headers })
                 .then((response) => {
@@ -212,6 +141,7 @@ const UpdateMatchMinBet = (props) => {
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {/* {loading == true  && (<ActivityIndicator size="large" color="#19398A" />)} */}
             <View>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Update Minimum Bet Points</Text>

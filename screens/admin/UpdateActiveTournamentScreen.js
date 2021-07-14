@@ -162,6 +162,7 @@ const UpdateActiveTournamentScreen = ({ navigation }) => {
         }}
       /> */}
             <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Activate Tournament</Text>

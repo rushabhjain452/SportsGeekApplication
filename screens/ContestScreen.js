@@ -24,7 +24,7 @@ import { Avatar } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from 'react-native-paper';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../helpers/showSweetAlert';
 import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
@@ -340,9 +340,10 @@ const ContestScreen = (props) => {
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
-                    <Text style={styles.text_header}>&lt;- Place Contest</Text>
+                    <Text style={styles.text_header}>Place Contest</Text>
                 </View>
                 <Animatable.View
                     animation="fadeInUpBig"

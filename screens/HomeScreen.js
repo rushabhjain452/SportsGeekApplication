@@ -68,15 +68,6 @@ const HomeScreen = ({ navigation }) => {
           tappableDots={true}
         />
       </View>
-      {/* <Card>
-    <Card.Title>IPL Schedule 2021</Card.Title>
-    <Card.Divider/>
-    <Card.Image source={require('../assets/schedule.jpg')}></Card.Image>
-    <Card.Divider/>
-    <Button
-      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-      title='View Schedule' onPress={() => navigation.navigate('ScheduleScreen')} />
-    </Card> */}
       <View style={{ paddingBottom: 20 }}></View>
     </ScrollView>
   );

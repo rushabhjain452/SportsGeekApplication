@@ -251,19 +251,6 @@ const SignInScreen = ({ navigation }) => {
                         <TouchableOpacity style={styles.linkStyle} onPress={() => navigation.navigate('SignUpScreen')}>
                             <Text style={{ color: '#19398A', marginTop: 15, fontSize: 16, textDecorationLine: 'underline' }}>Don't have an account? Sign Up</Text>
                         </TouchableOpacity>
-
-                        {/* <TouchableOpacity
-                    onPress={() => navigation.navigate('SignUpScreen')}
-                    style={[styles.signIn, {
-                        borderColor: '#19398A',
-                        borderWidth: 1,
-                        marginTop: 15
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: '#19398A'
-                    }]}>Sign Up</Text>
-                </TouchableOpacity> */}
                     </View>
                     <View style={{ marginTop: 50 }}></View>
                 </ScrollView>

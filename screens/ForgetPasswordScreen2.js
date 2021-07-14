@@ -17,6 +17,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl } from '../config';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ForgetPasswordScreen2 = (props) => {
 
@@ -81,6 +82,7 @@ const ForgetPasswordScreen2 = (props) => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>

@@ -1,11 +1,11 @@
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card, ListItem, Button} from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
@@ -64,6 +64,7 @@ function UpdateMatchScheduleScreen({ navigation }) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Old Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {data.length == [] && (<Text style={{ fontSize: 20, fontWeight: 'bold', margin: 20 }}>Sorry, there are no matches pending for setting Winner...</Text>)}

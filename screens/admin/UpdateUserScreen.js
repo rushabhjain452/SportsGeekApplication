@@ -20,11 +20,13 @@ import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 const UpdateUserScreen = (props) => {
 
     const { userId } = props.route.params;
-
+    const navigation = useNavigation();
     const [data, setData] = useState([]);
 
     const [firstName, setFirstName] = useState('');
@@ -49,19 +51,6 @@ const UpdateUserScreen = (props) => {
     }, []);
 
     const fetchGenderData = () => {
-        // fetch(baseurl+'/genders')
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     if(json.code == 200){
-        //         setGenderData(json.data);
-        //         setGenderId(data.genderId);
-        //     }
-        //     else
-        //         showSweetAlert('error', 'Error', 'Error in fetching gender data. Please try again...');
-        // })
-        // .catch((error) => {
-        //     showSweetAlert('error', 'Error', 'Error in fetching gender data. Please try again...');
-        // });
         axios.get(baseurl + '/genders')
             .then(response => {
                 if (response.status == 200) {
@@ -79,31 +68,6 @@ const UpdateUserScreen = (props) => {
     }
 
     const fetchUserData = (userId, token) => {
-        // fetch(baseurl+'/user/'+userId, {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => {
-        //   return response.json();
-        // })
-        // .then((json) => {
-        //     if(json.code == 200)
-        //     {
-        //         // setData(json.data);
-        //         setEmail(json.data.email);
-        //         setFirstName(json.data.firstName);
-        //         setLastName(json.data.lastName);
-        //         setMobileNumber(json.data.mobileNumber);
-        //         setGenderId(json.data.genderId);
-        //     }
-        //     else
-        //       showSweetAlert('error', 'Error', 'Error in fetching data. Please try again...');
-        //     setWaiting(false);
-        // })
-        // .catch((error) => {
-        //     // showSweetAlert('error', 'Network Error', 'Error in fetching data. Please try again...');
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/' + userId, { headers })
             .then(response => {
@@ -142,33 +106,6 @@ const UpdateUserScreen = (props) => {
         }
         else {
             setWaiting(true);
-            // fetch(baseurl+'/user/'+userId, {
-            //     method: 'PUT',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + token
-            //     },
-            //     body: JSON.stringify({
-            //         firstName: firstName,
-            //         lastName: lastName,
-            //         email: email,
-            //         mobileNumber: mobileNumber,
-            //         genderId: genderId,
-            //     })
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     if(json.code == 201){
-            //         showSweetAlert('success', 'Success', 'Profile Updated Successfully...!');
-            //     }else{
-            //         showSweetAlert('warning', 'Updation Failed', 'Profile Updation failed...!');
-            //     }
-            //     setWaiting(false);
-            // })
-            // .catch((error) => {
-            //     showSweetAlert('warning', 'Network Error', 'Something went wrong. Please try again after sometime...');
-            // });
             const requestData = {
                 firstName: firstName,
                 lastName: lastName,
@@ -195,6 +132,7 @@ const UpdateUserScreen = (props) => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <View style={styles.header}>
@@ -367,32 +305,6 @@ const UpdateUserScreen = (props) => {
                         </Animatable.View>
                         : null
                     }
-
-                    {/* <Text style={[styles.text_footer, {marginTop: 35}]}>Profile Picture</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="camera-retro"
-                    color="#05375a"
-                    size={20}
-                />
-                <TouchableOpacity
-                    style={styles.buttonStyle}
-                    activeOpacity={0.5}
-                    onPress={() => {photoUploadHandler()}}>
-                <Text style={styles.buttonTextStyle}>Upload Photo</Text>
-                </TouchableOpacity>
-                {data.check_textInputChange ? 
-                <Animatable.View
-                    animation="bounceIn"
-                >
-                    <Feather 
-                        name="check-circle"
-                        color="green"
-                        size={20}
-                    />
-                </Animatable.View>
-                : null}
-            </View> */}
                     <View style={styles.button}>
                         <TouchableOpacity
                             onPress={() => { updateProfileHandler() }}

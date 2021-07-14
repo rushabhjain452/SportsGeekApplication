@@ -82,27 +82,6 @@ const RechargeScreen = ({ navigation }) => {
     }
 
     const displayRecharge = (token) => {
-        // fetch(baseurl+'/recharge', {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + token
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     if(json.code == 200)
-        //     {
-        //         setRecData(json.data);
-        //     }
-        //     else
-        //         showSweetAlert('error', 'Error', 'Error in fetching User data. Please try again...');
-        //     setLoading(false);
-        //     setRefreshing(false);
-        // })
-        // .catch((error) => {
-        //     showSweetAlert('error', 'Error', 'Error in fetching data. Please try again...');
-        //     setLoading(false);
-        //     setRefreshing(false);
-        // });
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/recharge', { headers })
             .then(response => {
@@ -135,35 +114,6 @@ const RechargeScreen = ({ navigation }) => {
         }
         else {
             setLoading(true);
-            // fetch(baseurl+'/recharge', {
-            //     method: 'POST',
-            //     headers: {
-            //         Accept: 'application/json',
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + token
-            //     },
-            //     body: JSON.stringify({
-            //         userId: userId,
-            //         points: points
-            //     })
-            // })
-            // .then((response) => response.json())
-            // .then((json) => {
-            //     setLoading(false);
-            //     if(json.code == 201){
-            //         showSweetAlert('success', 'Success', 'Recharge done successfully.');
-            //     }
-            //     else{
-            //         showSweetAlert('warning', 'Network Error', 'Something went wrong. Please check your internet connection or try again after sometime...');
-            //     }
-            //     setUserId(0);
-            //     setPoints(0);
-            //     displayRecharge(token);
-            // })
-            // .catch((error) => {
-            //     setLoading(false);
-            //     showSweetAlert('error', 'Error', 'Error in processing recharge.Please try again after sometime.');
-            // });
             const requestData = {
                 userId: userId,
                 points: points
@@ -213,6 +163,7 @@ const RechargeScreen = ({ navigation }) => {
         }}
       /> */}
             <View style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
                 <StatusBar backgroundColor='#19398A' barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Recharge Details</Text>

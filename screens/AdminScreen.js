@@ -39,12 +39,6 @@ const AdminScreen = ({ navigation }) => {
                 <Text style={styles.menuItemText1}>Update User</Text>
               </View>
             </TouchableRipple>
-            {/* <TouchableRipple onPress={() => {navigation.navigate('ListAllUsersScreen')}}>
-                  <View style={styles.menuItem1}>
-                    <Icon name="account-details" color="#19398A" size={25}/>
-                    <Text style={styles.menuItemText1}>List All Users</Text>
-                  </View>
-                </TouchableRipple> */}
             <TouchableRipple onPress={() => { navigation.navigate('RechargeScreen') }}>
               <View style={styles.menuItem1}>
                 <Icon name="wallet" color="#19398A" size={25} />
@@ -148,19 +142,6 @@ const AdminScreen = ({ navigation }) => {
           </View>
         </CollapseHeader>
       </Collapse>
-
-      {/* <Collapse>
-            <CollapseHeader>
-                <View style={styles.menuWrapper}>
-                <TouchableRipple onPress={() => {navigation.navigate('MatchesScreen')}}>
-                <View style={styles.menuItem}>
-                      <Icon name="calendar" color="#19398A" size={25}/>
-                        <Text style={styles.menuItemText}>Matches</Text>
-                </View>
-                </TouchableRipple>
-                  </View>
-              </CollapseHeader>
-            </Collapse> */}
       <Collapse>
         <CollapseHeader>
           <View style={styles.menuWrapper}>

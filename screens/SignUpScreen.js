@@ -19,6 +19,7 @@ import SweetAlert from 'react-native-sweet-alert';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { baseurl, errorMessage } from '../config';
 
@@ -218,8 +219,9 @@ const SignUpScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor='#19398A' barStyle="light-content" />
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register Now!</Text>
+                <Text style={styles.text_header}> Register Now!</Text>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
@@ -416,18 +418,6 @@ const SignUpScreen = ({ navigation }) => {
                                 </View>
                             ))
                         }
-                        {/* <TouchableOpacity
-                    style={styles.radioCircle}
-                    onPress={() => {setGender('Male')}}>
-                        {gender == 'Male' && <View style={styles.selectedRb} />}        
-                </TouchableOpacity>
-                <Text style={{paddingLeft:10}} onPress={() => {setGender('Male')}}>Male</Text>
-                <TouchableOpacity
-                    style={styles.radioCircle}
-                    onPress={() => {setGender('Female')}}>
-                        {gender == 'Female' && <View style={styles.selectedRb} />}
-                </TouchableOpacity>
-                <Text style={{paddingLeft:10}} onPress={() => {setGender('Female')}}>Female</Text> */}
 
                     </View>
 

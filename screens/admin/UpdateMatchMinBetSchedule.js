@@ -1,12 +1,12 @@
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card, ListItem, Button} from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UpdateMatchMinBet from './UpdateMatchMinBet';
 import axios from 'axios';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
@@ -29,37 +29,8 @@ function UpdateMatchMinBetSchedule({ navigation }) {
     fetchData(token);
   }, [refreshing]);
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(, 10000);
-  // });
-
-  // const refreshData = () => {
-
-  // }
 
   const fetchData = (token) => {
-    // console.log(token);
-    // fetch(baseurl+'/matches', {
-    //   headers: {
-    //     'Authorization': 'Bearer ' + token
-    //   }
-    // })
-    // .then((response) => response.json())
-    // .then((json) => {
-    //   // console.log(json.data);
-    //   setData(json.data);
-    //   setLoading(false);
-    //   setRefreshing(false);
-    // })
-    // .catch((error) => {
-    //   showSweetAlert('error', 'Network Error!', errorMessage);
-    //   setLoading(false);
-    //   setRefreshing(false);
-    // });
     const headers = { 'Authorization': 'Bearer ' + token }
     axios.get(baseurl + '/matches/upcoming', { headers })
       .then(response => {
@@ -109,6 +80,7 @@ function UpdateMatchMinBetSchedule({ navigation }) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Upcoming Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {
