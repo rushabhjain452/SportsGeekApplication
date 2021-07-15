@@ -157,7 +157,7 @@ const PlayerScreen = (props) => {
                 setProfilePicture(image);
             }
         }).catch((error) => {
-            showSweetAlert('warning', 'Image not selected', 'Image not selected for team Logo.');
+            showSweetAlert('warning', 'Image not selected', 'Image not selected for Profile Picture.');
         });
     }
 

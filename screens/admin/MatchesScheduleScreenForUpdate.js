@@ -108,7 +108,7 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
           <View style={styles.rect} key={item.matchId}>
             <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
-              <TouchableOpacity onPress={() => { getConfirmation(item.matchId) }} style={{ textAlign: 'right' }} ><Text ><Icon name="delete-circle-outline" color="#19398A" size={40} /></Text></TouchableOpacity>
+              {/* <TouchableOpacity onPress={() => { getConfirmation(item.matchId) }} style={{ textAlign: 'right' }} ><Text ><Icon name="delete-circle-outline" color="#19398A" size={40} /></Text></TouchableOpacity> */}
             </View>
             <TouchableOpacity onPress={() => { handleCardClick(item.matchId) }} >
               <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
