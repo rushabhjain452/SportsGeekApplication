@@ -136,7 +136,7 @@ const SignInScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+            <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <View style={styles.header}>
                 <Text style={styles.text_header}>SportsGeek Login!</Text>

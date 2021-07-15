@@ -100,7 +100,7 @@ function ScheduleScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+      <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       <Text style={styles.text_header}>Upcoming Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {

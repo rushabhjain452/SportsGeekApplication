@@ -77,7 +77,7 @@ const MainTabScreen = () => {
         />)
       }
       <Tab.Screen
-        name="Fantasy5"
+        name="Fantasy"
         component={FantasyStackScreen}
         options={{
           tabBarLabel: 'Fantasy',

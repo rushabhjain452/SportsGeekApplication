@@ -10,7 +10,7 @@ const NotificationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+      <StatusBar backgroundColor="#1F4F99" barStyle={theme.dark ? "light-content" : "dark-content"} />
       <Text style={{ color: colors.text }}>Notification Screen</Text>
     </View>
   );

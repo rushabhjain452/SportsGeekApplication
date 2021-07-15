@@ -17,7 +17,6 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import SwipeList from 'react-native-smooth-swipe-list';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
@@ -175,7 +174,7 @@ const GenderScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
-            <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+            <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Gender Details</Text>

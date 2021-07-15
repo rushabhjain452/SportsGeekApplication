@@ -5,57 +5,57 @@ const getColor = (c) => {
       c = c.substr(0, 1).toUpperCase();
       switch (c) {
         case 'A':
-          return '#007aff';
+          return '#007AFF';
         case 'B':
-          return '#2b8339';
+          return '#2B8339';
         case 'C':
-          return '#2a9d8f';
+          return '#2A9D8F';
         case 'D':
-          return '#b5179e';
+          return '#B5179E';
         case 'E':
-          return '#f77f00';
+          return '#F77F00';
         case 'F':
           return '#3F51B5';
         case 'G':
-          return '#5f0f40';
+          return '#5F0F40';
         case 'H':
-          return '#fca311';
+          return '#FCA311';
         case 'I':
-          return '#6b705c';
+          return '#6B705C';
         case 'J':
-          return '#606c38';
+          return '#606C38';
         case 'K':
-          return '#0077b6';
+          return '#0077B6';
         case 'L':
-          return '#06d6a0';
+          return '#06D6A0';
         case 'M':
-          return '#8338ec';
+          return '#8338EC';
         case 'N':
-          return '#9c6644';
+          return '#9C6644';
         case 'O':
-          return '#fb5607';
+          return '#FB5607';
         case 'P':
-          return '#ffc300';
+          return '#FFC300';
         case 'Q':
-          return '#ef476f';
+          return '#EF476F';
         case 'R':
-          return '#6d6875';
+          return '#6D6875';
         case 'S':
           return '#774936';
         case 'T':
-          return '#00bbf9';
+          return '#00BBF9';
         case 'U':
-          return '#006d77';
+          return '#006D77';
         case 'V':
-          return '#f48c06';
+          return '#F48C06';
         case 'W':
-          return '#38b000';
+          return '#38B000';
         case 'X':
-          return '#457b9d';
+          return '#457B9D';
         case 'Y':
           return '#3F51B5';
         case 'Z':
-          return '#ed2f2f';
+          return '#ED2F2F';
         default:
           return '#000';
       }

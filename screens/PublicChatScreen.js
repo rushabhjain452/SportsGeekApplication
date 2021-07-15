@@ -14,6 +14,7 @@ const PublicChatScreen = () => {
   // const [lastId, setLastId] = useState(0);
   let lastId = 0;
   let lastResponseArrived = true;
+  let lastLogId = 0;
 
   const [userId, setUserId] = useState(0);
 
@@ -33,7 +34,7 @@ const PublicChatScreen = () => {
     // Refresh messages at some interval
     intervalRef.current = setInterval(() => {
       if (token) {
-        refreshMessages(token);
+        // refreshMessages(token);
       }
     }, chatRefreshDelay);
     // Unmount
@@ -59,16 +60,49 @@ const PublicChatScreen = () => {
           data.push({
             _id: 0,
             text: 'Welcome to SportsGeek Public Chat',
-            createdAt: new Date(),
+            // createdAt: new Date(),
             system: true
           });
-          setMessages(data);
+          // setMessages(data);
+          fetchContestLog(token, data);
         } else {
           showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
         }
       })
       .catch((error) => {
         setLoading(false);
+        console.log(error);
+        showSweetAlert('error', 'Network Error', errorMessage);
+      });
+  };
+
+  const fetchContestLog = (token, chatData) => {
+    const headers = { 'Authorization': 'Bearer ' + token };
+    axios.get(baseurl + '/contest-log/formatted/last-days/' + chatDays, { headers })
+      .then((response) => {
+        if (response.status == 200) {
+          const logData = response.data;
+          if (logData.length > 0) {
+            lastLogId = logData[0]._id.substr(1);
+          }
+          // Required for Live AWS Database
+          // logData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
+          console.log('chat data : ');
+          console.log(chatData);
+          console.log(typeof(chatData));
+          console.log('Log data : ');
+          console.log(logData);
+          console.log(typeof(logData));
+          const finalData = chatData.concat(logData);
+          console.log('Final Data : ');
+          console.log(finalData);
+          setMessages(finalData);
+        } else {
+          showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
         showSweetAlert('error', 'Network Error', errorMessage);
       });
   };
@@ -135,7 +169,7 @@ const PublicChatScreen = () => {
   if (userId != 0) {
     return (
       <>
-        <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+        <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
         <GiftedChat
           messages={messages}

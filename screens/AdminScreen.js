@@ -16,7 +16,7 @@ const AdminScreen = ({ navigation }) => {
   const { colors } = useTheme();
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
-      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+      <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       <Collapse>
         <CollapseHeader>
           <View style={styles.menuWrapper}>
@@ -205,6 +205,18 @@ const AdminScreen = ({ navigation }) => {
           </View>
         </CollapseHeader>
       </Collapse>
+      <Collapse>
+        <CollapseHeader>
+          <View style={styles.menuWrapper}>
+            <TouchableRipple onPress={() => { navigation.navigate('RemovePublicChatScreen') }}>
+              <View style={styles.menuItem}>
+                <Icon name="chat" color="#19398A" size={25} />
+                <Text style={styles.menuItemText}>Public Chat</Text>
+              </View>
+            </TouchableRipple>
+          </View>
+        </CollapseHeader>
+      </Collapse>
     </ScrollView>
   );
 };
@@ -216,7 +228,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: StatusBar.currentHeight
   },
   card: {
     width: '100%',

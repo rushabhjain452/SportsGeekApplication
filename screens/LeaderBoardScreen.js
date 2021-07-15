@@ -102,7 +102,7 @@ function LeaderBoard(props) {
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />} >
-      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+      <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <View style={styles.rectStackRow}>
         { data.length >= 2 && <TopUser rank="2" data={data[1]} boxStyle={styles.box1} />}
@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#62B1F6',
+    // backgroundColor: '#6FA0CA',
     position: 'absolute',
     right: 5,
     top: -20
@@ -262,7 +263,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 35,
     // backgroundColor: "rgba(25,57,138,1)",
-    backgroundColor: '#1f4bb9',
+    // backgroundColor: '#1F4F99',
+    backgroundColor: '#3D74C7',
     borderWidth: 0,
     borderColor: "#000000",
     borderRadius: 5,

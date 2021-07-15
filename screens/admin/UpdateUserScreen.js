@@ -139,7 +139,7 @@ const UpdateUserScreen = (props) => {
         <View style={styles.container}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
-            <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+            <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Update Profile</Text>
             </View>

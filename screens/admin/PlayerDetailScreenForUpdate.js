@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshControl } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, StatusBar, RefreshControl } from "react-native";
 import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';

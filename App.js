@@ -6,61 +6,62 @@
  * @flow strict-local
  */
 
- import React, {useEffect} from 'react';
- import type {Node} from 'react';
- import {SafeAreaProvider} from 'react-native-safe-area-context';
- import { 
-   NavigationContainer, 
-   DefaultTheme as NavigationDefaultTheme,
-   DarkTheme as NavigationDarkTheme
- } from '@react-navigation/native';
- import { createDrawerNavigator } from '@react-navigation/drawer';
- import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
- import { 
-   Provider as PaperProvider, 
-   DefaultTheme as PaperDefaultTheme,
-   DarkTheme as PaperDarkTheme
- } from 'react-native-paper';
+import React, {useEffect} from 'react';
+import type {Node} from 'react';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { 
+  NavigationContainer, 
+  DefaultTheme as NavigationDefaultTheme,
+  DarkTheme as NavigationDarkTheme
+} from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
+import { 
+  Provider as PaperProvider, 
+  DefaultTheme as PaperDefaultTheme,
+  DarkTheme as PaperDarkTheme
+} from 'react-native-paper';
  
- import MainTabScreen from './screens/MainTabScreen';
- import ScheduleScreen from './screens/ScheduleScreen';
- import HelpScreen from './screens/HelpScreen';
- import GenderScreen from './screens/admin/GenderScreen';
- import ContestScreen from './screens/ContestScreen';
- import { AuthContext } from './components/context';
- 
- import RootStackScreen from './screens/RootStackScreen';
- 
- import ChangePasswordScreen from './screens/ChangePasswordScreen';
- import UpdateProfileScreen from './screens/UpdateProfileScreen';
- import RoleScreen from './screens/admin/RoleScreen';
- import PlayerTypeScreen from './screens/admin/PlayerTypeScreen';
- import VenueScreen from './screens/admin/VenueScreen';
- import TournamentScreen from './screens/admin/TournamentScreen';
- import TeamScreen from './screens/admin/TeamScreen';
- import UpdateMatchScheduleScreen from './screens/admin/UpdateMatchScheduleScreen';
- import UpdateMatchResultScreen from './screens/admin/UpdateMatchResultScreen';
- import UserAccountApproval from './screens/admin/UserAccountApproval';
- import ListAllUsersScreen from './screens/admin/ListAllUsersScreen';
- import PlayerScreen from './screens/admin/PlayerScreen';
- import MatchesScreen from './screens/admin/MatchesScreen';
- import RechargeScreen from './screens/admin/RechargeScreen';
- import AssignRoleToUserScreen from './screens/admin/AssignRoleToUserScreen';
- import DeleteScreen from './screens/admin/DeleteScreen';
- import UpdateUserScreen from './screens/admin/UpdateUserScreen';
- import ResultWithUsersScreen from './screens/ResultWithUsersScreen';
- import UpdateMatchMinBet from './screens/admin/UpdateMatchMinBet';
- import UpdateMatchMinBetSchedule from './screens/admin/UpdateMatchMinBetSchedule';
- import UsersContestsForLiveMatch from './screens/UsersContestsForLiveMatch';
- import UpdateActiveTournamentScreen from './screens/admin/UpdateActiveTournamentScreen';
- import MatchesScheduleScreenForUpdate from './screens/admin/MatchesScheduleScreenForUpdate';
- import ProfileScreen from './screens/ProfileScreen';
- import ChatHomeScreen from './screens/ChatHomeScreen';
- import RoomScreen from './screens/RoomScreen';
+import MainTabScreen from './screens/MainTabScreen';
+import ScheduleScreen from './screens/ScheduleScreen';
+import HelpScreen from './screens/HelpScreen';
+import GenderScreen from './screens/admin/GenderScreen';
+import ContestScreen from './screens/ContestScreen';
+import { AuthContext } from './components/context';
+
+import RootStackScreen from './screens/RootStackScreen';
+
+import ChangePasswordScreen from './screens/ChangePasswordScreen';
+import UpdateProfileScreen from './screens/UpdateProfileScreen';
+import RoleScreen from './screens/admin/RoleScreen';
+import PlayerTypeScreen from './screens/admin/PlayerTypeScreen';
+import VenueScreen from './screens/admin/VenueScreen';
+import TournamentScreen from './screens/admin/TournamentScreen';
+import TeamScreen from './screens/admin/TeamScreen';
+import UpdateMatchScheduleScreen from './screens/admin/UpdateMatchScheduleScreen';
+import UpdateMatchResultScreen from './screens/admin/UpdateMatchResultScreen';
+import UserAccountApproval from './screens/admin/UserAccountApproval';
+import ListAllUsersScreen from './screens/admin/ListAllUsersScreen';
+import PlayerScreen from './screens/admin/PlayerScreen';
+import MatchesScreen from './screens/admin/MatchesScreen';
+import RechargeScreen from './screens/admin/RechargeScreen';
+import AssignRoleToUserScreen from './screens/admin/AssignRoleToUserScreen';
+import DeleteScreen from './screens/admin/DeleteScreen';
+import UpdateUserScreen from './screens/admin/UpdateUserScreen';
+import ResultWithUsersScreen from './screens/ResultWithUsersScreen';
+import UpdateMatchMinBet from './screens/admin/UpdateMatchMinBet';
+import UpdateMatchMinBetSchedule from './screens/admin/UpdateMatchMinBetSchedule';
+import UsersContestsForLiveMatch from './screens/UsersContestsForLiveMatch';
+import UpdateActiveTournamentScreen from './screens/admin/UpdateActiveTournamentScreen';
+import MatchesScheduleScreenForUpdate from './screens/admin/MatchesScheduleScreenForUpdate';
+import ProfileScreen from './screens/ProfileScreen';
+import ChatHomeScreen from './screens/ChatHomeScreen';
+import RoomScreen from './screens/RoomScreen';
 import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
 
- import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUpdate';
+import RemovePublicChatScreen from './screens/admin/RemovePublicChatScreen';
  // const baseurl = 'localhost:8080';
  
 //  const Drawer = createDrawerNavigator();
@@ -297,22 +298,7 @@ import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUp
                 <Stack.Screen name="changePasswordScreen" component={ChangePasswordScreen} />
                 <Stack.Screen name="GenderScreen" component={GenderScreen} />
                 <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
-                <Stack.Screen 
-                  name="ContestScreen" 
-                  component={ContestScreen}
-                  options={{
-                    title: 'Contest',
-                    headerLeft: (props) => (
-                      <HeaderBackButton
-                        {...props}
-                        onPress={() => {
-                          // Do something
-                          console.log('Back button pressed...');
-                        }}
-                      />
-                    )
-                  }}
-                />
+                <Stack.Screen name="ContestScreen" component={ContestScreen} />
                 <Stack.Screen name="RoleScreen" component={RoleScreen} />
                 <Stack.Screen name="PlayerTypeSCreen" component={PlayerTypeScreen} />
                 <Stack.Screen name="VenueScreen" component={VenueScreen} />
@@ -341,6 +327,7 @@ import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUp
                 <Stack.Screen name="RoomScreen" component={RoomScreen} />
                 <Stack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} />
                 <Stack.Screen name="PlayerDetailScreenForUpdate" component={PlayerDetailScreenForUpdate} />
+                <Stack.Screen name="RemovePublicChatScreen" component={RemovePublicChatScreen} />
               </Stack.Navigator>
             )
             :

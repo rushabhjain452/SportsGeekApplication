@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'react-native-elements';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+
 import formatDate from '../helpers/formatDate';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
@@ -15,6 +17,8 @@ import { baseurl, errorMessage } from '../config';
 function ResultWithUsersScreen(props) {
 
   const { matchId } = props.route.params;
+
+  const navigation = useNavigation();
 
   const [matchData, setMatchData] = useState({});
   const [data, setData] = useState([]);
@@ -98,7 +102,7 @@ function ResultWithUsersScreen(props) {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
-      <StatusBar backgroundColor='#19398A' barStyle="light-content" />
+      <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       <TouchableOpacity style={styles2.rect}>
         <Text style={styles2.date}>{formatDate(matchData.startDatetime)}</Text>
