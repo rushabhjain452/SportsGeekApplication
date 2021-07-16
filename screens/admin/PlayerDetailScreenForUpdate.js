@@ -66,16 +66,16 @@ function PlayerDetailScreenForUpdate({ navigation }) {
       .then((response) => {
         setLoading(false);
         if (response.status == 200) {
-          showSweetAlert('success', 'Success', 'Match deleted successfully.');
+          showSweetAlert('success', 'Success', 'Player deleted successfully.');
           fetchData(token);
         }
         else {
-          showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+          showSweetAlert('error', 'Error', 'Failed to delete Player. Please try again...');
         }
       })
       .catch((error) => {
         setLoading(false);
-        showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');
+        showSweetAlert('error', 'Error', 'Failed to delete Player. Please try again...');
       })
   }
 

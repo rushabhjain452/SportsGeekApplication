@@ -310,6 +310,7 @@ const PlayerScreen = (props) => {
     const onPlayerSS = (value) => {
         setPlayerTypeId(value);
     };
+    
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
