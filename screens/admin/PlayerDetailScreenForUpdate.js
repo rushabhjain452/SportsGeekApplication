@@ -55,7 +55,7 @@ function PlayerDetailScreenForUpdate({ navigation }) {
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
-    // fetchData(token);
+    fetchData(token);
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 

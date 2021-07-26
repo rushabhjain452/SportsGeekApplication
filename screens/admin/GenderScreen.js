@@ -18,11 +18,12 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
 const GenderScreen = ({ navigation }) => {
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -175,7 +176,7 @@ const GenderScreen = ({ navigation }) => {
         <View style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Gender Details</Text>
             </View>

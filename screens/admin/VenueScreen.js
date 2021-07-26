@@ -171,7 +171,7 @@ const VenueScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <View style={styles.header}>

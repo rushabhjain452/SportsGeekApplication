@@ -10,6 +10,7 @@ import {
     StyleSheet,
     ScrollView,
     StatusBar,
+    RefreshControl,
     LogBox,
     Alert
 } from 'react-native';
@@ -17,10 +18,12 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../../config';
+import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
 const RoleScreen = ({ navigation }) => {
 
@@ -35,6 +38,8 @@ const RoleScreen = ({ navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        displayRole(token);
+        setRole('');
     }, []);
 
     useEffect(async () => {
@@ -45,7 +50,8 @@ const RoleScreen = ({ navigation }) => {
     }, [refreshing]);
 
     const displayRole = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/roles', { headers })
             .then(response => {
                 setLoading(false);
@@ -148,6 +154,7 @@ const RoleScreen = ({ navigation }) => {
             showSweetAlert('warning', 'Invalid Input', 'Please enter valid value for Role.');
         }
     }
+
     const getConfirmation = (roleId) =>
         Alert.alert(
             "Delete Confirmation",
@@ -162,10 +169,12 @@ const RoleScreen = ({ navigation }) => {
                 }
             ]
         );
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20, marginTop: 10, width:100}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Role Details</Text>
             </View>
@@ -173,7 +182,7 @@ const RoleScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps="handled">
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Role Name</Text>
                     <View style={styles.action}>
                         <FontAwesome
@@ -373,5 +382,8 @@ const styles = StyleSheet.create({
         //    backgroundColor:'red'
         //    justifyContent: 'space-between',  
         //    textAlign: 'center'
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     }
 });

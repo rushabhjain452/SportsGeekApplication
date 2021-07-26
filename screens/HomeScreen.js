@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Button, StyleSheet, StatusBar, Icon, ScrollView, TouchableOpacity } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import CarouselCardItem, { SLIDER_WIDTH, ITEM_WIDTH } from './CarouselCardItem';
@@ -6,16 +6,23 @@ import data from '../data';
 import { Card } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 import ScheduleScreen from './ScheduleScreen';
-import { Container, Header, Content, CardItem, Thumbnail, Left, Body } from 'native-base';
+// import { Container, Header, Content, CardItem, Thumbnail, Left, Body } from 'native-base';
+import { AuthContext } from '../App';
 // const HomeStack = createStackNavigator();
 
 const HomeScreen = ({ navigation }) => {
-  const [index, setIndex] = React.useState(0)
-  const isCarousel = React.useRef(null)
+
+  const [index, setIndex] = React.useState(0);
+  const isCarousel = React.useRef(null);
+
+  const { loginState } = React.useContext(AuthContext);
+  console.log('Home Screen : ');
+  console.log(loginState);
+
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
       <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
-      <Text style={styles.text_header}>Live Cricket Score</Text>
+      {/* <Text style={styles.text_header}>Live Cricket Score</Text>
       <TouchableOpacity style={styles.rect}>
         <Text style={styles.date}>Date</Text>
         <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -39,9 +46,9 @@ const HomeScreen = ({ navigation }) => {
           <Text style={{ textAlign: 'left', fontSize: 18, paddingLeft: 20, fontWeight: 'bold', width: '50%' }}>Live Score:{" "}</Text>
           <Text style={{ textAlign: 'right', fontSize: 18, paddingRight: 20, fontWeight: 'bold', width: '50%' }}>Overs:{" "}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={styles.container}>
-      <Text style={styles.text_header}>Cricket News</Text>
+        <Text style={styles.text_header}>Cricket News</Text>
         <Carousel
           layout="tinder"
           layoutCardOffset={9}

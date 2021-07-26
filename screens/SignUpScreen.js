@@ -187,7 +187,7 @@ const SignUpScreen = ({ navigation }) => {
                     if (response.status == 201) {
                         showSweetAlert('success', 'Registration Success', 'You are registered. Please wait until admin approves your account. You will receive an email, when admin will approve your account.');
                         setSuccess(true);
-                        // navigation.goBack();
+                        navigation.goBack();
                         // navigator.navigate('SignInScreen');
                     } else {
                         showSweetAlert('error', 'Network Error', errorMessage);
@@ -219,7 +219,7 @@ const SignUpScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}> Register Now!</Text>
             </View>

@@ -19,14 +19,14 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useNavigation } from '@react-navigation/native';
 
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
 const PlayerScreen = (props) => {
 
@@ -49,6 +49,8 @@ const PlayerScreen = (props) => {
     const [avatarPath, setAvatarPath] = useState(userAvatarLogo);
     const [success, setSuccess] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(async () => {
         const token = await AsyncStorage.getItem('token');
         setToken(token);
@@ -61,10 +63,11 @@ const PlayerScreen = (props) => {
     }, []);
 
     const displayTeam = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/teams', { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 if (response.status == 200) {
                     setData(response.data);
@@ -85,17 +88,18 @@ const PlayerScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
 
     const displayPlayerType = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/player-types', { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 if (response.status == 200) {
                     setData(response.data);
@@ -116,7 +120,7 @@ const PlayerScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
@@ -124,10 +128,11 @@ const PlayerScreen = (props) => {
 
     const fetchPlayerData = (playerId, token) => {
         setBtnText('Update');
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/players/' + playerId, { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 if (response.status == 200) {
                     setPlayerId(response.data.playerId);
                     setTeamId(response.data.teamId);
@@ -141,7 +146,7 @@ const PlayerScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
@@ -184,7 +189,7 @@ const PlayerScreen = (props) => {
     };
 
     const addPlayer = () => {
-        if (playerId == 0){
+        if (playerId == 0) {
             showSweetAlert('warning', 'Invalid Input!', 'Please enter Player Id.');
         }
         else if (teamId == 0) {
@@ -197,7 +202,7 @@ const PlayerScreen = (props) => {
             showSweetAlert('warning', 'Invalid Input!', 'Please Select Profile Picture.');
         }
         else {
-            // setLoading(true);
+            setLoading(true);
             // Submitting Form Data (with Profile Picture)
             const formData = new FormData();
             formData.append('playerId', playerId);
@@ -216,10 +221,10 @@ const PlayerScreen = (props) => {
                     uri: profilePicture.path
                 });
             }
-            const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
+            const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token };
             axios.post(baseurl + '/players', formData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Player added successfully.');
                         setSuccess(true);
@@ -236,12 +241,12 @@ const PlayerScreen = (props) => {
                     setTeamId(0);
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     // console.log(error);
                     console.log(error);
-                        showSweetAlert('error', 'Network Error', errorMessage);
+                    showSweetAlert('error', 'Network Error', errorMessage);
                 });
-            }
+        }
     }
 
     const updatePlayer = () => {
@@ -256,18 +261,19 @@ const PlayerScreen = (props) => {
         }
         else if (playerTypeId == 0) {
             showSweetAlert('warning', 'Invalid Input', 'Please Select Valid Player Type.');
-        }else if (!profilePicture) {
+        } else if (!profilePicture) {
             showSweetAlert('warning', 'Invalid Input!', 'Please Select Player logo.');
         }
         else {
-        const formData = new FormData();
+            setLoading(true);
+            const formData = new FormData();
             formData.append('teamId', teamId);
             formData.append('name', playerName);
             formData.append('typeId', playerTypeId);
             if (profilePicture == null) {
                 formData.append('profilePicture', null);
             } else {
-                console.log("ProfilePicture:"+profilePicture.path);
+                console.log("ProfilePicture:" + profilePicture.path);
                 let picturePath = profilePicture.path;
                 let pathParts = picturePath.split('/');
                 formData.append('profilePicture', {
@@ -280,7 +286,7 @@ const PlayerScreen = (props) => {
             const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
             axios.put(baseurl + '/players/' + playerId, formData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 200) {
                         setSuccess(true);
                         showSweetAlert('success', 'Success', 'Player updated successfully..');
@@ -297,7 +303,7 @@ const PlayerScreen = (props) => {
                     setPlayerTypeId(0);
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     console.log(error);
                     showSweetAlert('error', 'Error', 'Failed to update Player. Please try again...');
                 })
@@ -310,11 +316,12 @@ const PlayerScreen = (props) => {
     const onPlayerSS = (value) => {
         setPlayerTypeId(value);
     };
-    
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{ marginLeft: 15, marginTop: 10 }} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Player Details</Text>
             </View>
@@ -323,14 +330,14 @@ const PlayerScreen = (props) => {
                 style={styles.footer}
             >
                 <ScrollView keyboardShouldPersistTaps="handled">
-                <Text style={[styles.text_footer, { marginTop: 35 }]}>Player Id</Text>
+                    <Text style={[styles.text_footer, { marginTop: 35 }]}>Player Id</Text>
                     <View style={styles.action}>
                         <TextInput
                             placeholder="Enter Player Id"
                             style={styles.textInput}
                             autoCapitalize="none"
                             onChangeText={(val) => setPlayerId(val)}
-                            value={playerId  + ""}
+                            value={playerId + ""}
                             maxLength={20}
                         />
                         {(playerId != 0) ?
@@ -400,20 +407,20 @@ const PlayerScreen = (props) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Profile Picture</Text>
                     <View style={styles.imageUploadCard}>
-                            <Card.Image style={styles.imageuploadStyle} source={{ uri: avatarPath }} />
+                        <Card.Image style={styles.imageuploadStyle} source={{ uri: avatarPath }} />
                         <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={() => { photoSelectHandler() }}>
-                        <Text style={styles.buttonTextStyle}>
-                            {profilePicture == null ? <Icon name="account-check" color="#19398A" size={50} /> : <Icon name="account-edit" color="#19398A" size={50} />}
-                        </Text>
-                    </TouchableOpacity>
-                    {profilePicture !=null &&
-                        (<TouchableOpacity
-                            // style={styles.removeButtonStyle}
-                            onPress={() => { photoRemoveHandler() }}>
-                            <Text style={styles.buttonTextStyle1}><Icon name="account-cancel" color="#19398A" size={50} /></Text>
-                        </TouchableOpacity>)}
+                            style={styles.buttonStyle}
+                            onPress={() => { photoSelectHandler() }}>
+                            <Text style={styles.buttonTextStyle}>
+                                {profilePicture == null ? <Icon name="account-check" color="#19398A" size={50} /> : <Icon name="account-edit" color="#19398A" size={50} />}
+                            </Text>
+                        </TouchableOpacity>
+                        {profilePicture != null &&
+                            (<TouchableOpacity
+                                // style={styles.removeButtonStyle}
+                                onPress={() => { photoRemoveHandler() }}>
+                                <Text style={styles.buttonTextStyle1}><Icon name="account-cancel" color="#19398A" size={50} /></Text>
+                            </TouchableOpacity>)}
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity
@@ -628,5 +635,8 @@ const styles = StyleSheet.create({
         // paddingHorizontal:20,
         paddingVertical: 5,
         fontSize: 16,
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     }
 });

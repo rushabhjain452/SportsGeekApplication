@@ -18,12 +18,14 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../../config';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
 
 const MatchesScreen = (props) => {
 
@@ -48,6 +50,7 @@ const MatchesScreen = (props) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [token, setToken] = useState('');
 
+    const [loading, setLoading] = useState(true);
 
     useEffect(async () => {
         const token = await AsyncStorage.getItem('token');
@@ -63,10 +66,11 @@ const MatchesScreen = (props) => {
     }, []);
 
     const displayTournament = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/tournaments', { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 //     setRefreshing(false);
                 if (response.status == 200) {
                     setData(response.data);
@@ -88,16 +92,18 @@ const MatchesScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
-            })
-    }
+            });
+    };
+
     const displayVenue = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/venues', { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 if (response.status == 200) {
                     setData(response.data);
@@ -118,17 +124,18 @@ const MatchesScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
-            })
-    }
+            });
+    };
 
     const displayTeam = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/teams', { headers })
             .then(response => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 if (response.status == 200) {
                     setData(response.data);
@@ -150,15 +157,16 @@ const MatchesScreen = (props) => {
                 }
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 // setRefreshing(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
-            })
-    }
+            });
+    };
 
     const fetchMatchData = (matchId, token) => {
         setBtnText('Update');
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/matches/' + matchId, { headers })
             .then(response => {
                 // setLoading(false);
@@ -175,14 +183,13 @@ const MatchesScreen = (props) => {
                 else {
                     showSweetAlert('error', 'Network Error', errorMessage);
                 }
+                setLoading(false);
             })
             .catch(error => {
-                // setLoading(false);
+                setLoading(false);
                 showSweetAlert('error', 'Network Error', errorMessage);
-            })
-    }
-
-
+            });
+    };
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -226,6 +233,7 @@ const MatchesScreen = (props) => {
             showSweetAlert('warning', 'Invalid Input', 'Please select match date time.');
         }
         else {
+            setLoading(true);
             const requestData = {
                 matchId: matchId,
                 tournamentId: tournamentId,
@@ -236,10 +244,10 @@ const MatchesScreen = (props) => {
                 team2: team2Id,
                 minimumPoints: contestPoints
             };
-            const headers = { 'Authorization': 'Bearer ' + token }
+            const headers = { 'Authorization': 'Bearer ' + token };
             axios.post(baseurl + '/matches', requestData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Match added successfully.');
                     }
@@ -256,7 +264,7 @@ const MatchesScreen = (props) => {
                     setVenueId(0);
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     console.log(error);
                     console.log("matchId" + matchId + "to:" + tournamentId + "date:" + startDateTime + "team1:" + team1Id + "team2:" + team2Id + "venue:" + venueId + "name:" + matchName + "points:" + contestPoints);
                     showSweetAlert('error', 'Error', 'Failed to add Match. Please try again...');
@@ -290,6 +298,7 @@ const MatchesScreen = (props) => {
             showSweetAlert('warning', 'Invalid Input', 'Please select match date time.');
         }
         else {
+            setLoading(true);
             const requestData = {
                 tournamentId: tournamentId,
                 name: matchName,
@@ -302,7 +311,7 @@ const MatchesScreen = (props) => {
             const headers = { 'Authorization': 'Bearer ' + token }
             axios.put(baseurl + '/matches/' + matchId, requestData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Match updated successfully..');
                     }
@@ -320,7 +329,7 @@ const MatchesScreen = (props) => {
                     setBtnText('Add');
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     showSweetAlert('error', 'Error', 'Failed to update Match. Please try again...');
                 })
         }
@@ -339,7 +348,9 @@ const MatchesScreen = (props) => {
     };
     return (
         <View style={styles.container}>
-                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+            <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{ marginLeft: 15, marginTop: 10 }} /></TouchableOpacity>
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Add Match</Text>
@@ -664,5 +675,8 @@ const styles = StyleSheet.create({
         marginRight: 35,
         //   marginTop: 15,
         width: '50%'
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     }
 });

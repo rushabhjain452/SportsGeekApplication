@@ -23,7 +23,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-import { AuthContext } from '../components/context';
+import { AuthContext } from '../App';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 const SignInScreen = ({ navigation }) => {

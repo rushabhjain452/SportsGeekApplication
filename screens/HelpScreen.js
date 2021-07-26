@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const HelpScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} /></TouchableOpacity>
       <Text style={styles.heading}>Rules</Text>
       <Text style={styles.listitem}>1.Register by putting Rs 100.</Text>
       <Text style={styles.listitem}>2.You will get Rs 100 X 5 = 500 points.</Text>

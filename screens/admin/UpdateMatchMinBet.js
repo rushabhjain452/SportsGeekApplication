@@ -25,7 +25,6 @@ import { useTheme } from 'react-native-paper';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 
-import { AuthContext } from '../components/context';
 // import { log } from 'react-native-reanimated';
 // import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -74,15 +73,9 @@ const UpdateMatchMinBet = (props) => {
         // fetchData(token);
     }, []);
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        // fetchData(token);
-        // fetchMatchData(token);
-        // fetchUserData(userId, token);
-    }, []);
-
     const fetchMatchData = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/matches/' + matchId, { headers })
             .then(response => {
                 setLoading(false);
@@ -139,9 +132,8 @@ const UpdateMatchMinBet = (props) => {
     return (
         <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
-            {/* {loading == true  && (<ActivityIndicator size="large" color="#19398A" />)} */}
             <View>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
                 <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Update Minimum Bet Points</Text>

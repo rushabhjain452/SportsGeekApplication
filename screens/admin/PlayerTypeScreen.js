@@ -17,36 +17,42 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const PlayerTypeScreen = ({ navigation }) => {
+import showSweetAlert from '../../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
-    // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+const PlayerTypeScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
+
     const [data, setData] = useState([]);
     const [playerType, setPlayerType] = useState('');
     const [btnText, setBtnText] = useState('Add');
     const [playerTypeId, setPlayerTypeId] = useState(0);
-    const [token, setToken] = useState('');
+    // const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        displayPlayerType();
+        setPlayerType('');
     }, []);
 
     useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayPlayerType(token);
+        // const token = await AsyncStorage.getItem('token');
+        // setToken(token);
+        displayPlayerType();
         setPlayerType('');
     }, [refreshing]);
 
-    const displayPlayerType = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+    const displayPlayerType = () => {
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/player-types', { headers })
             .then(response => {
                 setLoading(false);
@@ -55,12 +61,15 @@ const PlayerTypeScreen = ({ navigation }) => {
                     setData(response.data);
                 }
                 else {
+                    console.log('1');
                     showSweetAlert('error', 'Network Error', errorMessage);
                 }
             })
             .catch(error => {
                 setLoading(false);
                 setRefreshing(false);
+                console.log(error);
+                console.log(error.response);
                 showSweetAlert('error', 'Network Error', errorMessage);
             })
     }
@@ -70,13 +79,14 @@ const PlayerTypeScreen = ({ navigation }) => {
             const requestData = {
                 typeName: playerType
             };
-            const headers = { 'Authorization': 'Bearer ' + token }
+            const headers = { 'Authorization': 'Bearer ' + token };
+            setLoading(true);
             axios.post(baseurl + '/player-types', requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'PlayerType added successfully.');
-                        displayPlayerType(token);
+                        displayPlayerType();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to add PlayerType. Please try again...');
@@ -93,13 +103,14 @@ const PlayerTypeScreen = ({ navigation }) => {
     }
 
     const deletePlayerType = (id) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.delete(baseurl + '/player-types/' + id, { headers })
             .then((response) => {
                 setLoading(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'PlayerType deleted successfully.');
-                    displayPlayerType(token);
+                    displayPlayerType();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete PlayerType. Please try again...');
@@ -123,13 +134,14 @@ const PlayerTypeScreen = ({ navigation }) => {
             const requestData = {
                 typeName: playerType
             };
-            const headers = { 'Authorization': 'Bearer ' + token }
+            const headers = { 'Authorization': 'Bearer ' + token };
+            setLoading(true);
             axios.put(baseurl + '/player-types/' + playerTypeId, requestData, { headers })
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'PlayerType updated successfully..');
-                        displayPlayerType(token);
+                        displayPlayerType();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to update PlayerType. Please try again...');
@@ -163,7 +175,7 @@ const PlayerTypeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{ marginLeft: 20, marginTop: 10, width: 100 }} /></TouchableOpacity>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <View style={styles.header}>
@@ -373,5 +385,8 @@ const styles = StyleSheet.create({
         //    backgroundColor:'red'
         //    justifyContent: 'space-between',  
         //    textAlign: 'center'
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     }
 });

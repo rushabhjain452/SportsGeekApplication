@@ -12,7 +12,8 @@ import {
     StatusBar,
     LogBox,
     RefreshControl,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -42,22 +43,35 @@ const TeamScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [success, setSuccess] = useState(false);
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        displayTeam(token);
+        // setTeam('');
+        // setTeamLogo('');
+        // setShortName('');
+        clearControls();
     }, []);
 
+    const clearControls = () => {
+        setTeam('');
+        setTeamLogo('');
+        setShortName('');
+    }
 
     useEffect(async () => {
         const token = await AsyncStorage.getItem('token');
         setToken(token);
         displayTeam(token);
-        setTeam('');
-        setTeamLogo('');
-        setShortName('');
+        // setTeam('');
+        // setTeamLogo('');
+        // setShortName('');
+        clearControls();
     }, [refreshing]);
 
     const displayTeam = (token) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.get(baseurl + '/teams', { headers })
             .then(response => {
                 setLoading(false);
@@ -112,7 +126,7 @@ const TeamScreen = ({ navigation }) => {
         setAvatarPath(userAvatarLogo);
         setTeamLogo(avatarPath);
     };
-    
+
     const addTeam = () => {
         if (team.length < 3) {
             showSweetAlert('warning', 'Invalid Input!', 'Please enter Team name greater than 3 characters to proceed.');
@@ -124,7 +138,7 @@ const TeamScreen = ({ navigation }) => {
             showSweetAlert('warning', 'Invalid Input!', 'Please Select Team logo.');
         }
         else {
-            // setLoading(true);
+            setLoading(true);
             // Submitting Form Data (with Profile Picture)
             const formData = new FormData();
             formData.append('name', team);
@@ -144,7 +158,7 @@ const TeamScreen = ({ navigation }) => {
             const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
             axios.post(baseurl + '/teams', formData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Team added successfully.');
                         setSuccess(true);
@@ -153,35 +167,38 @@ const TeamScreen = ({ navigation }) => {
                     } else {
                         showSweetAlert('error', 'Network Error', errorMessage);
                     }
-                    setTeam('');
-                    setShortName('');
-                    setTeamLogo(null);
+                    // setTeam('');
+                    // setShortName('');
+                    // setTeamLogo(null);
+                    clearControls();
                     setAvatarPath(avatarPath);
+                    displayTeam();
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     // console.log(error);
-                        showSweetAlert('error', 'Network Error', errorMessage);
+                    showSweetAlert('error', 'Network Error', errorMessage);
                 });
-            }
+        }
     }
     const getConfirmation = (teamId) =>
-    Alert.alert(
-        "Delete Confirmation",
-        "Do you really want to delete the Team ?",
-        [
-            {
-                text: "Cancel"
-            },
-            {
-                text: "OK",
-                onPress: () => { deleteTeam(teamId) }
-            }
-        ]
-    );
+        Alert.alert(
+            "Delete Confirmation",
+            "Do you really want to delete the Team ?",
+            [
+                {
+                    text: "Cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: () => { deleteTeam(teamId) }
+                }
+            ]
+        );
 
     const deleteTeam = (id) => {
-        const headers = { 'Authorization': 'Bearer ' + token }
+        const headers = { 'Authorization': 'Bearer ' + token };
+        setLoading(true);
         axios.delete(baseurl + '/teams/' + id, { headers })
             .then((response) => {
                 setLoading(false);
@@ -192,13 +209,15 @@ const TeamScreen = ({ navigation }) => {
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete Team. Please try again...');
                 }
-                setTeam('');
-                setTeamLogo('');
-                setShortName('');
+                // setTeam('');
+                // setTeamLogo('');
+                // setShortName('');
+                clearControls();
+                displayTeam();
             })
             .catch((error) => {
-                console.log(error);
-                // setLoading(false);
+                // console.log(error);
+                setLoading(false);
                 showSweetAlert('error', 'Error', 'Failed to delete Team. Please try again...');
             })
     }
@@ -223,13 +242,14 @@ const TeamScreen = ({ navigation }) => {
             showSweetAlert('warning', 'Invalid Input!', 'Please Select Team logo.');
         }
         else {
+            setLoading(true);
             const formData = new FormData();
             formData.append('name', team);
             formData.append('shortName', shortName);
             if (teamLogo == null) {
                 formData.append('teamLogo', null);
             } else {
-                console.log("TeamLogo:"+teamLogo.path);
+                console.log("TeamLogo:" + teamLogo.path);
                 let picturePath = teamLogo.path;
                 let pathParts = picturePath.split('/');
                 formData.append('teamLogo', {
@@ -242,7 +262,7 @@ const TeamScreen = ({ navigation }) => {
             const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
             axios.put(baseurl + '/teams/' + teamId, formData, { headers })
                 .then((response) => {
-                    // setLoading(false);
+                    setLoading(false);
                     if (response.status == 200) {
                         setSuccess(true);
                         showSweetAlert('success', 'Success', 'Team updated successfully..');
@@ -250,14 +270,17 @@ const TeamScreen = ({ navigation }) => {
                     else {
                         showSweetAlert('error', 'Error', 'Failed to update Team. Please try again...');
                     }
-                    setTeam('');
-                    setShortName('');
-                    setTeamLogo(null);
+                    // setTeam('');
+                    // setShortName('');
+                    // // setTeamLogo(null);
+                    // setTeamLogo('');
+                    clearControls();
                     setBtnText('Add');
                     setAvatarPath(avatarPath);
+                    displayTeam();
                 })
                 .catch((error) => {
-                    // setLoading(false);
+                    setLoading(false);
                     console.log(error);
                     showSweetAlert('error', 'Error', 'Failed to update Team. Please try again...');
                 })
@@ -265,8 +288,9 @@ const TeamScreen = ({ navigation }) => {
     }
     return (
         <View style={styles.container}>
-                       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{ marginLeft: 20, marginTop: 10, width: 100 }} /></TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Team Details</Text>
             </View>
@@ -274,7 +298,7 @@ const TeamScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
-                <ScrollView keyboardShouldPersistTaps="handled">
+                <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Team Name</Text>
                     <View style={styles.action}>
                         <FontAwesome
@@ -331,20 +355,20 @@ const TeamScreen = ({ navigation }) => {
                     </View>
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>Team Logo</Text>
                     <View style={styles.imageUploadCard}>
-                            <Card.Image style={styles.imageuploadStyle} source={{ uri: avatarPath }} />
+                        <Card.Image style={styles.imageuploadStyle} source={{ uri: avatarPath }} />
                         <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={() => { photoSelectHandler() }}>
-                        <Text style={styles.buttonTextStyle}>
-                            {teamLogo == null ? <Icon name="account-check" color="#19398A" size={50} /> : <Icon name="account-edit" color="#19398A" size={50} />}
-                        </Text>
-                    </TouchableOpacity>
-                    {teamLogo !=null &&
-                        (<TouchableOpacity
-                            // style={styles.removeButtonStyle}
-                            onPress={() => { photoRemoveHandler() }}>
-                            <Text style={styles.buttonTextStyle1}><Icon name="account-cancel" color="#19398A" size={50} /></Text>
-                        </TouchableOpacity>)}
+                            style={styles.buttonStyle}
+                            onPress={() => { photoSelectHandler() }}>
+                            <Text style={styles.buttonTextStyle}>
+                                {teamLogo == null ? <Icon name="account-check" color="#19398A" size={50} /> : <Icon name="account-edit" color="#19398A" size={50} />}
+                            </Text>
+                        </TouchableOpacity>
+                        {teamLogo != null &&
+                            (<TouchableOpacity
+                                // style={styles.removeButtonStyle}
+                                onPress={() => { photoRemoveHandler() }}>
+                                <Text style={styles.buttonTextStyle1}><Icon name="account-cancel" color="#19398A" size={50} /></Text>
+                            </TouchableOpacity>)}
                     </View>
 
                     <View style={styles.button}>
@@ -372,7 +396,7 @@ const TeamScreen = ({ navigation }) => {
                                     </View>
                                     <Text style={[styles.carditem, { width: '15%', paddingLeft: 20 }]}>{item.shortName}</Text>
                                     <Text style={[styles.carditem, { width: '50%', paddingLeft: 20 }]}>{item.name}</Text>
-                                    <TouchableOpacity onPress={() => { editTeam(item.teamId, item.name,item.shortName,item.teamLogo) }} style={{ width: '10%' }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { editTeam(item.teamId, item.name, item.shortName, item.teamLogo) }} style={{ width: '10%' }}><Text style={[styles.carditem]}><Icon name="circle-edit-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
                                     <TouchableOpacity onPress={() => { getConfirmation(item.teamId) }} style={{ width: '10%' }}><Text style={[styles.carditem]}><Icon name="delete-circle-outline" color="#19398A" size={30} /></Text></TouchableOpacity>
                                 </View>
                             </View>
@@ -555,7 +579,7 @@ const styles = StyleSheet.create({
         // paddingHorizontal:20,
         paddingVertical: 5,
         fontSize: 16,
-    }
+    },
     // buttonStyle: {
     //     backgroundColor: '#19398A',
     //     borderWidth: 0,
@@ -570,5 +594,8 @@ const styles = StyleSheet.create({
     //     // marginRight: 35,
     //     marginTop: 10,
     //     marginBottom: 15
-    // }
+    // },
+    spinnerTextStyle: {
+        color: '#FFF'
+    }
 });

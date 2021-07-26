@@ -24,9 +24,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
+
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import axios from 'axios';
+
 const UpdateMatchResultScreen = (props) => {
 
     const navigation = useNavigation();
@@ -126,9 +128,9 @@ const UpdateMatchResultScreen = (props) => {
     return (
         <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
             <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+            <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             <View style={styles.container}>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
-                <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Update Match Result</Text>
                 </View>
@@ -207,7 +209,6 @@ const UpdateMatchResultScreen = (props) => {
 
 export default UpdateMatchResultScreen;
 
-const { height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
     container: {
         width: '100%',

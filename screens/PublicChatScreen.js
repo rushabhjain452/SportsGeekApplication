@@ -179,7 +179,13 @@ const PublicChatScreen = () => {
           showAvatarForEveryMessage={true}
           maxInputLength={1000}
           renderAvatarOnTop={true}
-        // scrollToBottom={true}
+          scrollToBottom={true}
+          renderSystemMessage= {(a, b, c) => {
+            console.log('-----');
+            console.log(a);
+            console.log(b);
+            console.log(c);
+          }}
         />
       </>
     );

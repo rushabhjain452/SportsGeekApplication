@@ -4,9 +4,9 @@ import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UpdateMatchMinBet from './UpdateMatchMinBet';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
@@ -32,7 +32,8 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
 
 
   const fetchData = (token) => {
-    const headers = { 'Authorization': 'Bearer ' + token }
+    const headers = { 'Authorization': 'Bearer ' + token };
+    setLoading(true);
     axios.get(baseurl + '/matches', { headers })
       .then(response => {
         setLoading(false);
@@ -58,13 +59,14 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
-    // fetchData(token);
+    fetchData(token);
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const deleteMatch = (id) => {
     setLoading(true);
-    const headers = { 'Authorization': 'Bearer ' + token }
+    const headers = { 'Authorization': 'Bearer ' + token };
+    setLoading(true);
     axios.delete(baseurl + '/matches/' + id, { headers })
       .then((response) => {
         setLoading(false);
@@ -100,9 +102,11 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <Spinner visible={loading} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
+      <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
       <Text style={styles.text_header}>Matches Schedule</Text>
-      {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
+      {/* {loading == true && (<ActivityIndicator size="large" color="#19398A" />)} */}
       {
         data && data.map((item, index) => (
           <View style={styles.rect} key={item.matchId}>
@@ -324,6 +328,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     textAlign: "center",
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   }
 });
 

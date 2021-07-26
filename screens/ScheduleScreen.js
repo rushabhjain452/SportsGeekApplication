@@ -3,15 +3,21 @@ import { StyleSheet, View, Text, ScrollView, Alert, StatusBar, ActivityIndicator
 import { Card, ListItem, Button, Icon } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import ContestScreen from "./ContestScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+
+import ContestScreen from "./ContestScreen";
 
 import showSweetAlert from '../helpers/showSweetAlert';
 import formatDate from '../helpers/formatDate';
 import { baseurl, errorMessage } from '../config';
+import { AuthContext } from '../App';
 
 function ScheduleScreen({ navigation }) {
+  const { loginState } = React.useContext(AuthContext);
+  console.log('loginState : ');
+  console.log(loginState);
+  // const token = loginState.token;
 
   // const navigation = useNavigation();
 
@@ -98,37 +104,74 @@ function ScheduleScreen({ navigation }) {
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  let lastNumber = 0;
+  let lastDate = '';
+  const getNumberFromDate = (str) =>{
+    try{
+      // console.log(str);
+      // 2021-08-23T19:30:00.000+00:00
+      if(lastDate === ''){
+        lastDate = str;
+        let day = parseInt(str.substring(8,10));
+        lastNumber = day % 2;
+        return lastNumber;
+      }else{
+        const oldDate = lastDate.substring(0, 10);
+        const newDate = str.substring(0, 10);
+        lastDate = str;
+        if(oldDate === newDate){
+          return lastNumber;
+        }
+        else{
+          // Generate number
+          // let day = str.substring(8,10);
+          // let oldMonth = parseInt(lastDate.substring(5, 7));
+          // let newMonth = parseInt(str.substring(5,7));
+          lastNumber = (lastNumber + 1) % 2;
+          return lastNumber;
+        }
+      }
+    }
+    catch(err){
+      return 0;
+    }
+  }
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
       <Text style={styles.text_header}>Upcoming Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
       {
-        data && data.map((item, index) => (
-          <TouchableOpacity style={styles.rect} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
-            <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
-            <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-              <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}>
-              <View style={styles.ellipseRow}>
-                <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
-                <Text style={styles.mI}>{item.team1Short}</Text>
+        data && data.map((item, index) => {
+          const n = getNumberFromDate(item.startDatetime);
+          const mystyle = n === 0 ? styles.bgColorEven : styles.bgColorOdd;
+          return (
+            <TouchableOpacity style={[styles.rect, mystyle]} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
+              <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
+              <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}>
+                  <View style={styles.ellipseRow}>
+                    <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
+                    <Text style={styles.mI}>{item.team1Short}</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.loremIpsumColumn}>
+                  <Text style={styles.vs}>VS</Text>
+                </View>
+                <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}>
+                  <View style={styles.rightteam}>
+                    <Text style={styles.eng}>{item.team2Short}</Text>
+                    <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
+                  </View>
+                </TouchableOpacity>
               </View>
-              </TouchableOpacity>
-              <View style={styles.loremIpsumColumn}>
-                <Text style={styles.vs}>VS</Text>
+              <View style={{ height: 40 }}>
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
               </View>
-              <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}>
-              <View style={styles.rightteam}>
-                <Text style={styles.eng}>{item.team2Short}</Text>
-                <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
-              </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ height: 40 }}>
-              <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
-            </View>
-          </TouchableOpacity>
-        ))
+            </TouchableOpacity>
+          )
+        })
       }
       <View style={{ height: 20 }}></View>
     </ScrollView>
@@ -145,12 +188,25 @@ const styles = StyleSheet.create({
   rect: {
     width: '95%',
     height: 130,
-    backgroundColor: "#E6E6E6",
+    // backgroundColor: "#E6E6E6",
+    // backgroundColor: "#E8E8E4",
     borderWidth: 1,
     borderColor: "#000000",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 11,
+  },
+  bgColorOdd: {
+    // backgroundColor: "#E6E6E6",
+    // backgroundColor: "#BCD4E6",
+    // backgroundColor: "#99C1DE",
+    // backgroundColor: "#CAF0F8", // good
+    backgroundColor: "#DFE7FD",
+  },
+  bgColorEven: {
+    // backgroundColor: "#E8E8E4",
+    // backgroundColor: "#D8E2DC",
+    backgroundColor: "#BDE0FE",
   },
   ellipse: {
     width: 61,

@@ -27,7 +27,7 @@ import ScheduleScreen from './screens/ScheduleScreen';
 import HelpScreen from './screens/HelpScreen';
 import GenderScreen from './screens/admin/GenderScreen';
 import ContestScreen from './screens/ContestScreen';
-import { AuthContext } from './components/context';
+// import { AuthContext } from './components/context';
 
 import RootStackScreen from './screens/RootStackScreen';
 
@@ -65,178 +65,179 @@ import RemovePublicChatScreen from './screens/admin/RemovePublicChatScreen';
  // const baseurl = 'localhost:8080';
  
 //  const Drawer = createDrawerNavigator();
- const Stack = createStackNavigator();
+const Stack = createStackNavigator();
 
- const App: () => Node = () => {
+export const AuthContext = React.createContext();
+
+const App: () => Node = () => {
    // const [isLoading, setIsLoading] = React.useState(true);
    // const [userToken, setUserToken] = React.useState(null); 
  
-   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
- 
-   // const initialLoginState = {
-   //   isLoading: true,
-   //   userName: '',
-   //   userToken: null,
-   //   role: ''
-   // };
-   const initialLoginState = {
-     // isLoading: true,
-     username: '',
-     token: null,
-   };
- 
-   const CustomDefaultTheme = {
-     ...NavigationDefaultTheme,
-     ...PaperDefaultTheme,
-     colors: {
-       ...NavigationDefaultTheme.colors,
-       ...PaperDefaultTheme.colors,
-       background: '#ffffff',
-       text: '#333333'
-     }
-   }
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  // const initialLoginState = {
+  //   isLoading: true,
+  //   userName: '',
+  //   userToken: null,
+  //   role: ''
+  // };
+  const initialLoginState = {
+    // isLoading: true,
+    username: '',
+    token: null,
+  };
+
+  const CustomDefaultTheme = {
+    ...NavigationDefaultTheme,
+    ...PaperDefaultTheme,
+    colors: {
+      ...NavigationDefaultTheme.colors,
+      ...PaperDefaultTheme.colors,
+      background: '#ffffff',
+      text: '#333333'
+    }
+  }
    
-   const CustomDarkTheme = {
-     ...NavigationDarkTheme,
-     ...PaperDarkTheme,
-     colors: {
-       ...NavigationDarkTheme.colors,
-       ...PaperDarkTheme.colors,
-       background: '#333333',
-       text: '#ffffff'
-     }
-   }
+  const CustomDarkTheme = {
+    ...NavigationDarkTheme,
+    ...PaperDarkTheme,
+    colors: {
+      ...NavigationDarkTheme.colors,
+      ...PaperDarkTheme.colors,
+      background: '#333333',
+      text: '#ffffff'
+    }
+  }
  
-   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+  const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+
+  // const loginReducer = (prevState, action) => {
+  //   switch( action.type ) {
+  //     case 'RETRIEVE_TOKEN': 
+  //       return {
+  //         ...prevState,
+  //         userToken: action.token,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGIN': 
+  //       return {
+  //         ...prevState,
+  //         userName: action.id,
+  //         userToken: action.token,
+  //         role: action.role,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGOUT': 
+  //       return {
+  //         ...prevState,
+  //         userName: null,
+  //         userToken: null,
+  //         role: '',
+  //         isLoading: false,
+  //       };
+  //     case 'REGISTER': 
+  //       return {
+  //         ...prevState,
+  //         userName: action.id,
+  //         userToken: action.token,
+  //         isLoading: false,
+  //       };
+  //   }
+  // };
  
-   // const loginReducer = (prevState, action) => {
-   //   switch( action.type ) {
-   //     case 'RETRIEVE_TOKEN': 
-   //       return {
-   //         ...prevState,
-   //         userToken: action.token,
-   //         isLoading: false,
-   //       };
-   //     case 'LOGIN': 
-   //       return {
-   //         ...prevState,
-   //         userName: action.id,
-   //         userToken: action.token,
-   //         role: action.role,
-   //         isLoading: false,
-   //       };
-   //     case 'LOGOUT': 
-   //       return {
-   //         ...prevState,
-   //         userName: null,
-   //         userToken: null,
-   //         role: '',
-   //         isLoading: false,
-   //       };
-   //     case 'REGISTER': 
-   //       return {
-   //         ...prevState,
-   //         userName: action.id,
-   //         userToken: action.token,
-   //         isLoading: false,
-   //       };
-   //   }
-   // };
+  const loginReducer = (prevState, action) => {
+    switch( action.type ) {
+      case 'RETRIEVE_TOKEN': 
+        return {
+          ...prevState,
+          token: action.token,
+          // isLoading: false,
+        };
+      case 'LOGIN': 
+        return {
+          ...prevState,
+          userId: action.userId,
+          username: action.username,
+          role: action.role,
+          token: action.token,
+          // isLoading: false,
+        };
+      case 'LOGOUT': 
+        return {
+          ...prevState,
+          userId: null,
+          username: null,
+          role: null,
+          token: null,
+          // isLoading: false,
+        };
+      case 'REGISTER': 
+        return {
+          ...prevState,
+          username: action.id,
+          token: action.token,
+          // isLoading: false,
+        };
+    }
+  };
+
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
  
-   const loginReducer = (prevState, action) => {
-     switch( action.type ) {
-       case 'RETRIEVE_TOKEN': 
-         return {
-           ...prevState,
-           token: action.token,
-           // isLoading: false,
-         };
-       case 'LOGIN': 
-         console.log(action.userId + ' ' + action.username + ' ' + action.role + ' ' + action.token);
-         return {
-           ...prevState,
-           userId: action.userId,
-           username: action.username,
-           role: action.role,
-           token: action.token,
-           // isLoading: false,
-         };
-       case 'LOGOUT': 
-         return {
-           ...prevState,
-           userId: null,
-           username: null,
-           role: null,
-           token: null,
-           // isLoading: false,
-         };
-       case 'REGISTER': 
-         return {
-           ...prevState,
-           username: action.id,
-           token: action.token,
-           // isLoading: false,
-         };
-     }
-   };
- 
-   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
- 
-   const authContext = React.useMemo(() => ({
-     // signIn: async(userId, foundUser, role) => {
-     //   // setUserToken('fgkj');
-     //   // setIsLoading(false);
-     //   const userToken = String(foundUser[0].userToken);
-     //   const userName = foundUser[0].username;
-       
-     //   try {
-     //     // console.log('In App.js : ' + userId.toString());
-     //     await AsyncStorage.setItem('userToken', userToken);
-     //     await AsyncStorage.setItem('role', role);
-     //     await AsyncStorage.setItem('userId', userId.toString());
-     //   } catch(e) {
-     //     console.log(e);
-     //   }
-     //   // console.log('user token: ', userToken);
-     //   dispatch({ type: 'LOGIN', id: userName, token: userToken, role: role });
-     // },
-     signIn: async(userId, username, role, token) => {
-       try {
-         // console.log('From SignIn : ' + userId + ' ' + username + ' ' + role + ' ' + token);
-         await AsyncStorage.setItem('userId', userId+'');
-         await AsyncStorage.setItem('username', username);
-         await AsyncStorage.setItem('role', role);
-         await AsyncStorage.setItem('token', token);
-         // await AsyncStorage.setItem('role', role);
-         // await AsyncStorage.setItem('userId', userId.toString());
-       } catch(e) {
-         console.log(e);
-       }
-       console.log('Token from Signin : ', token);
-       // dispatch({ type: 'LOGIN', id: userName, token: userToken, role: role });
-       dispatch({ type: 'LOGIN', userId: userId, username: username, role:role, token: token });
-     },
-     signOut: async() => {
-       // setUserToken(null);
-       // setIsLoading(false);
-       try {
-         await AsyncStorage.removeItem('userId');
-         await AsyncStorage.removeItem('username');
-         await AsyncStorage.removeItem('role');
-         await AsyncStorage.removeItem('token');
-       } catch(e) {
-         // console.log(e);
-       }
-       dispatch({ type: 'LOGOUT' });
-     },
-     signUp: () => {
-       // setUserToken('fgkj');
-       // setIsLoading(false);
-     },
-     toggleTheme: () => {
-       setIsDarkTheme( isDarkTheme => !isDarkTheme );
-     }
-   }), []);
+  const authContext = React.useMemo(() => ({
+    // signIn: async(userId, foundUser, role) => {
+    //   // setUserToken('fgkj');
+    //   // setIsLoading(false);
+    //   const userToken = String(foundUser[0].userToken);
+    //   const userName = foundUser[0].username;
+      
+    //   try {
+    //     // console.log('In App.js : ' + userId.toString());
+    //     await AsyncStorage.setItem('userToken', userToken);
+    //     await AsyncStorage.setItem('role', role);
+    //     await AsyncStorage.setItem('userId', userId.toString());
+    //   } catch(e) {
+    //     console.log(e);
+    //   }
+    //   // console.log('user token: ', userToken);
+    //   dispatch({ type: 'LOGIN', id: userName, token: userToken, role: role });
+    // },
+    signIn: async(userId, username, role, token) => {
+      try {
+        // console.log('From SignIn : ' + userId + ' ' + username + ' ' + role + ' ' + token);
+        await AsyncStorage.setItem('userId', userId+'');
+        await AsyncStorage.setItem('username', username);
+        await AsyncStorage.setItem('role', role);
+        await AsyncStorage.setItem('token', token);
+        // await AsyncStorage.setItem('role', role);
+        // await AsyncStorage.setItem('userId', userId.toString());
+      } catch(e) {
+        console.log(e);
+      }
+      console.log('Token from Signin : ', token);
+      // dispatch({ type: 'LOGIN', id: userName, token: userToken, role: role });
+      dispatch({ type: 'LOGIN', userId: userId, username: username, role:role, token: token });
+    },
+    signOut: async() => {
+      // setUserToken(null);
+      // setIsLoading(false);
+      try {
+        await AsyncStorage.removeItem('userId');
+        await AsyncStorage.removeItem('username');
+        await AsyncStorage.removeItem('role');
+        await AsyncStorage.removeItem('token');
+      } catch(e) {
+        // console.log(e);
+      }
+      dispatch({ type: 'LOGOUT' });
+    },
+    signUp: () => {
+      // setUserToken('fgkj');
+      // setIsLoading(false);
+    },
+    toggleTheme: () => {
+      setIsDarkTheme( isDarkTheme => !isDarkTheme );
+    }
+  }), []);
  
   // useEffect(() => {
   //   setTimeout(async() => {
@@ -258,39 +259,18 @@ import RemovePublicChatScreen from './screens/admin/RemovePublicChatScreen';
     dispatch({ type: 'RETRIEVE_TOKEN', token: token });
   }, []);
  
-   // if( loginState.isLoading ) {
-   //   return(
-   //     <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-   //       <ActivityIndicator size="large"/>
-   //     </View>
-   //   );
-   // }
+  // if( loginState.isLoading ) {
+  //   return(
+  //     <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+  //       <ActivityIndicator size="large"/>
+  //     </View>
+  //   );
+  // }
  
-   return (
-     // <SafeAreaProvider>
-     //   <PaperProvider theme={theme}>
-     //       <AuthContext.Provider value={authContext}>
-     //       <NavigationContainer theme={theme}>
-     //         { loginState.userToken !== null ? (
-     //           <Drawer.Navigator>
-     //             <Drawer.Screen name="Home" component={MainTabScreen} />
-     //             <Drawer.Screen name="changePasswordScreen" component={ChangePasswordScreen} />
-     //             <Drawer.Screen name="GenderScreen" component={GenderScreen} />
-     //             <Drawer.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
-     //             {/* <Drawer.Screen name="ContestScreen" component={ContestScreen} /> */}
-     //           </Drawer.Navigator>
-     //         )
-     //       :
-     //         <RootStackScreen/>
-     //       }
-     //       </NavigationContainer>
-     //     </AuthContext.Provider>
-     //   </PaperProvider>
-     // </SafeAreaProvider>
- 
+   return ( 
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <AuthContext.Provider value={authContext}>
+        <AuthContext.Provider value={{ ...authContext, loginState: loginState }}>
           <NavigationContainer theme={theme}>
             { loginState.token !== null ? (
               <Stack.Navigator screenOptions={{headerShown: false}}>

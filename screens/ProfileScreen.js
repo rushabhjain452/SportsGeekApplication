@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-import { AuthContext } from '../components/context';
+import { AuthContext } from '../App';
 // import ChangePasswordScreen from './ChangePasswordScreen';
 import showSweetAlert from '../helpers/showSweetAlert';
 import getColor from '../helpers/getColor';
@@ -90,7 +90,7 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+      <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#19398A" size={40} style={{marginLeft: 15, marginTop: 10}} /></TouchableOpacity>
       <ScrollView keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
         <View style={styles.userInfoSection}>

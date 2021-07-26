@@ -29,7 +29,6 @@ import showSweetAlert from '../helpers/showSweetAlert';
 import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
 
-import { AuthContext } from '../components/context';
 // import { log } from 'react-native-reanimated';
 // import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -336,13 +335,15 @@ const ContestScreen = (props) => {
     }
 
     // console.log(data);
+    let card1Style = selectedTeamId == matchData.team1Id ? styles.bgColorSelected : styles.bgColorNormal;
+    let card2Style = selectedTeamId == matchData.team2Id ? styles.bgColorSelected : styles.bgColorNormal;
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
             <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
             {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
             <View>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20,marginTop: 10,width:100}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}><Icon name="arrow-left-circle" color="#FFF" size={40} style={{marginLeft: 20, marginTop: 10}} /></TouchableOpacity>
                 <View style={styles.header}>
                     <Text style={styles.text_header}>Place Contest</Text>
                 </View>
@@ -358,12 +359,12 @@ const ContestScreen = (props) => {
                     </View>
                     {/* <Text>Minimum Contest Points : {matchData.minimumPoints}</Text> */}
                     <View style={styles.action}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={styles.radioCircle}
                             onPress={() => { setSelectedTeamId(matchData.team1Id) }}>
                             {selectedTeamId == matchData.team1Id && <View style={styles.selectedRb} />}
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rect} onPress={() => setSelectedTeamId(matchData.team1Id)}>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity style={[styles.rect, card1Style]} onPress={() => setSelectedTeamId(matchData.team1Id)}>
                             <View style={styles.ellipseRow}>
                                 <Card.Image style={styles.ellipse} source={{ uri: matchData.team1Logo }} />
                                 <Text style={styles.mI}>{matchData.team1Short}</Text>
@@ -372,12 +373,12 @@ const ContestScreen = (props) => {
                                 <Text style={styles.txtBetPoints}>{team1BetPoints}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={styles.radioCircle}
                             onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
                             {selectedTeamId == matchData.team2Id && <View style={styles.selectedRb} />}
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rect} onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity style={[styles.rect, card2Style]} onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
                             <View style={styles.ellipseRow}>
                                 <Card.Image style={styles.ellipse} source={{ uri: matchData.team2Logo }} />
                                 <Text style={styles.mI}>{matchData.team2Short}</Text>
@@ -420,7 +421,8 @@ const ContestScreen = (props) => {
                                 setTempAvailablePoints(parseInt(availablePoints) + parseInt(oldPoints) - contestPoints);
                                 // console.log(contestPoints);
                             }}
-                            value={points.toString()}
+                            // value={points.toString()}
+                            value={points != 0 ? points.toString() : ''}
                         />
                     </View>
                     <View style={styles.button}>
@@ -440,6 +442,26 @@ const ContestScreen = (props) => {
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.text_header1}>User Participated in this Contest</Text>
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => { sort('Name') }}
+                            style={{borderColor: '#19398A'}}>
+                            <Text>Name</Text>
+                            <FontAwesome name="sort" color={colors.text} size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => { sort('Name') }}
+                            style={{borderColor: '#19398A'}}>
+                            <Text>Team</Text>
+                            <FontAwesome name="sort" color={colors.text} size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => { sort('Name') }}
+                            style={{borderColor: '#19398A'}}>
+                            <Text>Points</Text>
+                            <FontAwesome name="sort" color={colors.text} size={20} />
+                        </TouchableOpacity>
+                    </View>
                     {data.length == 0 && (<Text style={{ marginTop: 20, fontSize: 15 }}>No users have placed contest on this match.</Text>)}
                     {
                         data && data.length > 0 && data.map((item, index) => {
@@ -607,7 +629,7 @@ const styles = StyleSheet.create({
     rect: {
         width: '39%',
         height: 110,
-        backgroundColor: "#E6E6E6",
+        // backgroundColor: "#E6E6E6",
         borderWidth: 1,
         borderColor: "#000000",
         borderRadius: 10,
@@ -680,5 +702,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         marginTop: 10
-    }
+    },
+    bgColorNormal: {
+        backgroundColor: "#E6E6E6"
+    },
+    bgColorSelected: {
+        backgroundColor: "#BDE0FE"
+    },
 });
