@@ -19,13 +19,16 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 const GenderScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
+
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
     const [gender, setGender] = useState('');
@@ -33,7 +36,6 @@ const GenderScreen = ({ navigation }) => {
     const [genderId, setGenderId] = useState(0);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [token, setToken] = useState('');
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -41,9 +43,7 @@ const GenderScreen = ({ navigation }) => {
         setGender('');
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
+    useEffect(() => {
         displayGender();
         setGender('');
     }, [refreshing]);

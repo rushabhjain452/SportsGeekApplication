@@ -213,7 +213,7 @@ const App: () => Node = () => {
       } catch(e) {
         console.log(e);
       }
-      console.log('Token from Signin : ', token);
+      // console.log('Token from Signin : ', token);
       // dispatch({ type: 'LOGIN', id: userName, token: userToken, role: role });
       dispatch({ type: 'LOGIN', userId: userId, username: username, role:role, token: token });
     },
@@ -254,9 +254,12 @@ const App: () => Node = () => {
   // }, []);
 
   useEffect(async () => {
-    let token = null;
-    token = await AsyncStorage.getItem('token');
-    dispatch({ type: 'RETRIEVE_TOKEN', token: token });
+    // dispatch({ type: 'RETRIEVE_TOKEN', token: token });
+    let userId = await AsyncStorage.getItem('userId');
+    let username = await AsyncStorage.getItem('username');
+    let role = await AsyncStorage.getItem('role');
+    let token = await AsyncStorage.getItem('token');
+    dispatch({ type: 'LOGIN', userId: userId, username: username, role:role, token: token });
   }, []);
  
   // if( loginState.isLoading ) {

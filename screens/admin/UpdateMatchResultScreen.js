@@ -20,7 +20,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
@@ -28,8 +27,11 @@ import { useTheme } from 'react-native-paper';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const UpdateMatchResultScreen = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const navigation = useNavigation();
     const { matchId, setParentRefreshing } = props.route.params;
@@ -45,16 +47,13 @@ const UpdateMatchResultScreen = (props) => {
     // const [resultStatus, setResultStatus] = useState(1);
 
     // const [refreshing, setRefreshing] = useState(false);
-    const [token, setToken] = useState('');
 
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        fetchData(token);
+    useEffect(() => {
+        fetchData();
     }, []);
 
-    const fetchData = (token) => {
+    const fetchData = () => {
         // console.log("MatchId : " + matchId);
         setLoading(true);
         const headers = { 'Authorization': 'Bearer ' + token }

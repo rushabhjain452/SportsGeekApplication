@@ -18,25 +18,25 @@ import {
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Card } from 'react-native-elements';
+import { Card, colors } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
 import { Avatar } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import showSweetAlert from '../helpers/showSweetAlert';
-import getColor from '../helpers/getColor';
-import { baseurl, errorMessage } from '../config';
-
-// import { log } from 'react-native-reanimated';
-// import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import { AuthContext } from '../App';
 
-// import Users from '../model/User';
+import getColor from '../helpers/getColor';
+import showSweetAlert from '../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../config';
 
 const ContestScreen = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
+    const userId = loginState.userId;
+    const username = loginState.username;
 
     const { matchId } = props.route.params;
 
@@ -50,8 +50,6 @@ const ContestScreen = (props) => {
     const [matchData, setMatchData] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const [userId, setUserId] = useState(0);
-    const [username, setUsername] = useState('');
     const [availablePoints, setAvailablePoints] = useState(0);
     const [tempAvailablePoints, setTempAvailablePoints] = useState(0);
     const [option, setOption] = useState('insert');
@@ -60,26 +58,23 @@ const ContestScreen = (props) => {
     const [refreshing, setRefreshing] = useState(false);
     const [waiting, setWaiting] = React.useState(true);
 
-    const [team1BetPoints, setTeam1BetPoints] = useState(0);
-    const [team2BetPoints, setTeam2BetPoints] = useState(0);
+    const [team1ContestPoints, setTeam1ContestPoints] = useState(0);
+    const [team2ContestPoints, setTeam2ContestPoints] = useState(0);
 
-    const [token, setToken] = useState('');
+    const [team1NoOfUsers, setTeam1NoOfUsers] = useState(0);
+    const [team2NoOfUsers, setTeam2NoOfUsers] = useState(0);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        // Get UserId
-        const userId = await AsyncStorage.getItem('userId');
-        setUserId(userId);
-        const username = await AsyncStorage.getItem('username');
-        setUsername(username);
-        checkUserContest(userId, token);
-        fetchUserData(userId, token);
-        fetchMatchData(token);
+    const [sortColumn, setSortColumn] = useState('AssetId');
+    const [sortOrder, setSortOrder] = useState(1);  // 1 = ASC and -1 = DESC
+
+    useEffect(() => {
+        checkUserContest();
+        fetchUserData();
+        fetchMatchData();
         // fetchData(token);
     }, [refreshing]);
 
-    const checkUserContest = (userId, token) => {
+    const checkUserContest = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         axios.get(baseurl + '/users/' + userId + '/contest/' + matchId, { headers })
             .then((response) => {
@@ -105,8 +100,8 @@ const ContestScreen = (props) => {
             });
     }
 
-    // BetOnTeam data
-    const fetchData = (token, matchData) => {
+    // Contest data
+    const fetchData = (matchData) => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         // console.log(baseurl + '/matches/' + matchId + '/contest');
@@ -117,29 +112,27 @@ const ContestScreen = (props) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     setData(response.data);
-                    // console.log(response.data);
+                    console.log(response.data);
                     let records = response.data;
                     let team1points = 0, team2points = 0;
+                    let team1users = 0, team2users = 0;
                     // console.log(records);
                     // console.log(matchData.team1Id);
                     // console.log(matchData.team2Id);
                     records.forEach((item) => {
-                        // if(item.teamId == matchData.team1Id){
-                        //     // setTeam1BetPoints(oldPoints => oldPoints + item.contestPoints);
-                        //     team1points += item.contestPoints;
-                        // }else if(item.teamId == matchData.team2Id){
-                        //     // setTeam2BetPoints(oldPoints => oldPoints + item.contestPoints);
-                        //     team2points += item.contestPoints;
-                        // }
                         if (item.teamShortName == matchData.team1Short) {
+                            team1users++;
                             team1points += item.contestPoints;
                         } else if (item.teamShortName == matchData.team2Short) {
+                            team2users++;
                             team2points += item.contestPoints;
                         }
                     });
                     // console.log(team1points + ' ' + team2points);
-                    setTeam1BetPoints(team1points);
-                    setTeam2BetPoints(team2points);
+                    setTeam1ContestPoints(team1points);
+                    setTeam2ContestPoints(team2points);
+                    setTeam1NoOfUsers(team1users);
+                    setTeam2NoOfUsers(team2users);
                 } else {
                     // console.log('Error 2');
                     // console.log(error);
@@ -157,13 +150,13 @@ const ContestScreen = (props) => {
     }
 
     // Matches Data
-    const fetchMatchData = (token) => {
+    const fetchMatchData = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         axios.get(baseurl + '/matches/' + matchId, { headers })
             .then((response) => {
                 if (response.status == 200) {
                     setMatchData(response.data);
-                    fetchData(token, response.data);
+                    fetchData(response.data);
                 } else {
                     setMatchData([]);
                 }
@@ -175,7 +168,7 @@ const ContestScreen = (props) => {
     }
 
     // User data
-    const fetchUserData = (userId, token) => {
+    const fetchUserData = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         axios.get(baseurl + '/users/' + userId, { headers })
             .then((response) => {
@@ -194,12 +187,10 @@ const ContestScreen = (props) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        // fetchData(token);
-        // fetchMatchData(token);
-        // fetchUserData(userId, token);
+        // fetchData();
+        // fetchMatchData();
+        // fetchUserData();
     }, []);
-
-    const { colors } = useTheme();
 
     const contestHandler = () => {
         let current_datetime = new Date();
@@ -267,11 +258,11 @@ const ContestScreen = (props) => {
                                 setAvailablePoints((availablePoints) => parseInt(availablePoints) - parseInt(points));
                                 setOldPoints(parseInt(points));
                                 setContestId(response.data.contestId);
-                                // console.log('Insert success : BetTeamId = ' + json.data.contestId);
+                                // console.log('Insert success : ContestId = ' + json.data.contestId);
                                 // console.log('Insert : ' + typeof(points));
-                                fetchData(token, matchData);
+                                fetchData(matchData);
                                 // fetchMatchData(token);
-                                fetchUserData(userId, token);
+                                fetchUserData();
                                 setOption('update');
                                 showSweetAlert('success', 'Contest placed successfully', "Your contest for " + parseInt(points) + " points is placed successfully.");
                             }
@@ -313,9 +304,9 @@ const ContestScreen = (props) => {
                                 // console.log('After update : ' + typeof(oldPoints));
                                 setOldPoints(points);
                                 setContestId(response.data.contestId);
-                                // console.log('Update success : BetTeamId = ' + json.data.contestId);
-                                fetchData(token, matchData);
-                                fetchUserData(userId, token);
+                                // console.log('Update success : ContestId = ' + json.data.contestId);
+                                fetchData(matchData);
+                                fetchUserData();
                                 // showSweetAlert('success', 'Contest updated successfully', "Your contest is updated from " + oldPoints + " points to " + points + " points.");
                                 showSweetAlert('success', 'Contest updated successfully', "Your contest is updated to " + parseInt(points) + " points.");
                             }
@@ -334,9 +325,67 @@ const ContestScreen = (props) => {
         }
     }
 
+    const sort = (column) => {
+        let order = sortOrder;
+        if(sortColumn === column){
+          order = order * -1;
+          setSortOrder(order);
+        } else {
+          order = 1;
+          setSortOrder(1);
+        }
+        setSortColumn(column);
+        switch (column) {
+            case 'name':
+                setData((oldData) => {
+                    let newData = [...oldData];
+                    newData.sort((a, b) => {
+                        let val1 = a.firstName.toLowerCase() + ' ' + a.lastName.toLowerCase();
+                        let val2 = b.firstName.toLowerCase() + ' ' + b.lastName.toLowerCase();
+                        if (val1 < val2) {
+                            return order * -1;
+                        }
+                        if (val1 > val2) {
+                            return order * 1;
+                        }
+                        return 0;
+                    });
+                    return newData;
+                });
+                break;
+            case 'team':
+                setData((oldData) => {
+                    let newData = [...oldData];
+                    newData.sort((a, b) => {
+                        let val1 = a.teamShortName.toLowerCase();
+                        let val2 = b.teamShortName.toLowerCase();
+                        if (val1 < val2) {
+                            return order * -1;
+                        }
+                        if (val1 > val2) {
+                            return order * 1;
+                        }
+                        return 0;
+                    });
+                    return newData;
+                });
+                break;
+            case 'points':
+                setData((oldData) => {
+                    let newData = [...oldData];
+                    newData.sort((a, b) => (a.contestPoints - b.contestPoints) * order);
+                    return newData;
+                });
+                break;
+        }
+    };
+
+    const { colors } = useTheme();
+
     // console.log(data);
     let card1Style = selectedTeamId == matchData.team1Id ? styles.bgColorSelected : styles.bgColorNormal;
     let card2Style = selectedTeamId == matchData.team2Id ? styles.bgColorSelected : styles.bgColorNormal;
+
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <Spinner visible={waiting} textContent="Loading..." animation="fade" textStyle={styles.spinnerTextStyle} />
@@ -353,59 +402,59 @@ const ContestScreen = (props) => {
                         backgroundColor: colors.background
                     }]}
                 >
-                    <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
-                        <Text>Available Points : {availablePoints}</Text>
-                        <Text>Minimum Points : {matchData.minimumPoints}</Text>
-                    </View>
-                    {/* <Text>Minimum Contest Points : {matchData.minimumPoints}</Text> */}
-                    <View style={styles.action}>
-                        {/* <TouchableOpacity
-                            style={styles.radioCircle}
-                            onPress={() => { setSelectedTeamId(matchData.team1Id) }}>
-                            {selectedTeamId == matchData.team1Id && <View style={styles.selectedRb} />}
-                        </TouchableOpacity> */}
-                        <TouchableOpacity style={[styles.rect, card1Style]} onPress={() => setSelectedTeamId(matchData.team1Id)}>
+                    <View style={styles.boxContainer}>
+                        <TouchableOpacity style={[styles.box, card1Style]} onPress={() => setSelectedTeamId(matchData.team1Id)}>
                             <View style={styles.ellipseRow}>
                                 <Card.Image style={styles.ellipse} source={{ uri: matchData.team1Logo }} />
-                                <Text style={styles.mI}>{matchData.team1Short}</Text>
+                                <Text style={styles.ellipseText}>{matchData.team1Short}</Text>
                             </View>
                             <View>
-                                <Text style={styles.txtBetPoints}>{team1BetPoints}</Text>
+                                <Text style={styles.txtContestPoints}>{team1ContestPoints} points</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.txtUsers}>{team1NoOfUsers} users</Text>
                             </View>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity
-                            style={styles.radioCircle}
-                            onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
-                            {selectedTeamId == matchData.team2Id && <View style={styles.selectedRb} />}
-                        </TouchableOpacity> */}
-                        <TouchableOpacity style={[styles.rect, card2Style]} onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
+                        <TouchableOpacity style={[styles.box, card2Style]} onPress={() => { setSelectedTeamId(matchData.team2Id) }}>
                             <View style={styles.ellipseRow}>
                                 <Card.Image style={styles.ellipse} source={{ uri: matchData.team2Logo }} />
-                                <Text style={styles.mI}>{matchData.team2Short}</Text>
+                                <Text style={styles.ellipseText}>{matchData.team2Short}</Text>
                             </View>
                             <View>
-                                <Text style={styles.txtBetPoints}>{team2BetPoints}</Text>
+                                <Text style={styles.txtContestPoints}>{team2ContestPoints} points</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.txtUsers}>{team2NoOfUsers} users</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <Text style={[styles.text_footer, {
-                        color: colors.text
-                    }]}>
-                        Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
-                    </Text>
-                    <View style={styles.action}>
+                    <View style={styles.pointsContainer}>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                            <Text style={styles.boldText}>Available Points:</Text>
+                            <Text> {availablePoints}</Text>
+                        </View>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                            <Text style={styles.boldText}>Minimum Points:</Text>
+                            <Text> {matchData.minimumPoints}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.lblContestPointsContainer}>
+                        <Text style={styles.lblContestPoints}>
+                            Contest Points (Remaining Points: {tempAvailablePoints > 0 ? tempAvailablePoints : 0})
+                        </Text>
+                    </View>
+                    <View style={styles.inputContainer}>
                         <FontAwesome
                             name="money"
                             color={colors.text}
                             size={20}
+                            style={{paddingLeft: 5}}
                         />
                         <TextInput
                             placeholder="Your Contest Points"
                             placeholderTextColor="#666666"
                             keyboardType="numeric"
-                            style={[styles.textInput, {
-                                color: colors.text
-                            }]}
+                            style={styles.textInput}
                             onChangeText={(val) => {
                                 setPoints(val)
                                 // console.log(val);
@@ -419,61 +468,50 @@ const ContestScreen = (props) => {
                                     }
                                 }
                                 setTempAvailablePoints(parseInt(availablePoints) + parseInt(oldPoints) - contestPoints);
-                                // console.log(contestPoints);
                             }}
-                            // value={points.toString()}
                             value={points != 0 ? points.toString() : ''}
                         />
                     </View>
-                    <View style={styles.button}>
+                    <View style={styles.btnContainer}>
                         <TouchableOpacity
                             onPress={() => { contestHandler() }}
-                            style={[styles.signIn, {
-                                borderColor: '#19398A',
-                                borderWidth: 1,
-                                // marginTop: 5
-                            }]}
+                            style={styles.btn}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#19398A'
-                            }]}>
+                            <Text style={styles.btnText}>
                                 {option == 'insert' ? 'Place Contest' : 'Update Contest'}
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={styles.text_header1}>User Participated in this Contest</Text>
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => { sort('Name') }}
-                            style={{borderColor: '#19398A'}}>
-                            <Text>Name</Text>
-                            <FontAwesome name="sort" color={colors.text} size={20} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => { sort('Name') }}
-                            style={{borderColor: '#19398A'}}>
-                            <Text>Team</Text>
-                            <FontAwesome name="sort" color={colors.text} size={20} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => { sort('Name') }}
-                            style={{borderColor: '#19398A'}}>
-                            <Text>Points</Text>
-                            <FontAwesome name="sort" color={colors.text} size={20} />
-                        </TouchableOpacity>
+                    <View style={styles.boxContainer}>
+                        <Text style={styles.main_header}>All Contests for the Match</Text>
                     </View>
-                    {data.length == 0 && (<Text style={{ marginTop: 20, fontSize: 15 }}>No users have placed contest on this match.</Text>)}
-                    {
-                        data && data.length > 0 && data.map((item, index) => {
-                            {/* console.log(item.username + ' ' + userId); */ }
-                            const mystyle = item.username == username ? styles.bgDark : styles.bgLight;
-                            return (
-                                <View style={[styles.card, mystyle]} key={item.contestId}>
-                                    <View style={styles.cardlist}>
-                                        {/* <Card.Image style={styles.ellipse1} source={{uri: item.profilePicture}} /> */}
-                                        {/* <View style={styles.ellipse1}>
-                                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>{item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}</Text>
-                                        </View> */}
+                    <View style={styles.listContainer}>
+                        <View style={styles.headingRow}>
+                            <TouchableOpacity
+                                onPress={() => { sort('name') }}
+                                style={[styles.headingCol, styles.headingCol1]}>
+                                <Text style={styles.headingColText}>Name</Text>
+                                <FontAwesome name="sort" color={colors.text} size={20} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { sort('team') }}
+                                style={[styles.headingCol, styles.headingCol2]}>
+                                <Text style={styles.headingColText}>Team</Text>
+                                <FontAwesome name="sort" color={colors.text} size={20} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { sort('points') }}
+                                style={[styles.headingCol, styles.headingCol3]}>
+                                <Text style={styles.headingColText}>Points</Text>
+                                <FontAwesome name="sort" color={colors.text} size={20} />
+                            </TouchableOpacity>
+                        </View>
+                        {data.length == 0 && (<Text style={styles.msgStyle}>No users have placed contest on this match.</Text>)}
+                        {
+                            data && data.length > 0 && data.map((item, index) => {
+                                const mystyle = item.username == username ? styles.bgDark : styles.bgLight;
+                                return (
+                                    <View style={[styles.card, mystyle]} key={item.contestId}>
                                         {
                                             item.profilePicture != '' ?
                                                 (<Avatar
@@ -489,17 +527,17 @@ const ContestScreen = (props) => {
                                                     rounded
                                                     title={item.firstName.substr(0, 1) + item.lastName.substr(0, 1)}
                                                     // activeOpacity={0.7}
-                                                    containerStyle={{ color: 'green', marginLeft: 5, backgroundColor: getColor(item.firstName) }}
+                                                    containerStyle={{ marginLeft: 5, backgroundColor: getColor(item.firstName) }}
                                                 />)
                                         }
-                                        <Text style={[styles.carditem, { width: '53%', fontSize: 17 }]}>{item.firstName + " " + item.lastName}</Text>
-                                        <Text style={[styles.carditem, { width: '17%' }]}>{item.teamShortName}</Text>
-                                        <Text style={[styles.carditem, { width: '15%' }]}>{item.contestPoints}</Text>
+                                        <Text style={[styles.carditem, styles.name]}>{item.firstName + ' ' + item.lastName}</Text>
+                                        <Text style={[styles.carditem, styles.teamShortName]}>{item.teamShortName}</Text>
+                                        <Text style={[styles.carditem, styles.points]}>{item.contestPoints}</Text>
                                     </View>
-                                </View>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </View>
                 </Animatable.View>
             </View>
         </ScrollView>
@@ -508,10 +546,10 @@ const ContestScreen = (props) => {
 
 export default ContestScreen;
 
-const { height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
     container: {
         width: '100%',
+        display: 'flex',
         flex: 1,
         backgroundColor: '#19398A'
     },
@@ -519,8 +557,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 30,
-        marginTop: 30
+        paddingBottom: 20,
+        marginTop: 10,
     },
     footer: {
         flex: 3,
@@ -528,78 +566,38 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingHorizontal: 10,
-        paddingVertical: 20
+        paddingVertical: 15,
     },
     text_header: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 25
     },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 16
+    boldText: {
+        fontWeight: 'bold',
     },
-    action: {
+    boxContainer: {
+        display: 'flex',
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 5,
+        marginBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
-    },
-    actionError: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#FF0000',
-        paddingBottom: 5
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#05375a',
-    },
-    errorMsg: {
-        color: '#FF0000',
-        fontSize: 14,
-    },
-    button: {
         alignItems: 'center',
-        marginTop: 15
+        justifyContent: 'space-around',
+        // backgroundColor: 'pink'
     },
-    signIn: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-    },
-    textSign: {
-        fontSize: 18,
-        fontWeight: 'bold'
-    },
-    textPrivate: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginTop: 20
-    },
-    radioCircle: {
-        height: 30,
-        width: 30,
-        borderRadius: 100,
-        borderWidth: 2,
-        borderColor: '#3740ff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        // marginLeft:20 ,
-        marginTop: 40,
-        marginLeft: 5
-    },
-    selectedRb: {
-        width: 20,
-        height: 20,
-        borderRadius: 50,
-        backgroundColor: '#19398A',
+    box: {
+        width: '47%',
+        // backgroundColor: "#E6E6E6",
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 10,
+        //   marginTop: 10,
+        display: "flex",
+        flexDirection: 'column',
+        // alignItems: 'center',
+        // justifyContent: 'space-between',
     },
     ellipseRow: {
         // height: 95,
@@ -609,104 +607,215 @@ const styles = StyleSheet.create({
         //   marginLeft: 25,
         // alignSelf: "flex-start"
         // flex: 4,
-        //   justifyContent: "space-between",
+        justifyContent: "space-evenly",
     },
     ellipse: {
         width: 60,
         height: 60,
-        marginTop: 0,
-        borderRadius: 30,
-        marginLeft: 7
+        borderRadius: 50,
     },
-    mI: {
+    ellipseText: {
         fontFamily: "roboto-regular",
         color: "#121212",
         fontSize: 18,
-        marginLeft: 10,
-        marginTop: 20,
-        fontWeight: "bold"
+        lineHeight: 60,
+        fontWeight: "bold",
     },
-    rect: {
-        width: '39%',
-        height: 110,
-        // backgroundColor: "#E6E6E6",
-        borderWidth: 1,
-        borderColor: "#000000",
+    txtContestPoints: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center',
+        marginTop: 8,
+    },
+    txtUsers: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16,
+        textAlign: 'center',
+        paddingTop: 5,
+        paddingBottom: 8,
+    },
+    pointsContainer: {
+        display: 'flex', 
+        flexDirection: 'row',
+        justifyContent: 'space-between', 
+        paddingLeft: 5,
+        paddingRight: 5,
+    },
+    lblContestPointsContainer: {
+        marginTop: 10,
+        paddingLeft: 5,
+        paddingRight: 5,
+    },
+    lblContestPoints: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    inputContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 5,
+        marginBottom: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+    },
+    textInput: {
+        flex: 1,
+        // marginTop: Platform.OS === 'ios' ? 0 : -12,
+        paddingLeft: 10,
+        // color: '#05375a',
+        color: colors.text,
+    },
+    btnContainer: {
+        alignItems: 'center',
+        marginTop: 10
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: 10,
-        //   marginTop: 10,
-        marginLeft: 8,
-        display: "flex",
+        borderColor: '#19398A',
+        borderWidth: 1,
+    },
+    btnText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#19398A'
+    },
+    // radioCircle: {
+    //     height: 30,
+    //     width: 30,
+    //     borderRadius: 100,
+    //     borderWidth: 2,
+    //     borderColor: '#3740ff',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     // marginLeft:20 ,
+    //     marginTop: 40,
+    //     marginLeft: 5
+    // },
+    // selectedRb: {
+    //     width: 20,
+    //     height: 20,
+    //     borderRadius: 50,
+    //     backgroundColor: '#19398A',
+    // },
+    main_header: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+        marginTop: 15
+    },
+    listContainer: {
+        display: 'flex',
         flexDirection: 'column',
-        //    justifyContent: 'space-between',
-        marginBottom: 30
+        // alignItems: 'center',
+        // backgroundColor: 'pink'
+    },
+    headingRow: {
+        // width: '100%',
+        height: 40,
+        // backgroundColor: "rgba(25,57,138,1)",
+        backgroundColor: '#1F4F99',
+        backgroundColor: '#3D74C7',
+        borderWidth: 0,
+        borderColor: "#000000",
+        borderRadius: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        fontFamily: "roboto-regular",
+        color: "rgba(255,255,255,1)",
+        color: '#000',
+        fontSize: 20,
+        alignItems: 'center',
+        fontWeight: 'bold'
+    },
+    headingCol: {
+        display: 'flex',
+        flexDirection: 'row',
+        color: '#000',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    headingCol1: {
+        width: '60%',
+    },
+    headingCol2: {
+        width: '20%',
+    },
+    headingCol3: {
+        width: '20%',
+        textAlign: 'right',
+    },
+    headingColText: {
+        paddingRight: 8,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    msgStyle: {
+        marginTop: 20, 
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     card: {
         width: '100%',
-        height: 50,
-        // backgroundColor: "#E6E6E6",
+        height: 45,
         borderWidth: 1,
         borderColor: "#000000",
-        borderRadius: 3,
-        marginTop: 5,
+        borderRadius: 5,
+        marginTop: 7,
         display: "flex",
         flexDirection: 'row',
         justifyContent: 'space-between',
-        //  marginBottom:50
+        alignItems: 'center',
+    },
+    carditem: {
+        color: "#121212",
+        fontSize: 16,
+        fontWeight: "bold",
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    name: { 
+        width: '53%',
+        paddingLeft: 10,
+    },
+    teamShortName: { 
+        width: '20%', 
+        fontSize: 17,
+        paddingLeft: 5,
+    },
+    points: {
+        textAlign: 'center',
+        paddingRight: 8,
+        width: '15%',
     },
     bgLight: {
         backgroundColor: "#E6E6E6",
     },
     bgDark: {
-        // backgroundColor: "#98FB98",
         backgroundColor: '#87CEFA'
-    },
-    text_header1: {
-        color: '#000',
-        fontWeight: 'bold',
-        fontSize: 20,
-        textAlign: 'center',
-        marginTop: 30
-    },
-    cardlist: {
-        display: "flex",
-        flexDirection: "row",
-        marginTop: 4,
-        justifyContent: "space-between",
-        alignContent: 'center',
-    },
-    ellipse1: {
-        width: 30,
-        height: 30,
-        //   marginTop: 0,
-        borderRadius: 100,
-        marginLeft: 5,
-        justifyContent: 'center',
-        backgroundColor: '#e9c46a'
-    },
-    carditem: {
-        color: "#121212",
-        fontSize: 20,
-        marginLeft: 3,
-        marginTop: 5,
-        fontWeight: "bold",
-        display: 'flex',
-        justifyContent: 'space-between',
-        //    textAlign: 'center'
     },
     spinnerTextStyle: {
         color: '#FFF'
-    },
-    txtBetPoints: {
-        color: '#000',
-        fontWeight: 'bold',
-        fontSize: 18,
-        textAlign: 'center',
-        marginTop: 10
     },
     bgColorNormal: {
         backgroundColor: "#E6E6E6"
     },
     bgColorSelected: {
-        backgroundColor: "#BDE0FE"
+        // backgroundColor: "#BDE0FE"
+        backgroundColor: "#87CEFA"
+        // backgroundColor: "#BDE0FE"
+        // backgroundColor: "#BDE0FE"
+        // backgroundColor: "#BDE0FE"
+        // backgroundColor: "#BDE0FE"
     },
 });

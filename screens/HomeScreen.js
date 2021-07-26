@@ -7,17 +7,11 @@ import { Card } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 import ScheduleScreen from './ScheduleScreen';
 // import { Container, Header, Content, CardItem, Thumbnail, Left, Body } from 'native-base';
-import { AuthContext } from '../App';
 // const HomeStack = createStackNavigator();
 
 const HomeScreen = ({ navigation }) => {
-
   const [index, setIndex] = React.useState(0);
   const isCarousel = React.useRef(null);
-
-  const { loginState } = React.useContext(AuthContext);
-  console.log('Home Screen : ');
-  console.log(loginState);
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">

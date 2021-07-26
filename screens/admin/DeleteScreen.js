@@ -21,29 +21,28 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import { Card } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const DeleteScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const userstatus = 1;
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [token, setToken] = useState('');
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayUser(token);
+    useEffect(() => {
+        displayUser();
     }, [refreshing]);
 
-    const displayUser = (token) => {
+    const displayUser = () => {
         let userStatus = 1;
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/user-with-status/' + userStatus, { headers })
@@ -74,7 +73,7 @@ const DeleteScreen = ({ navigation }) => {
                 setRefreshing(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'User deleted successfully...');
-                    displayUser(token);
+                    displayUser();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete User. Please try again...');

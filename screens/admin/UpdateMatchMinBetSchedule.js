@@ -3,34 +3,33 @@ import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshCo
 import { Card, ListItem, Button} from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import UpdateMatchMinBet from './UpdateMatchMinBet';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 function UpdateMatchMinBetSchedule({ navigation }) {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
 
   // const navigation = useNavigation();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
   const [refreshing, setRefreshing] = React.useState(false);
 
   //   const noOfFutureBets = 5;
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    fetchData(token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
 
-  const fetchData = (token) => {
+  const fetchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token }
     axios.get(baseurl + '/matches/upcoming', { headers })
       .then(response => {
@@ -61,7 +60,7 @@ function UpdateMatchMinBetSchedule({ navigation }) {
     // console.log(dt > startTimestamp);
     if (dt > startTimestamp) {
       showSweetAlert('warning', 'Timeout', 'Sorry, Contests for this match has been closed.');
-      fetchData(token);
+      fetchData();
     }
     else {
       // showSweetAlert('success', 'Success', 'You can play this match.');
@@ -73,7 +72,7 @@ function UpdateMatchMinBetSchedule({ navigation }) {
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
-    // fetchData(token);
+    // fetchData();
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 

@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, StatusBar
 import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -11,27 +10,27 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 function MatchesScheduleScreenForUpdate({ navigation }) {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
 
   // const navigation = useNavigation();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
   const [refreshing, setRefreshing] = React.useState(false);
 
   //   const noOfFutureBets = 5;
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    fetchData(token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
 
-  const fetchData = (token) => {
+  const fetchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     setLoading(true);
     axios.get(baseurl + '/matches', { headers })
@@ -59,7 +58,7 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
-    fetchData(token);
+    fetchData();
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
@@ -72,7 +71,7 @@ function MatchesScheduleScreenForUpdate({ navigation }) {
         setLoading(false);
         if (response.status == 200) {
           showSweetAlert('success', 'Success', 'Match deleted successfully.');
-          fetchData(token);
+          fetchData();
         }
         else {
           showSweetAlert('error', 'Error', 'Failed to delete Match. Please try again...');

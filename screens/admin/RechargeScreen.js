@@ -19,15 +19,17 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 const RechargeScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
@@ -38,21 +40,17 @@ const RechargeScreen = ({ navigation }) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [loading, setLoading] = useState(true);
 
-    const [token, setToken] = useState('');
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         // displayRecharge(token);
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayUser(token);
-        displayRecharge(token);
+    useEffect(() => {
+        displayUser();
+        displayRecharge();
     }, [refreshing]);
 
-    const displayUser = (token) => {
+    const displayUser = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users', { headers })
             .then(response => {
@@ -80,7 +78,7 @@ const RechargeScreen = ({ navigation }) => {
             })
     }
 
-    const displayRecharge = (token) => {
+    const displayRecharge = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/recharge', { headers })
             .then(response => {
@@ -129,7 +127,7 @@ const RechargeScreen = ({ navigation }) => {
                     }
                     setUserId(0);
                     setPoints(0);
-                    displayRecharge(token);
+                    displayRecharge();
                 })
                 .catch((error) => {
                     setLoading(false);

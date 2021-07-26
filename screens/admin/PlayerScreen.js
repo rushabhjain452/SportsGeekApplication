@@ -19,7 +19,6 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -27,8 +26,11 @@ import { useNavigation } from '@react-navigation/native';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 const PlayerScreen = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const { updatePlayerId } = props.route.params ?? "undefined";
     const navigation = useNavigation();
@@ -45,24 +47,21 @@ const PlayerScreen = (props) => {
     const [btnText, setBtnText] = useState('Add');
     const [profilePicture, setProfilePicture] = useState(null);
     const [valueSS, setValueSS] = useState('');
-    const [token, setToken] = useState('');
     const [avatarPath, setAvatarPath] = useState(userAvatarLogo);
     const [success, setSuccess] = useState(false);
 
     const [loading, setLoading] = useState(true);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayTeam(token);
-        displayPlayerType(token);
+    useEffect(() => {
+        displayTeam();
+        displayPlayerType();
         if (updatePlayerId != undefined) {
-            fetchPlayerData(updatePlayerId, token);
+            fetchPlayerData(updatePlayerId);
         }
         // setPlayerType('');
     }, []);
 
-    const displayTeam = (token) => {
+    const displayTeam = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/teams', { headers })
@@ -94,7 +93,7 @@ const PlayerScreen = (props) => {
             })
     }
 
-    const displayPlayerType = (token) => {
+    const displayPlayerType = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/player-types', { headers })

@@ -23,29 +23,28 @@ import Feather from 'react-native-vector-icons/Feather';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 // https://github.com/jemise111/react-native-swipe-list-view/blob/master/SwipeListExample/examples/swipe_value_based_ui.js
 
 const RemovePublicChatScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const [data, setData] = useState([]);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [waiting, setWaiting] = React.useState(false);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        fetchChatData(token);
+    useEffect(() => {
+        fetchChatData();
     }, []);
 
-    const fetchChatData = (token) => {
+    const fetchChatData = () => {
         let days = 30;
         // setWaiting(true);
         const headers = { 'Authorization': 'Bearer ' + token }

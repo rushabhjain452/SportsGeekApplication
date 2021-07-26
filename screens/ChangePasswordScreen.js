@@ -14,15 +14,18 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-const ChangePasswordScreen = ({ navigation }) => {
+import { AuthContext } from '../App';
 
-    const [userId, setUserId] = useState(0);
+const ChangePasswordScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
+    const userId = loginState.userId + "";
+
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [validNewPassword, setValidNewPassword] = useState(false);
@@ -30,22 +33,12 @@ const ChangePasswordScreen = ({ navigation }) => {
     const [secureTextEntry1, setSecureTextEntry1] = useState(true);
     const [secureTextEntry2, setSecureTextEntry2] = useState(true);
     const [secureTextEntry3, setSecureTextEntry3] = useState(true);
-    const [token, setToken] = useState('');
 
     const [loading, setLoading] = React.useState(false);
 
     const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@%!])[0-9a-zA-Z@%!]{8,}$/;
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        const userId = await AsyncStorage.getItem('userId');
-        setUserId(userId + "");
-        // console.log(userId);
-    }, []);
-
-    const changePasswordHandler = () => {
-        // console.log(token);
+    const changePasswordHandler = () => {;
         if (oldPassword.length == 0) {
             showSweetAlert('warning', 'Invalid Input!', 'Please enter valid old password to proceed.');
         }

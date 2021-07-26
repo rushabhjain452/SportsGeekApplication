@@ -16,7 +16,6 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Avatar } from "react-native-elements";
 import showSweetAlert from '../helpers/showSweetAlert';
@@ -24,8 +23,10 @@ import { baseurl, errorMessage } from '../config';
 import axios from 'axios';
 
 const UpdateProfileScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
+    const userId = loginState.userId;
 
-    const [userId, setUserId] = useState(0);
     // const [data, setData] = useState([]);
 
     const [avatarPath, setAvatarPath] = useState('');
@@ -40,20 +41,14 @@ const UpdateProfileScreen = ({ navigation }) => {
     const [mobileNumber, setMobileNumber] = useState(0);
 
     const [genderData, setGenderData] = useState([]);
-    const [token, setToken] = useState('');
 
     const [loading, setLoading] = React.useState(true);
 
     const email_regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        const userId = await AsyncStorage.getItem('userId');
-        // console.log(userId);
-        setUserId(userId);
+    useEffect(() => {
         fetchGenderData();
-        fetchUserData(userId, token);
+        fetchUserData();
     }, []);
 
     const fetchGenderData = () => {
@@ -70,7 +65,7 @@ const UpdateProfileScreen = ({ navigation }) => {
             });
     }
 
-    const fetchUserData = (userId, token) => {
+    const fetchUserData = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         axios.get(baseurl + '/users/' + userId, { headers })
             .then((response) => {

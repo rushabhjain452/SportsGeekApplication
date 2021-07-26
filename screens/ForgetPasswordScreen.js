@@ -14,13 +14,18 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import showSweetAlert from '../helpers/showSweetAlert';
-import { baseurl, errorMessage } from '../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AuthContext } from '../App';
+
+import showSweetAlert from '../helpers/showSweetAlert';
+import { baseurl, errorMessage } from '../config';
+
 const ForgetPasswordScreen = () => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const navigation = useNavigation();
     const [email, setEmail] = useState('');

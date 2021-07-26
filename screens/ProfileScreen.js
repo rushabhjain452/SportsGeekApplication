@@ -8,49 +8,36 @@ import {
 } from 'react-native-paper';
 import { Avatar } from "react-native-elements";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-import { AuthContext } from '../App';
 // import ChangePasswordScreen from './ChangePasswordScreen';
 import showSweetAlert from '../helpers/showSweetAlert';
 import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
+import { AuthContext } from '../App';
 
 const ProfileScreen = ({ navigation }) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = parseInt(loginState.userId);
 
   const [data, setData] = useState({});
   const [winningPoints, setWinningPoints] = useState(0);
   const [losingPoints, setLosingPoints] = useState(0);
-  const [userId, setUserId] = useState(0);
   const [shortName, setShortName] = useState('');
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    // if(userId == 0){
-    //   const userId = await AsyncStorage.getItem('userId');
-    // }
-    let userId = await AsyncStorage.getItem('userId');
-    userId = parseInt(userId);
-    // console.log("Profile screen : " + userId);
-    // console.log(typeof(userId));
-    setUserId(userId);
-    displayProfile(userId, token);
-    displayWinningAndLosingPoints(userId, token);
+  useEffect(() => {
+    displayProfile();
+    displayWinningAndLosingPoints();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
   }, []);
 
-  const displayProfile = (userId, token) => {
-    if (userId == 0) {
-      return;
-    }
+  const displayProfile = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/users/' + userId, { headers })
       .then((response) => {
@@ -66,7 +53,7 @@ const ProfileScreen = ({ navigation }) => {
       });
   }
 
-  const displayWinningAndLosingPoints = (userId, token) => {
+  const displayWinningAndLosingPoints = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/users/' + userId + '/winning-losing-points', { headers })
       .then((response) => {

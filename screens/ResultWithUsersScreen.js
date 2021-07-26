@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, TouchableOpa
 import {
   Avatar
 } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'react-native-elements';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,8 +12,12 @@ import { useNavigation } from '@react-navigation/native';
 import formatDate from '../helpers/formatDate';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
+import { AuthContext } from '../App';
 
-function ResultWithUsersScreen(props) {
+const ResultWithUsersScreen = (props) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const username = loginState.username;
 
   const { matchId } = props.route.params;
 
@@ -23,28 +26,21 @@ function ResultWithUsersScreen(props) {
   const [matchData, setMatchData] = useState({});
   const [data, setData] = useState([]);
   const [winnerTeam, setWinnerTeam] = useState('');
-  const [username, setUsername] = useState('');
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
   const [team1ContestPoints, setTeam1ContestPoints] = useState(0);
   const [team2ContestPoints, setTeam2ContestPoints] = useState(0);
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    const username = await AsyncStorage.getItem('username');
-    setUsername(username);
-    // fetchData(token);
-    fetchMatchData(token);
+  useEffect(() => {
+    fetchMatchData();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
   }, []);
 
-  const fetchMatchData = (token) => {
+  const fetchMatchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/matches/' + matchId, { headers })
       .then((response) => {
@@ -56,7 +52,7 @@ function ResultWithUsersScreen(props) {
             setWinnerTeam(matchData.team1Short);
           else if (matchData.winnerTeamId == matchData.team2Id)
             setWinnerTeam(matchData.team2Short);
-          fetchData(token, matchData);
+          fetchData(matchData);
         } else {
           setMatchData([]);
         }
@@ -67,7 +63,7 @@ function ResultWithUsersScreen(props) {
       });
   }
 
-  const fetchData = (token, matchData) => {
+  const fetchData = (matchData) => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/matches/' + matchId + '/contest', { headers })
       .then((response) => {

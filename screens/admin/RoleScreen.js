@@ -19,20 +19,21 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 
 const RoleScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
     const [role, setRole] = useState('');
     const [btnText, setBtnText] = useState('Add');
     const [roleId, setRoleId] = useState(0);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -42,14 +43,12 @@ const RoleScreen = ({ navigation }) => {
         setRole('');
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayRole(token);
+    useEffect(() => {
+        displayRole();
         setRole('');
     }, [refreshing]);
 
-    const displayRole = (token) => {
+    const displayRole = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/roles', { headers })
@@ -82,7 +81,7 @@ const RoleScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Role added successfully.');
-                        displayRole(token);
+                        displayRole();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to add Role. Please try again...');
@@ -106,7 +105,7 @@ const RoleScreen = ({ navigation }) => {
                 setLoading(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'Role deleted successfully.');
-                    displayRole(token);
+                    displayRole();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete Role. Please try again...');
@@ -138,7 +137,7 @@ const RoleScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Role updated successfully.');
-                        displayRole(token);
+                        displayRole();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to update Role. Please try again...');

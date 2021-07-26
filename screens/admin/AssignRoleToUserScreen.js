@@ -19,13 +19,15 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { baseurl, errorMessage } from '../../config';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const AssignRoleToUserScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -34,16 +36,13 @@ const AssignRoleToUserScreen = ({ navigation }) => {
     const [roleId, setRoleId] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const [token, setToken] = useState('');
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayUser(token);
-        displayRole(token);
+    useEffect(() => {
+        displayUser();
+        displayRole();
     }, []);
 
-    const displayUser = (token) => {
+    const displayUser = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users', { headers })
             .then(response => {
@@ -69,7 +68,7 @@ const AssignRoleToUserScreen = ({ navigation }) => {
             })
     }
 
-    const displayRole = (token) => {
+    const displayRole = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/roles', { headers })
             .then(response => {

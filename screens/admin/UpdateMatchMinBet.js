@@ -19,7 +19,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Card } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
 import showSweetAlert from '../../helpers/showSweetAlert';
@@ -30,8 +29,11 @@ import { baseurl, errorMessage } from '../../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 // import Users from '../model/User';
+import { AuthContext } from '../../App';
 
 const UpdateMatchMinBet = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const { matchId } = props.route.params;
 
@@ -45,8 +47,6 @@ const UpdateMatchMinBet = (props) => {
     const [matchData, setMatchData] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const [userId, setUserId] = useState(0);
-    const [username, setUsername] = useState('');
     const [availablePoints, setAvailablePoints] = useState(0);
     const [tempAvailablePoints, setTempAvailablePoints] = useState(0);
     const [option, setOption] = useState('insert');
@@ -57,23 +57,11 @@ const UpdateMatchMinBet = (props) => {
     const [team1BetPoints, setTeam1BetPoints] = useState(0);
     const [team2BetPoints, setTeam2BetPoints] = useState(0);
 
-    const [token, setToken] = useState('');
-
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        // Get UserId
-        // const userId = await AsyncStorage.getItem('userId');
-        // setUserId(userId);
-        // const username = await AsyncStorage.getItem('username');
-        // setUsername(username);
-        // checkUserBet(userId, token);
-        // fetchUserData(userId, token);
-        fetchMatchData(token);
-        // fetchData(token);
+    useEffect(() => {
+        fetchMatchData();
     }, []);
 
-    const fetchMatchData = (token) => {
+    const fetchMatchData = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/matches/' + matchId, { headers })

@@ -17,7 +17,6 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -33,7 +32,6 @@ const PlayerTypeScreen = ({ navigation }) => {
     const [playerType, setPlayerType] = useState('');
     const [btnText, setBtnText] = useState('Add');
     const [playerTypeId, setPlayerTypeId] = useState(0);
-    // const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -43,9 +41,7 @@ const PlayerTypeScreen = ({ navigation }) => {
         setPlayerType('');
     }, []);
 
-    useEffect(async () => {
-        // const token = await AsyncStorage.getItem('token');
-        // setToken(token);
+    useEffect(() => {
         displayPlayerType();
         setPlayerType('');
     }, [refreshing]);

@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Text, ActivityIndicator, StatusBar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage, chatRefreshDelay, chatDays } from '../config';
 import { convertUTCDateToLocalDate } from '../helpers/dateConversion';
 
+import { AuthContext } from '../App';
+
 const PublicChatScreen = () => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = parseInt(loginState.userId);
 
   const [messages, setMessages] = useState([]);
   // const [lastId, setLastId] = useState(0);
@@ -16,21 +20,12 @@ const PublicChatScreen = () => {
   let lastResponseArrived = true;
   let lastLogId = 0;
 
-  const [userId, setUserId] = useState(0);
-
-  const [token, setToken] = useState('');
-
   const [loading, setLoading] = useState(true);
 
   const intervalRef = useRef();
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    // Get UserId
-    let userId = await AsyncStorage.getItem('userId');
-    setUserId(parseInt(userId));
-    fetchMessages(token);
+  useEffect(() => {
+    fetchMessages();
     // Refresh messages at some interval
     intervalRef.current = setInterval(() => {
       if (token) {
@@ -44,7 +39,7 @@ const PublicChatScreen = () => {
     };
   }, []);
 
-  const fetchMessages = (token) => {
+  const fetchMessages = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     // setLoading(true);
     axios.get(baseurl + '/public-chat/formatted/last-days/' + chatDays, { headers })
@@ -64,7 +59,7 @@ const PublicChatScreen = () => {
             system: true
           });
           // setMessages(data);
-          fetchContestLog(token, data);
+          fetchContestLog(data);
         } else {
           showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
         }
@@ -76,7 +71,7 @@ const PublicChatScreen = () => {
       });
   };
 
-  const fetchContestLog = (token, chatData) => {
+  const fetchContestLog = (chatData) => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/contest-log/formatted/last-days/' + chatDays, { headers })
       .then((response) => {
@@ -107,7 +102,7 @@ const PublicChatScreen = () => {
       });
   };
 
-  const refreshMessages = (token) => {
+  const refreshMessages = () => {
     if(lastId && lastResponseArrived){
       const headers = { 'Authorization': 'Bearer ' + token };
       // setLoading(true);

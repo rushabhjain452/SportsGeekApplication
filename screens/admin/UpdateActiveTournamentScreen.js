@@ -21,15 +21,17 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import axios from 'axios';
 // import { log } from 'react-native-reanimated';
+import { AuthContext } from '../../App';
 
 const UpdateActiveTournamentScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     // LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
@@ -39,21 +41,17 @@ const UpdateActiveTournamentScreen = ({ navigation }) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [loading, setLoading] = useState(true);
 
-    const [token, setToken] = useState('');
+    useEffect(() => {
+        // displayActiveTournament(token);
+        displayTournament();
+    }, [refreshing]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        // displayRecharge(token);
+        displayTournament();
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        // displayActiveTournament(token);
-        displayTournament(token);
-    }, [refreshing]);
-
-    const displayTournament = (token) => {
+    const displayTournament = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/tournaments', { headers })
             .then(response => {
@@ -85,7 +83,7 @@ const UpdateActiveTournamentScreen = ({ navigation }) => {
             })
     }
 
-    const displayActiveTournament = (token) => {
+    const displayActiveTournament = () => {
         setLoading(true);
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/tournaments/active-tournaments', { headers })

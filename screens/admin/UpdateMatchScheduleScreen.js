@@ -3,29 +3,28 @@ import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, RefreshCo
 import { Card, ListItem, Button} from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import formatDate from '../../helpers/formatDate';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 function UpdateMatchScheduleScreen({ navigation }) {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
 
   // const navigation = useNavigation();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
   }, []);
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
+  useEffect(() => {
     fetchData(token);
   }, [refreshing]);
 
@@ -94,7 +93,8 @@ function UpdateMatchScheduleScreen({ navigation }) {
       <View style={{ height: 20 }}></View>
     </ScrollView>
   );
-}
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

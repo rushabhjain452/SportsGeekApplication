@@ -18,9 +18,10 @@ import MyMatchesScreen from './MyMatchesScreen';
 import ScheduleScreen from './ScheduleScreen';
 import RootStackScreen from './RootStackScreen';
 import AdminScreen from './AdminScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import PlayerDetailofTeam from './PlayerDetailofTeam';
 import PublicChatScreen from './PublicChatScreen';
+
+import { AuthContext } from '../App';
 
 const HomeStack = createStackNavigator();
 const AdminStack = createStackNavigator();
@@ -32,16 +33,10 @@ const Tab = createMaterialBottomTabNavigator();
 const MyMatchesStack = createStackNavigator();
 
 const MainTabScreen = () => {
-
-  const [role, setRole] = useState('');
+  const { loginState } = React.useContext(AuthContext);
+  const role = loginState.role;
 
   const [badge, setBadge] = useState(0);
-
-  useEffect(async () => {
-    const role = await AsyncStorage.getItem('role');
-    // console.log(role);
-    setRole(role);
-  }, []);
 
   const changeBadge = (badge) => {
     setBadge(badge);
@@ -275,19 +270,20 @@ const MyMatchesStackScreen = ({ navigation }) => (
 // );
 
 const UserAvatar = (props) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = loginState.userId;
+
   const [avatarPath, setAvatarPath] = useState('');
   const [shortName, setShortName] = useState('');
 
-  useEffect(async () => {
-    const userId = await AsyncStorage.getItem('userId');
-    // console.log('userId : ' + userId);
-    const token = await AsyncStorage.getItem('token');
+  useEffect(() => {
     if(userId && token){
-      fetchUserData(userId, token);
+      fetchUserData();
     }
   }, []);
 
-  const fetchUserData = (userId, token) => {
+  const fetchUserData = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     // console.log(baseurl + '/users/' + userId);
     axios.get(baseurl + '/users/' + userId, { headers })

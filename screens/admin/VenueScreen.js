@@ -18,21 +18,22 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 const VenueScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
     const [venue, setVenue] = useState('');
     const [btnText, setBtnText] = useState('Add');
     const [venueId, setVenueId] = useState(0);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -40,14 +41,12 @@ const VenueScreen = ({ navigation }) => {
         setRefreshing(true);
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayVenue(token);
+    useEffect(() => {
+        displayVenue();
         setVenue('');
     }, [refreshing]);
 
-    const displayVenue = (token) => {
+    const displayVenue = () => {
         setLoading(true);
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/venues', { headers })
@@ -80,7 +79,7 @@ const VenueScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Venue added successfully.');
-                        displayVenue(token);
+                        displayVenue();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to add Venue. Please try again...');
@@ -105,7 +104,7 @@ const VenueScreen = ({ navigation }) => {
                 setLoading(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'Venue deleted successfully.');
-                    displayVenue(token);
+                    displayVenue();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete Venue. Please try again...');
@@ -137,7 +136,7 @@ const VenueScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Venue updated successfully.');
-                        displayVenue(token);
+                        displayVenue();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to update Venue. Please try again...');

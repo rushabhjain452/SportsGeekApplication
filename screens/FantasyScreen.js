@@ -8,6 +8,8 @@ import ContestScreen from './ContestScreen';
 const Tab = createMaterialTopTabNavigator();
 
 const FantasyScreen = (props) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
 
   const [matchId, setMatchId] = useState(0);
 

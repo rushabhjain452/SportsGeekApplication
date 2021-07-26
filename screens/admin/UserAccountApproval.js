@@ -23,31 +23,30 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import { Card } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const UserAccountApproval = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const [data, setData] = useState([]);
-    const [token, setToken] = useState('');
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [waiting, setWaiting] = React.useState(false);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayUser(token);
+    useEffect(() => {
+        displayUser();
     }, [refreshing]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         // console.log('Token on refresh : ' + token);
-        // displayUser(token);
+        // displayUser();
     }, []);
 
-    const displayUser = (token) => {
+    const displayUser = () => {
         let userStatus = 0;
         setWaiting(true);
         const headers = { 'Authorization': 'Bearer ' + token }
@@ -79,7 +78,7 @@ const UserAccountApproval = ({ navigation }) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'User Approved');
-                    displayUser(token);
+                    displayUser();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to update Status. Please try again...');

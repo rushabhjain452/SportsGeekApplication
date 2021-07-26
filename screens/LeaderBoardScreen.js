@@ -5,7 +5,6 @@ import { StyleSheet, View, Text, RefreshControl, ActivityIndicator, ScrollView, 
 // import {
 //   Avatar
 // } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Avatar } from "react-native-elements";
 import { useTheme } from 'react-native-paper';
@@ -14,39 +13,36 @@ import axios from 'axios';
 import showSweetAlert from '../helpers/showSweetAlert';
 import getColor from '../helpers/getColor';
 import { baseurl, errorMessage } from '../config';
+import { AuthContext } from '../App';
 
-function LeaderBoard(props) {
+const LeaderBoard = (props) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = loginState.userId;
 
   const [data, setData] = useState([]);
   const [contestData, setContestData] = useState([]);
-  const [userId, setUserId] = useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
   const { colors } = useTheme();
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    const userId = await AsyncStorage.getItem('userId');
-    setUserId(userId);
-    fetchData(token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     // console.log('Refreshing...');
-    // fetchData(token);
+    // fetchData();
   }, []);
 
-  const fetchData = (token) => {
-    console.log('fetchData');
+  const fetchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/users/statistics', { headers })
       .then((response) => {
         if (response.status == 200) {
           setData(response.data);
-          // fetchContestData(response.data, token);
+          // fetchContestData(response.data);
           setLoading(false);
           setRefreshing(false);
         } else {
@@ -60,7 +56,7 @@ function LeaderBoard(props) {
       });
   }
 
-  const fetchContestData = (data, token) => {
+  const fetchContestData = (data) => {
     console.log('fetchContestData');
     const headers = { 'Authorization': 'Bearer ' + token };
     axios.get(baseurl + '/users/future-contest', { headers })

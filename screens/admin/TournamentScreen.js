@@ -20,18 +20,19 @@ import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const TournamentScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     const [data, setData] = useState([]);
     const [tournament, setTournament] = useState('');
     const [btnText, setBtnText] = useState('Add');
     const [tournamentId, setTournamentId] = useState(0);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -39,14 +40,12 @@ const TournamentScreen = ({ navigation }) => {
         setRefreshing(true);
     }, []);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayTournament(token);
+    useEffect(() => {
+        displayTournament();
         setTournament('');
     }, [refreshing]);
 
-    const displayTournament = (token) => {
+    const displayTournament = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/tournaments', { headers })
             .then(response => {
@@ -78,7 +77,7 @@ const TournamentScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 201) {
                         showSweetAlert('success', 'Success', 'Tournament added successfully.');
-                        displayTournament(token);
+                        displayTournament();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to add Tournament. Please try again...');
@@ -103,7 +102,7 @@ const TournamentScreen = ({ navigation }) => {
                 setLoading(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'Tournament deleted successfully.');
-                    displayTournament(token);
+                    displayTournament();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete Tournament. Please try again...');
@@ -135,7 +134,7 @@ const TournamentScreen = ({ navigation }) => {
                     setLoading(false);
                     if (response.status == 200) {
                         showSweetAlert('success', 'Success', 'Tournament updated successfully..');
-                        displayTournament(token);
+                        displayTournament();
                     }
                     else {
                         showSweetAlert('error', 'Error', 'Failed to update Tournament. Please try again...');

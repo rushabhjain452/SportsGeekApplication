@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const HelpScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">

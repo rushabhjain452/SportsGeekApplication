@@ -1,9 +1,9 @@
-import { Button } from 'native-base'
-import React from 'react'
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native"
-import { TouchableOpacity } from 'react-native-gesture-handler'
-export const SLIDER_WIDTH = Dimensions.get('window').width + 80
-export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
+import { Button } from 'native-base';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+export const SLIDER_WIDTH = Dimensions.get('window').width + 80;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
 const CarouselCardItem = ({ item, index, navigation }) => {
   return (
@@ -17,8 +17,9 @@ const CarouselCardItem = ({ item, index, navigation }) => {
         <Text style={styles.body}>{item.body}</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -52,6 +53,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20
   }
-})
+});
 
-export default CarouselCardItem
+export default CarouselCardItem;

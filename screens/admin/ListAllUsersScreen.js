@@ -22,27 +22,26 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import { Card } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { AuthContext } from '../../App';
 
 const ListAllUsersScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const [data, setData] = useState([]);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayUser(token);
+    useEffect(() => {
+        displayUser();
     }, [refreshing]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
     }, []);
 
-    const displayUser = (token) => {
+    const displayUser = () => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users', { headers })
             .then(response => {

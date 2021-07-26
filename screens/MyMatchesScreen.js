@@ -4,40 +4,37 @@ import { useTheme } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Card } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import formatDate from '../helpers/formatDate';
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
+import { AuthContext } from '../App';
 
 const Tab = createMaterialTopTabNavigator();
 
-function UpcomingMatches() {
+const UpcomingMatches = () => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = loginState.userId;
+
   const [data, setData] = useState([]);
-  const [userId, setUserId] = useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    const userId = await AsyncStorage.getItem('userId');
-    setUserId(userId);
-    fetchData(userId, token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     // console.log("User Id : "+userId);
-    // fetchData(userId);
+    // fetchData();
   }, []);
 
-  const fetchData = (userId, token) => {
-    axios.get(baseurl + '/users/' + userId + '/upcoming', {
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
+  const fetchData = () => {
+    const headers = { 'Authorization': 'Bearer ' + token };
+    axios.get(baseurl + '/users/' + userId + '/upcoming', { headers })
       .then((response) => {
         setLoading(false);
         setRefreshing(false);
@@ -95,25 +92,25 @@ function UpcomingMatches() {
   );
 }
 
-function LiveMatches({ navigation }) {
+const LiveMatches = ({ navigation }) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = loginState.userId;
+
   const [data, setData] = useState([]);
-  const [userId, setUserId] = useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    const userId = await AsyncStorage.getItem('userId');
-    setUserId(userId);
-    fetchData(userId, token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // fetchData(userId);
+    // fetchData();
   }, []);
 
-  const fetchData = (userId, token) => {
+  const fetchData = () => {
     // console.log("U Id : " + userId);
     setLoading(false);
     setRefreshing(false);
@@ -176,17 +173,17 @@ function LiveMatches({ navigation }) {
   );
 }
 
-function Results({ navigation }) {
+const Results = ({ navigation }) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
+  const userId = loginState.userId;
+
   const [result, setResult] = useState([]);
-  const [userId, setUserId] = useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    const userId = await AsyncStorage.getItem('userId');
-    setUserId(userId);
-    fetchResultData(userId, token);
+  useEffect(() => {
+    fetchResultData();
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
@@ -194,7 +191,7 @@ function Results({ navigation }) {
     // fetchResultData(userId);
   }, []);
 
-  const fetchResultData = (userId, token) => {
+  const fetchResultData = () => {
     setLoading(false);
     setRefreshing(false);
     // console.log("User Id : " + userId);

@@ -15,15 +15,17 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 // import ImagePicker from 'react-native-image-crop-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../../App';
 
 const UpdateUserScreen = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const { userId } = props.route.params;
     const navigation = useNavigation();
@@ -37,17 +39,13 @@ const UpdateUserScreen = (props) => {
     const [mobileNumber, setMobileNumber] = useState(0);
     const [genderData, setGenderData] = useState([]);
 
-    const [token, setToken] = useState('');
-
     const [waiting, setWaiting] = React.useState(true);
 
     const email_regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
+    useEffect(() => {
         fetchGenderData();
-        fetchUserData(userId, token);
+        fetchUserData(userId);
     }, []);
 
     const fetchGenderData = () => {
@@ -66,7 +64,7 @@ const UpdateUserScreen = (props) => {
             })
     }
 
-    const fetchUserData = (userId, token) => {
+    const fetchUserData = (userId) => {
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/' + userId, { headers })
             .then(response => {

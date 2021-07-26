@@ -23,11 +23,13 @@ import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
 import { Card } from 'react-native-elements';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-crop-picker';
+import { AuthContext } from '../../App';
 
 const TeamScreen = ({ navigation }) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const userAvatarLogo = 'https://firebasestorage.googleapis.com/v0/b/sportsgeek-74e1e.appspot.com/o/69bba4a0-c114-4379-9854-e4381a3130bc.png?alt=media&token=e9924ea4-c2d9-4782-bc2d-0fe734431c86';
 
@@ -39,14 +41,21 @@ const TeamScreen = ({ navigation }) => {
     const [shortName, setShortName] = useState('');
     const [teamLogo, setTeamLogo] = useState(null);
     const [avatarPath, setAvatarPath] = useState(userAvatarLogo);
-    const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    useEffect(() => {
+        displayTeam();
+        // setTeam('');
+        // setTeamLogo('');
+        // setShortName('');
+        clearControls();
+    }, [refreshing]);
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        displayTeam(token);
+        displayTeam();
         // setTeam('');
         // setTeamLogo('');
         // setShortName('');
@@ -59,17 +68,7 @@ const TeamScreen = ({ navigation }) => {
         setShortName('');
     }
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayTeam(token);
-        // setTeam('');
-        // setTeamLogo('');
-        // setShortName('');
-        clearControls();
-    }, [refreshing]);
-
-    const displayTeam = (token) => {
+    const displayTeam = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/teams', { headers })

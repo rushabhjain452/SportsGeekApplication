@@ -3,32 +3,31 @@ import { StyleSheet, View, Text, ScrollView, Alert, ActivityIndicator, StatusBar
 import { Card, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
-function PlayerDetailScreenForUpdate({ navigation }) {
+const PlayerDetailScreenForUpdate = ({ navigation }) => {
+  const { loginState } = React.useContext(AuthContext);
+  const token = loginState.token;
 
   // const navigation = useNavigation();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
   const [refreshing, setRefreshing] = React.useState(false);
 
   //   const noOfFutureBets = 5;
 
-  useEffect(async () => {
-    const token = await AsyncStorage.getItem('token');
-    setToken(token);
-    fetchData(token);
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
 
 
-  const fetchData = (token) => {
+  const fetchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token }
     axios.get(baseurl + '/players', { headers })
       .then(response => {
@@ -55,7 +54,7 @@ function PlayerDetailScreenForUpdate({ navigation }) {
   const onRefresh = React.useCallback(() => {
     // console.log('After refresh : ');
     setRefreshing(true);
-    fetchData(token);
+    fetchData();
     // wait(2000).then(() => setRefreshing(false));
   }, []);
 
@@ -67,7 +66,7 @@ function PlayerDetailScreenForUpdate({ navigation }) {
         setLoading(false);
         if (response.status == 200) {
           showSweetAlert('success', 'Success', 'Player deleted successfully.');
-          fetchData(token);
+          fetchData();
         }
         else {
           showSweetAlert('error', 'Error', 'Failed to delete Player. Please try again...');

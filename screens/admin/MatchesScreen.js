@@ -20,14 +20,16 @@ import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import showSweetAlert from '../../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../../config';
+import { AuthContext } from '../../App';
 
 const MatchesScreen = (props) => {
+    const { loginState } = React.useContext(AuthContext);
+    const token = loginState.token;
 
     const { updateMatchId } = props.route.params ?? "undefined";
     const navigation = useNavigation();
@@ -48,24 +50,21 @@ const MatchesScreen = (props) => {
     const [tournamentId, setTournamentId] = useState(0);
     const [valueSS, setValueSS] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [token, setToken] = useState('');
 
     const [loading, setLoading] = useState(true);
 
-    useEffect(async () => {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
-        displayTournament(token);
-        displayVenue(token);
-        displayTeam(token);
+    useEffect(() => {
+        displayTournament();
+        displayVenue();
+        displayTeam();
         if (updateMatchId != undefined) {
-            fetchMatchData(updateMatchId, token);
+            fetchMatchData(updateMatchId);
         }
         // displayTeam();
         // setPlayerType('');
     }, []);
 
-    const displayTournament = (token) => {
+    const displayTournament = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/tournaments', { headers })
@@ -98,7 +97,7 @@ const MatchesScreen = (props) => {
             });
     };
 
-    const displayVenue = (token) => {
+    const displayVenue = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/venues', { headers })
@@ -130,7 +129,7 @@ const MatchesScreen = (props) => {
             });
     };
 
-    const displayTeam = (token) => {
+    const displayTeam = () => {
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
         axios.get(baseurl + '/teams', { headers })
