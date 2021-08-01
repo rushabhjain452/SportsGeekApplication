@@ -112,7 +112,7 @@ const ContestScreen = (props) => {
                 setWaiting(false);
                 if (response.status == 200) {
                     setData(response.data);
-                    console.log(response.data);
+                    // console.log(response.data);
                     let records = response.data;
                     let team1points = 0, team2points = 0;
                     let team1users = 0, team2users = 0;

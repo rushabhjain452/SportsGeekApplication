@@ -125,7 +125,7 @@ const PlayerScreen = (props) => {
             })
     }
 
-    const fetchPlayerData = (playerId, token) => {
+    const fetchPlayerData = (playerId) => {
         setBtnText('Update');
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);
@@ -137,7 +137,8 @@ const PlayerScreen = (props) => {
                     setTeamId(response.data.teamId);
                     setPlayerTypeId(response.data.typeId);
                     setPlayerName(response.data.name);
-                    setProfilePicture(response.data.profilePicture);
+                    // setProfilePicture(response.data.profilePicture);
+                    setProfilePicture(null);
                     setAvatarPath(response.data.profilePicture);
                 }
                 else {
@@ -184,7 +185,7 @@ const PlayerScreen = (props) => {
 
     const photoRemoveHandler = () => {
         setAvatarPath(userAvatarLogo);
-        setProfilePicture(avatarPath);
+        setProfilePicture(null);
     };
 
     const addPlayer = () => {
@@ -197,9 +198,9 @@ const PlayerScreen = (props) => {
         else if (playerName.length < 3) {
             showSweetAlert('warning', 'Invalid Input!', 'Please enter Player name greater than 2 characters to proceed.');
         }
-        else if (!profilePicture) {
-            showSweetAlert('warning', 'Invalid Input!', 'Please Select Profile Picture.');
-        }
+        // else if (!profilePicture) {
+        //     showSweetAlert('warning', 'Invalid Input!', 'Please Select Player Profile Picture.');
+        // }
         else {
             setLoading(true);
             // Submitting Form Data (with Profile Picture)
@@ -220,6 +221,7 @@ const PlayerScreen = (props) => {
                     uri: profilePicture.path
                 });
             }
+            console.log(formData);
             const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token };
             axios.post(baseurl + '/players', formData, { headers })
                 .then((response) => {
@@ -241,8 +243,8 @@ const PlayerScreen = (props) => {
                 })
                 .catch((error) => {
                     setLoading(false);
-                    // console.log(error);
                     console.log(error);
+                    console.log(error.response);
                     showSweetAlert('error', 'Network Error', errorMessage);
                 });
         }
@@ -260,14 +262,16 @@ const PlayerScreen = (props) => {
         }
         else if (playerTypeId == 0) {
             showSweetAlert('warning', 'Invalid Input', 'Please Select Valid Player Type.');
-        } else if (!profilePicture) {
-            showSweetAlert('warning', 'Invalid Input!', 'Please Select Player logo.');
-        }
+        } 
+        // else if (!profilePicture) {
+        //     showSweetAlert('warning', 'Invalid Input!', 'Please Select Player Profile Picture.');
+        // }
         else {
             setLoading(true);
             const formData = new FormData();
             formData.append('teamId', teamId);
             formData.append('name', playerName);
+            console.log(playerName);
             formData.append('typeId', playerTypeId);
             if (profilePicture == null) {
                 formData.append('profilePicture', null);

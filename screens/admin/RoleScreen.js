@@ -39,7 +39,7 @@ const RoleScreen = ({ navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        displayRole(token);
+        displayRole();
         setRole('');
     }, []);
 

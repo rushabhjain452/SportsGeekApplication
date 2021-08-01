@@ -162,7 +162,7 @@ const MatchesScreen = (props) => {
             });
     };
 
-    const fetchMatchData = (matchId, token) => {
+    const fetchMatchData = (matchId) => {
         setBtnText('Update');
         const headers = { 'Authorization': 'Bearer ' + token };
         setLoading(true);

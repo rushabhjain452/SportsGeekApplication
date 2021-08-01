@@ -21,6 +21,7 @@ import { Avatar } from "react-native-elements";
 import showSweetAlert from '../helpers/showSweetAlert';
 import { baseurl, errorMessage } from '../config';
 import axios from 'axios';
+import { AuthContext } from '../App';
 
 const UpdateProfileScreen = ({ navigation }) => {
     const { loginState } = React.useContext(AuthContext);

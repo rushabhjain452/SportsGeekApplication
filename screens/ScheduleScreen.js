@@ -144,21 +144,21 @@ const ScheduleScreen = ({ navigation }) => {
             <TouchableOpacity style={[styles.rect, mystyle]} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
               <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
               <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}>
+                {/* <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}> */}
                   <View style={styles.ellipseRow}>
                     <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
                     <Text style={styles.mI}>{item.team1Short}</Text>
                   </View>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
                 <View style={styles.loremIpsumColumn}>
                   <Text style={styles.vs}>VS</Text>
                 </View>
-                <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}>
+                {/* <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}> */}
                   <View style={styles.rightteam}>
                     <Text style={styles.eng}>{item.team2Short}</Text>
                     <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
                   </View>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
               </View>
               <View style={{ height: 40 }}>
                 <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>

@@ -25,7 +25,7 @@ function UpdateMatchScheduleScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    fetchData(token);
+    fetchData();
   }, [refreshing]);
 
   // useEffect(() => {
@@ -36,7 +36,7 @@ function UpdateMatchScheduleScreen({ navigation }) {
 
   // }
 
-  const fetchData = (token) => {
+  const fetchData = () => {
     const headers = { 'Authorization': 'Bearer ' + token }
     axios.get(baseurl + '/matches/old-matches', { headers })
       .then(response => {

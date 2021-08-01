@@ -64,7 +64,7 @@ const TeamScreen = ({ navigation }) => {
 
     const clearControls = () => {
         setTeam('');
-        setTeamLogo('');
+        setTeamLogo(null);
         setShortName('');
     }
 
@@ -100,6 +100,7 @@ const TeamScreen = ({ navigation }) => {
                 setTeamLogo(image);
             }
         }).catch((error) => {
+
             showSweetAlert('warning', 'Image not selected', 'Image not selected for team Logo.');
         });
     }
@@ -123,7 +124,7 @@ const TeamScreen = ({ navigation }) => {
 
     const photoRemoveHandler = () => {
         setAvatarPath(userAvatarLogo);
-        setTeamLogo(avatarPath);
+        setTeamLogo(null);
     };
 
     const addTeam = () => {
@@ -203,7 +204,7 @@ const TeamScreen = ({ navigation }) => {
                 setLoading(false);
                 if (response.status == 200) {
                     showSweetAlert('success', 'Success', 'Team deleted successfully.');
-                    displayTeam(token);
+                    displayTeam();
                 }
                 else {
                     showSweetAlert('error', 'Error', 'Failed to delete Team. Please try again...');
@@ -225,7 +226,7 @@ const TeamScreen = ({ navigation }) => {
         setTeam(name);
         setBtnText('Update');
         setTeamId(teamId);
-        setTeamLogo(teamLogo);
+        setTeamLogo(null);
         setShortName(shortName);
         setAvatarPath(teamLogo);
     }
@@ -248,7 +249,7 @@ const TeamScreen = ({ navigation }) => {
             if (teamLogo == null) {
                 formData.append('teamLogo', null);
             } else {
-                console.log("TeamLogo:" + teamLogo.path);
+                // console.log("TeamLogo:" + teamLogo.path);
                 let picturePath = teamLogo.path;
                 let pathParts = picturePath.split('/');
                 formData.append('teamLogo', {
