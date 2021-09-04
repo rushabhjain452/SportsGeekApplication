@@ -48,8 +48,8 @@ const AssignRoleToUserScreen = ({ navigation }) => {
             .then(response => {
                 if (response.status == 200) {
                     setData(response.data);
-                    let dt = response.data;
-                    let arr = [];
+                    const dt = response.data;
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].userId,
@@ -76,9 +76,9 @@ const AssignRoleToUserScreen = ({ navigation }) => {
                 if (response.status == 200) {
                     setData(response.data);
                   
-                    let dt = response.data;
+                    const dt = response.data;
                     
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].roleId,

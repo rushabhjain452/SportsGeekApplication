@@ -120,8 +120,10 @@ const SignInScreen = ({ navigation }) => {
             })
             .catch((error) => {
                 setLoading(false);
+                // console.log(error);
                 if (error.response) {
                     const response = error.response;
+                    // console.log(response);
                     if (response.status == 400 || response.status == 401) {
                         showSweetAlert('warning', 'Login Failed', response.data.message);
                     } else {

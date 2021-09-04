@@ -171,8 +171,8 @@ const SignUpScreen = ({ navigation }) => {
             if (profilePicture == null) {
                 formData.append('profilePicture', null);
             } else {
-                let picturePath = profilePicture.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = profilePicture.path;
+                const pathParts = picturePath.split('/');
                 formData.append('profilePicture', {
                     // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
                     name: pathParts[pathParts.length - 1],
@@ -235,6 +235,7 @@ const SignUpScreen = ({ navigation }) => {
                             source={{
                                 uri: avatarPath
                             }}
+                            onPress={() => { photoSelectHandler() }}
                         />
                     </View>
                     <TouchableOpacity

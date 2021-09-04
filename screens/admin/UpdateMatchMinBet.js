@@ -84,10 +84,10 @@ const UpdateMatchMinBet = (props) => {
     const { colors } = useTheme();
 
     const contestHandler = () => {
-        let current_datetime = new Date();
-        let str = matchData.startDatetime;
-        let matchDate = new Date(str);
-        let match_date = new Date(matchDate.getUTCFullYear(), matchDate.getUTCMonth(), matchDate.getUTCDate(), matchDate.getUTCHours(), matchDate.getUTCMinutes(), matchDate.getUTCSeconds());
+        const current_datetime = new Date();
+        const str = matchData.startDatetime;
+        const matchDate = new Date(str);
+        const match_date = new Date(matchDate.getUTCFullYear(), matchDate.getUTCMonth(), matchDate.getUTCDate(), matchDate.getUTCHours(), matchDate.getUTCMinutes(), matchDate.getUTCSeconds());
         if (points < 1) {
             showSweetAlert('warning', 'Invalid Contest Points', "Please enter valid value for Contest points.");
         }
@@ -154,7 +154,7 @@ const UpdateMatchMinBet = (props) => {
                             onChangeText={(val) => {
                                 setPoints(val)
                                 // console.log(val);
-                                let betPoints = 0;
+                                const betPoints = 0;
                                 if (val == '')
                                     betPoints = 0;
                                 else {

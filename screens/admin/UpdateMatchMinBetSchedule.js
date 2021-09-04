@@ -52,10 +52,10 @@ function UpdateMatchMinBetSchedule({ navigation }) {
   const handleCardClick = (startDatetime, matchId) => {
     // Alert.alert(item.team1 + ' vs ' + item.team2);
     // Alert.alert(index.toString());
-    let startTimestamp = new Date(startDatetime);
+    const startTimestamp = new Date(startDatetime);
     // console.log("Type : " + typeof(startTimestamp));
     // console.log("StartDatetime : " + startTimestamp);
-    let dt = new Date();
+    const dt = new Date();
     // console.log("Current Timestamp : " + dt.toLocaleString());
     // console.log(dt > startTimestamp);
     if (dt > startTimestamp) {

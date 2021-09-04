@@ -71,9 +71,9 @@ const PlayerScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(json.data);
-                    let dt = response.data;
+                    const dt = response.data;
                     // console.log(dt.length);
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].teamId,
@@ -103,9 +103,9 @@ const PlayerScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(json.data);
-                    let dt = response.data;
+                    const dt = response.data;
                     // console.log(dt.length);
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].playerTypeId,
@@ -212,8 +212,8 @@ const PlayerScreen = (props) => {
             if (profilePicture == null) {
                 formData.append('profilePicture', null);
             } else {
-                let picturePath = profilePicture.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = profilePicture.path;
+                const pathParts = picturePath.split('/');
                 formData.append('profilePicture', {
                     // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
                     name: pathParts[pathParts.length - 1],
@@ -277,8 +277,8 @@ const PlayerScreen = (props) => {
                 formData.append('profilePicture', null);
             } else {
                 console.log("ProfilePicture:" + profilePicture.path);
-                let picturePath = profilePicture.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = profilePicture.path;
+                const pathParts = picturePath.split('/');
                 formData.append('profilePicture', {
                     // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
                     name: pathParts[pathParts.length - 1],

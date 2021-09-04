@@ -113,7 +113,7 @@ const ContestScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(response.data);
-                    let records = response.data;
+                    const records = response.data;
                     let team1points = 0, team2points = 0;
                     let team1users = 0, team2users = 0;
                     // console.log(records);
@@ -193,8 +193,8 @@ const ContestScreen = (props) => {
     }, []);
 
     const contestHandler = () => {
-        let current_datetime = new Date();
-        let str = matchData.startDatetime;
+        const current_datetime = new Date();
+        const str = matchData.startDatetime;
         // let match_datetime = new Date(str);
         // console.log('MatchDatetime : ' + str);
         // console.log('Match Date : ' + match_datetime.toISOString());
@@ -204,14 +204,14 @@ const ContestScreen = (props) => {
         // console.log('Current Date : ' + current_datetime.toISOString());
         // console.log('Type : ' + typeof(match_datetime));
         // new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, milliseconds]]]]])
-        let matchDate = new Date(str);
-        let match_date = new Date(matchDate.getUTCFullYear(), matchDate.getUTCMonth(), matchDate.getUTCDate(), matchDate.getUTCHours(), matchDate.getUTCMinutes(), matchDate.getUTCSeconds());
+        const matchDate = new Date(str);
+        const match_date = new Date(matchDate.getUTCFullYear(), matchDate.getUTCMonth(), matchDate.getUTCDate(), matchDate.getUTCHours(), matchDate.getUTCMinutes(), matchDate.getUTCSeconds());
         // console.log('MatchDatetime : ' + match_date.toString());
         // console.log('CurrentDatetime : ' + current_datetime.toString());
         // console.log(match_date - current_datetime);
         // console.log(match_date < current_datetime);
         if (selectedTeamId == 0) {
-            showSweetAlert('warning', 'Team not selected', "Please select you Team for Contest.");
+            showSweetAlert('warning', 'Team not selected', "Please select Team for Contest.");
         }
         else if (points < 1) {
             showSweetAlert('warning', 'Invalid Contest Points', "Please enter valid value for Contest points.");
@@ -281,7 +281,7 @@ const ContestScreen = (props) => {
             }
             else if (option == 'update') {
                 console.log('update');
-                let balance = parseInt(availablePoints) + parseInt(oldPoints);
+                const balance = parseInt(availablePoints) + parseInt(oldPoints);
                 if (parseInt(points) > balance) {
                     setWaiting(false);
                     showSweetAlert('warning', 'Insufficient Points', "Your have only " + (balance) + " available points.");
@@ -338,10 +338,10 @@ const ContestScreen = (props) => {
         switch (column) {
             case 'name':
                 setData((oldData) => {
-                    let newData = [...oldData];
+                    const newData = [...oldData];
                     newData.sort((a, b) => {
-                        let val1 = a.firstName.toLowerCase() + ' ' + a.lastName.toLowerCase();
-                        let val2 = b.firstName.toLowerCase() + ' ' + b.lastName.toLowerCase();
+                        const val1 = a.firstName.toLowerCase() + ' ' + a.lastName.toLowerCase();
+                        const val2 = b.firstName.toLowerCase() + ' ' + b.lastName.toLowerCase();
                         if (val1 < val2) {
                             return order * -1;
                         }
@@ -355,10 +355,10 @@ const ContestScreen = (props) => {
                 break;
             case 'team':
                 setData((oldData) => {
-                    let newData = [...oldData];
+                    const newData = [...oldData];
                     newData.sort((a, b) => {
-                        let val1 = a.teamShortName.toLowerCase();
-                        let val2 = b.teamShortName.toLowerCase();
+                        const val1 = a.teamShortName.toLowerCase();
+                        const val2 = b.teamShortName.toLowerCase();
                         if (val1 < val2) {
                             return order * -1;
                         }
@@ -372,7 +372,7 @@ const ContestScreen = (props) => {
                 break;
             case 'points':
                 setData((oldData) => {
-                    let newData = [...oldData];
+                    const newData = [...oldData];
                     newData.sort((a, b) => (a.contestPoints - b.contestPoints) * order);
                     return newData;
                 });
@@ -383,8 +383,8 @@ const ContestScreen = (props) => {
     const { colors } = useTheme();
 
     // console.log(data);
-    let card1Style = selectedTeamId == matchData.team1Id ? styles.bgColorSelected : styles.bgColorNormal;
-    let card2Style = selectedTeamId == matchData.team2Id ? styles.bgColorSelected : styles.bgColorNormal;
+    const card1Style = selectedTeamId == matchData.team1Id ? styles.bgColorSelected : styles.bgColorNormal;
+    const card2Style = selectedTeamId == matchData.team2Id ? styles.bgColorSelected : styles.bgColorNormal;
 
     return (
         <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
@@ -491,19 +491,19 @@ const ContestScreen = (props) => {
                                 onPress={() => { sort('name') }}
                                 style={[styles.headingCol, styles.headingCol1]}>
                                 <Text style={styles.headingColText}>Name</Text>
-                                <FontAwesome name="sort" color={colors.text} size={20} />
+                                <FontAwesome name="sort" color={colors.text} size={15} />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => { sort('team') }}
                                 style={[styles.headingCol, styles.headingCol2]}>
                                 <Text style={styles.headingColText}>Team</Text>
-                                <FontAwesome name="sort" color={colors.text} size={20} />
+                                <FontAwesome name="sort" color={colors.text} size={15} />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => { sort('points') }}
                                 style={[styles.headingCol, styles.headingCol3]}>
                                 <Text style={styles.headingColText}>Points</Text>
-                                <FontAwesome name="sort" color={colors.text} size={20} />
+                                <FontAwesome name="sort" color={colors.text} size={15} />
                             </TouchableOpacity>
                         </View>
                         {data.length == 0 && (<Text style={styles.msgStyle}>No users have placed contest on this match.</Text>)}
@@ -727,7 +727,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#3D74C7',
         borderWidth: 0,
         borderColor: "#000000",
-        borderRadius: 5,
+        borderRadius: 2,
+        // borderRadius: 5,
         display: 'flex',
         flexDirection: 'row',
         fontFamily: "roboto-regular",

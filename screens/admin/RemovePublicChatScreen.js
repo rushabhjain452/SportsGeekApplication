@@ -45,7 +45,7 @@ const RemovePublicChatScreen = ({ navigation }) => {
     }, []);
 
     const fetchChatData = () => {
-        let days = 30;
+        const days = 30;
         // setWaiting(true);
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/public-chat/last-days/' + days, { headers })
@@ -69,7 +69,7 @@ const RemovePublicChatScreen = ({ navigation }) => {
     }
 
     // const updateUser = (userId) => {
-    //     let userStatus = true;
+    //     const userStatus = true;
     //     setWaiting(true);
     //     const headers = { 'Authorization': 'Bearer ' + token }
     //     axios.put(baseurl + '/users/' + userId + '/update-status/true', {}, { headers })

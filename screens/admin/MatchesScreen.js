@@ -74,9 +74,9 @@ const MatchesScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(json.data);
-                    let dt = response.data;
+                    const dt = response.data;
                     // console.log(dt.length);
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].tournamentId,
@@ -107,9 +107,9 @@ const MatchesScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(json.data);
-                    let dt = response.data;
+                    const dt = response.data;
                     // console.log(dt.length);
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].venueId,
@@ -139,9 +139,9 @@ const MatchesScreen = (props) => {
                 if (response.status == 200) {
                     setData(response.data);
                     // console.log(json.data);
-                    let dt = response.data;
+                    const dt = response.data;
                     // console.log(dt.length);
-                    let arr = [];
+                    const arr = [];
                     for (let i = 0; i < dt.length; i++) {
                         arr.push({
                             value: dt[i].teamId,

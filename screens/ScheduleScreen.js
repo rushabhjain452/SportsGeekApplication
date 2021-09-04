@@ -67,10 +67,10 @@ const ScheduleScreen = ({ navigation }) => {
   const handleCardClick = (index, startDatetime, matchId) => {
     // Alert.alert(item.team1 + ' vs ' + item.team2);
     // Alert.alert(index.toString());
-    let startTimestamp = new Date(startDatetime);
+    const startTimestamp = new Date(startDatetime);
     // console.log("Type : " + typeof(startTimestamp));
     // console.log("StartDatetime : " + startTimestamp);
-    let dt = new Date();
+    const dt = new Date();
     // console.log("Current Timestamp : " + dt.toLocaleString());
     // console.log(dt > startTimestamp);
     if (index > noOfFutureBets) {
@@ -106,7 +106,7 @@ const ScheduleScreen = ({ navigation }) => {
       // 2021-08-23T19:30:00.000+00:00
       if(lastDate === ''){
         lastDate = str;
-        let day = parseInt(str.substring(8,10));
+        const day = parseInt(str.substring(8,10));
         lastNumber = day % 2;
         return lastNumber;
       }else{
@@ -134,40 +134,44 @@ const ScheduleScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
-      <Text style={styles.text_header}>Upcoming Matches</Text>
       {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
+      <Text style={styles.heading}>Upcoming Matches</Text>
+      <View style={styles.cardContainer}>
       {
         data && data.map((item, index) => {
           const n = getNumberFromDate(item.startDatetime);
           const mystyle = n === 0 ? styles.bgColorEven : styles.bgColorOdd;
           return (
-            <TouchableOpacity style={[styles.rect, mystyle]} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
-              <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
-              <View style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+            <TouchableOpacity style={[styles.card, mystyle]} key={item.matchId} onPress={() => { handleCardClick(index + 1, item.startDatetime, item.matchId) }}>
+              <View>
+                <Text style={styles.date}>{formatDate(item.startDatetime)}</Text>
+              </View>
+              <View style={styles.teamsContainer}>
                 {/* <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team1Id) }}> */}
-                  <View style={styles.ellipseRow}>
-                    <Card.Image style={styles.ellipse} source={{ uri: item.team1Logo }} />
-                    <Text style={styles.mI}>{item.team1Short}</Text>
+                  <View style={styles.teamLeft}>
+                    <Card.Image style={styles.ellipseLeft} source={{ uri: item.team1Logo }} />
+                    <Text style={styles.teamNameLeft}>{item.team1Short}</Text>
                   </View>
                 {/* </TouchableOpacity> */}
-                <View style={styles.loremIpsumColumn}>
-                  <Text style={styles.vs}>VS</Text>
+                <View style={styles.vsColumn}>
+                  <Text style={styles.vs}>vs</Text>
                 </View>
                 {/* <TouchableOpacity onPress={() => { handlePlayerDetailClick(item.team2Id) }}> */}
-                  <View style={styles.rightteam}>
-                    <Text style={styles.eng}>{item.team2Short}</Text>
-                    <Card.Image style={styles.ellipse1} source={{ uri: item.team2Logo }} />
+                  <View style={styles.teamRight}>
+                    <Text style={styles.teamNameRight}>{item.team2Short}</Text>
+                    <Card.Image style={styles.ellipseRight} source={{ uri: item.team2Logo }} />
                   </View>
                 {/* </TouchableOpacity> */}
               </View>
-              <View style={{ height: 40 }}>
-                <Text style={{ textAlign: 'center', fontSize: 16 }}>{item.venue}</Text>
+              <View>
+                <Text style={styles.venue}>{item.venue}</Text>
               </View>
             </TouchableOpacity>
-          )
+          );
         })
       }
-      <View style={{ height: 20 }}></View>
+      </View>
+      <View style={{ height: 15 }}></View>
     </ScrollView>
   );
 }
@@ -177,18 +181,34 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderColor: "#000000",
-    backgroundColor: "rgba(255,255,255,1)"
+    backgroundColor: "rgba(255,255,255,1)",
   },
-  rect: {
-    width: '95%',
-    height: 130,
+  heading: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: "center",
+    paddingTop: 5
+  },
+  cardContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    // alignItems: 'center'
+    // justifyContent: 'center'
+  },
+  card: {
+    width: '96%',
+    height: 125,
     // backgroundColor: "#E6E6E6",
     // backgroundColor: "#E8E8E4",
-    borderWidth: 1,
-    borderColor: "#000000",
+    borderWidth: 2,
+    // borderColor: "#000000",
+    // borderColor: "#c1c1c1",
+    borderColor: '#19398A',
     borderRadius: 10,
-    marginTop: 10,
-    marginLeft: 11,
+    marginTop: 8,
+    alignSelf: 'center'
   },
   bgColorOdd: {
     // backgroundColor: "#E6E6E6",
@@ -202,27 +222,88 @@ const styles = StyleSheet.create({
     // backgroundColor: "#D8E2DC",
     backgroundColor: "#BDE0FE",
   },
-  ellipse: {
-    width: 61,
-    height: 61,
-    marginTop: 0,
-    borderRadius: 30,
-    marginLeft: 7
-  },
-  mI: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 20,
-    marginLeft: 11,
-    marginTop: 20,
-    fontWeight: "bold"
-  },
   date: {
     fontFamily: "roboto-regular",
     color: "#121212",
     fontSize: 18,
     textAlign: "center",
-    paddingTop: 7
+    paddingTop: 4,
+    fontWeight: 'bold'
+  },
+  teamsContainer: { 
+    display: 'flex', 
+    flexDirection: 'row', 
+    // justifyContent: 'space-between',
+    // backgroundColor: 'purple',
+    marginTop: 5,
+    marginBottom: 3,
+    marginLeft: 15,
+    marginRight: 15,
+  },
+  teamLeft: {
+    width: '45%',
+    // height: 95,
+    // marginLeft: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    // alignContent: 'flex-end',
+    justifyContent: 'flex-start',
+    // alignSelf: "flex-start"
+    // flex: 4,
+    // backgroundColor: 'pink'
+  },
+  teamRight: {
+    width: '45%',
+    // marginRight: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    // backgroundColor: 'green'
+  },
+  ellipseLeft: {
+    width: 60,
+    height: 60,
+    // marginRight: 15,
+    borderRadius: 30,
+  },
+  ellipseRight: {
+    width: 60,
+    height: 60,
+    // marginLeft: 15,
+    borderRadius: 30
+  },
+  teamNameLeft: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 22,
+    marginLeft: 15,
+    // marginTop: 20,
+    fontWeight: 'bold',
+    textAlignVertical: 'center'
+  },
+  teamNameRight: {
+    fontFamily: "roboto-regular",
+    color: "#121212",
+    fontSize: 22,
+    marginRight: 15,
+    // marginTop: 20,
+    fontWeight: 'bold',
+    textAlignVertical: 'center'
+  },
+  vsColumn: {
+    // width: 95,
+    // marginLeft: 15,
+    width: '10%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // height: 150,
+    // marginTop: 10,
+    // textAlign: "center",
+    // alignSelf: "center"
+    // flex: 2,
+    // backgroundColor: 'red'
   },
   vs: {
     fontFamily: "roboto-regular",
@@ -230,149 +311,109 @@ const styles = StyleSheet.create({
     // marginTop: 22,
     // marginLeft: 33,
     textAlign: 'center',
-    fontSize: 20,
-    marginTop: 20,
+    // fontSize: 20,
+    fontSize: 22,
+    // backgroundColor: 'gray'
   },
-  time: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
+  venue: { 
+    textAlign: 'center', 
     fontSize: 16,
-    marginTop: 18,
-    marginLeft: 13
+    position: 'relative',
+    bottom: 0,
   },
-  loremIpsumColumn: {
-    // width: 95,
-    // marginLeft: 15,
-    display: 'flex',
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // height: 150,
-    marginTop: 10,
-    // textAlign: "center",
-    // alignSelf: "center"
-    // flex: 2
-  },
-  eng: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 20,
-    marginLeft: 20,
-    marginTop: 20,
-    fontWeight: "bold"
-  },
-  ellipse1: {
-    width: 61,
-    height: 61,
-    marginLeft: 18,
-    marginTop: 0,
-    borderRadius: 30
-  },
-  ellipseRow: {
-    // height: 95,
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 10,
-    marginLeft: 10,
-    // alignSelf: "flex-start"
-    // flex: 4
-  },
-  rect1: {
-    width: 407,
-    height: 142,
-    backgroundColor: "#E6E6E6",
-    borderWidth: 1,
-    borderColor: "#000000",
-    borderRadius: 10,
-    marginTop: 12,
-    marginLeft: 10
-  },
-  ellipse2: {
-    width: 61,
-    height: 61,
-    marginTop: 15,
-    borderRadius: 30
-  },
-  mI3: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 18,
-    marginLeft: 11,
-    marginTop: 37,
-    fontWeight: "bold"
-  },
-  loremIpsum3: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 16
-  },
-  vs1: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginTop: 22,
-    marginLeft: 33
-  },
-  loremIpsum4: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 16,
-    marginTop: 18,
-    marginLeft: 19
-  },
-  loremIpsum3Column: {
-    width: 95,
-    marginLeft: 23
-  },
-  eng1: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    fontSize: 18,
-    marginLeft: 20,
-    marginTop: 37,
-    fontWeight: "bold"
-  },
-  ellipse3: {
-    width: 61,
-    height: 61,
-    marginLeft: 18,
-    marginTop: 17,
-    borderRadius: 30
-  },
-  ellipse2Row: {
-    height: 95,
-    flexDirection: "row",
-    marginTop: 26,
-    marginLeft: 10,
-    marginRight: 10
-  },
-  iplSchedule2021: {
-    fontFamily: "roboto-regular",
-    color: "rgba(00,00,00,1)",
-    fontSize: 24,
-    textAlign: "center",
-    marginTop: -336,
-  },
-  rightteam: {
-    // flex: 4
-    display: 'flex',
-    flexDirection: "row",
-    marginTop: 10,
-    marginRight: 10,
-  },
-  container2: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
-  },
-  text_header: {
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 20,
-    textAlign: "center",
-  }
+
+  // time: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   fontSize: 16,
+  //   marginTop: 18,
+  //   marginLeft: 13
+  // },
+  // rect1: {
+  //   width: 407,
+  //   height: 142,
+  //   backgroundColor: "#E6E6E6",
+  //   borderWidth: 1,
+  //   borderColor: "#000000",
+  //   borderRadius: 10,
+  //   marginTop: 12,
+  //   marginLeft: 10
+  // },
+  // ellipse2: {
+  //   width: 61,
+  //   height: 61,
+  //   marginTop: 15,
+  //   borderRadius: 30
+  // },
+  // mI3: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   fontSize: 18,
+  //   marginLeft: 11,
+  //   marginTop: 37,
+  //   fontWeight: "bold"
+  // },
+  // loremIpsum3: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   fontSize: 16
+  // },
+  // vs1: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   marginTop: 22,
+  //   marginLeft: 33
+  // },
+  // loremIpsum4: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   fontSize: 16,
+  //   marginTop: 18,
+  //   marginLeft: 19
+  // },
+  // loremIpsum3Column: {
+  //   width: 95,
+  //   marginLeft: 23
+  // },
+  // eng1: {
+  //   fontFamily: "roboto-regular",
+  //   color: "#121212",
+  //   fontSize: 18,
+  //   marginLeft: 20,
+  //   marginTop: 37,
+  //   fontWeight: "bold"
+  // },
+  // ellipse3: {
+  //   width: 61,
+  //   height: 61,
+  //   marginLeft: 18,
+  //   marginTop: 17,
+  //   borderRadius: 30
+  // },
+  // ellipse2Row: {
+  //   height: 95,
+  //   flexDirection: "row",
+  //   marginTop: 26,
+  //   marginLeft: 10,
+  //   marginRight: 10
+  // },
+  // iplSchedule2021: {
+  //   fontFamily: "roboto-regular",
+  //   color: "rgba(00,00,00,1)",
+  //   fontSize: 24,
+  //   textAlign: "center",
+  //   marginTop: -336,
+  // },
+  // container2: {
+  //   flex: 1,
+  //   justifyContent: "center"
+  // },
+  // horizontal: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-around",
+  //   padding: 10
+  // },
+  
 });
 
 export default ScheduleScreen;

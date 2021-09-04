@@ -146,8 +146,8 @@ const TeamScreen = ({ navigation }) => {
             if (teamLogo == null) {
                 formData.append('teamLogo', null);
             } else {
-                let picturePath = teamLogo.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = teamLogo.path;
+                const pathParts = picturePath.split('/');
                 formData.append('teamLogo', {
                     // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
                     name: pathParts[pathParts.length - 1],
@@ -250,8 +250,8 @@ const TeamScreen = ({ navigation }) => {
                 formData.append('teamLogo', null);
             } else {
                 // console.log("TeamLogo:" + teamLogo.path);
-                let picturePath = teamLogo.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = teamLogo.path;
+                const pathParts = picturePath.split('/');
                 formData.append('teamLogo', {
                     // name: picturePath.substr(picturePath.lastIndexOf('/') + 1),
                     name: pathParts[pathParts.length - 1],

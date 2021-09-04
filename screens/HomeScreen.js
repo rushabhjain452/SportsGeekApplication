@@ -11,7 +11,7 @@ import ScheduleScreen from './ScheduleScreen';
 
 const HomeScreen = ({ navigation }) => {
   const [index, setIndex] = React.useState(0);
-  const isCarousel = React.useRef(null);
+  const carouselRef = React.useRef(null);
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
         <Carousel
           layout="tinder"
           layoutCardOffset={9}
-          ref={isCarousel}
+          ref={carouselRef}
           data={data}
           renderItem={CarouselCardItem}
           sliderWidth={SLIDER_WIDTH}
@@ -57,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
         <Pagination
           dotsLength={data.length}
           activeDotIndex={index}
-          carouselRef={isCarousel}
+          carouselRef={carouselRef}
           dotStyle={{
             width: 10,
             height: 10,
@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
           tappableDots={true}
         />
       </View>
-      <View style={{ paddingBottom: 20 }}></View>
+      <View style={{ paddingBottom: 10 }}></View>
     </ScrollView>
   );
 };

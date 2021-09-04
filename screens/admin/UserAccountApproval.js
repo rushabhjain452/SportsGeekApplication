@@ -47,7 +47,7 @@ const UserAccountApproval = ({ navigation }) => {
     }, []);
 
     const displayUser = () => {
-        let userStatus = 0;
+        const userStatus = 0;
         setWaiting(true);
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/user-with-status/' + userStatus, { headers })
@@ -70,7 +70,7 @@ const UserAccountApproval = ({ navigation }) => {
     }
 
     const updateUser = (userId) => {
-        let userStatus = true;
+        // const userStatus = true;
         setWaiting(true);
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.put(baseurl + '/users/' + userId + '/update-status/true', {}, { headers })

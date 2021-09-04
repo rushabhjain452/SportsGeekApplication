@@ -163,7 +163,7 @@ const AdminStackScreen = ({ navigation }) => (
     }
   }}>
     <AdminStack.Screen name="Home" component={AdminScreen} options={{
-      title: 'SportsGeek',
+      title: 'SportsGeek Admin Panel',
       headerLeft: () => (
         <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       )
@@ -208,9 +208,9 @@ const ChatStackScreen = ({ navigation }) => (
       headerLeft: () => (
         <UserAvatar onPress={() => navigation.navigate('ProfileScreen')} />
       ),
-      // headerRight: () => (
-      //   <Icon.Button name="search-outline" size={25} backgroundColor="#19398A" iconStyle={{ marginRight: 0 }} onPress={() => navigation.navigate('HelpScreen')}></Icon.Button>
-      // )
+      headerRight: () => (
+        <Icon.Button name="refresh-circle-outline" size={30} iconStyle={{ marginRight: 0 }} backgroundColor="#19398A" onPress={() => console.log('Refreshing Chats...')}></Icon.Button>
+      )
     }} />
   </ChatStack.Navigator>
 );
@@ -311,7 +311,7 @@ const UserAvatar = (props) => {
     />) :
       shortName != '' ?
       (<Avatar
-      {...props}
+        {...props}
         size="small"
         rounded
         title={shortName}

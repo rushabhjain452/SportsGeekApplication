@@ -65,9 +65,9 @@ const LeaderBoard = (props) => {
         setRefreshing(false);
         if (response.status == 200) {
           setContestData(response.data);
-          let contestData = response.data;
+          const contestData = response.data;
           data.forEach((item) => {
-            let obj = contestData.find(o => o.userId == item.userId);
+            const obj = contestData.find(o => o.userId == item.userId);
             if (obj)
               item.totalWinningPoints += obj.contestPoints;
           });

@@ -242,7 +242,7 @@ const App: () => Node = () => {
   // useEffect(() => {
   //   setTimeout(async() => {
   //     // setIsLoading(false);
-  //     let token = null;
+  //     const token = null;
   //     try {
   //       token = await AsyncStorage.getItem('token');
   //     } catch(e) {
@@ -255,10 +255,10 @@ const App: () => Node = () => {
 
   useEffect(async () => {
     // dispatch({ type: 'RETRIEVE_TOKEN', token: token });
-    let userId = await AsyncStorage.getItem('userId');
-    let username = await AsyncStorage.getItem('username');
-    let role = await AsyncStorage.getItem('role');
-    let token = await AsyncStorage.getItem('token');
+    const userId = await AsyncStorage.getItem('userId');
+    const username = await AsyncStorage.getItem('username');
+    const role = await AsyncStorage.getItem('role');
+    const token = await AsyncStorage.getItem('token');
     dispatch({ type: 'LOGIN', userId: userId, username: username, role:role, token: token });
   }, []);
  

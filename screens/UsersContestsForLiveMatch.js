@@ -66,7 +66,7 @@ function UsersContestsForLiveMatch(props) {
         if (response.status == 200) {
           console.log(response.data);
           setData(response.data);
-          let records = response.data;
+          const records = response.data;
           let team1points = 0, team2points = 0;
           records.forEach((item, index) => {
             if (item.teamShortName == matchData.team1Short) {

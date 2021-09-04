@@ -25,13 +25,15 @@ const PublicChatScreen = () => {
   const intervalRef = useRef();
 
   useEffect(() => {
+    console.log('PublicChat useEffect() called...');
     fetchMessages();
     // Refresh messages at some interval
-    intervalRef.current = setInterval(() => {
-      if (token) {
-        // refreshMessages(token);
-      }
-    }, chatRefreshDelay);
+    // Don't refresh automatically, refresh on button click
+    // intervalRef.current = setInterval(() => {
+    //   if (token) {
+    //     // refreshMessages(token);
+    //   }
+    // }, chatRefreshDelay);
     // Unmount
     return () => {
       // console.log('Interval cleared...');
@@ -52,12 +54,12 @@ const PublicChatScreen = () => {
           }
           // Required for Live AWS Database
           // data.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
-          data.push({
-            _id: 0,
-            text: 'Welcome to SportsGeek Public Chat',
-            // createdAt: new Date(),
-            system: true
-          });
+          // data.push({
+          //   _id: 0,
+          //   text: 'Welcome to SportsGeek Public Chat',
+          //   // createdAt: new Date(),
+          //   system: true
+          // });
           // setMessages(data);
           fetchContestLog(data);
         } else {
@@ -82,15 +84,35 @@ const PublicChatScreen = () => {
           }
           // Required for Live AWS Database
           // logData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
-          console.log('chat data : ');
-          console.log(chatData);
-          console.log(typeof(chatData));
-          console.log('Log data : ');
-          console.log(logData);
-          console.log(typeof(logData));
+          // console.log('chat data : ');
+          // console.log(chatData);
+          // console.log(typeof(chatData));
+          // console.log('Log data : ');
+          // console.log(logData);
+          // console.log(typeof(logData));
           const finalData = chatData.concat(logData);
-          console.log('Final Data : ');
-          console.log(finalData);
+          // console.log('Final Data : ');
+          // console.log(finalData);
+          // Sor Data on date
+          finalData.sort((a, b) => {
+            const val1 = new Date(a.createdAt);
+            const val2 = new Date(b.createdAt);
+            if(val1 < val2){
+              return 1;
+            }
+            if(val1 > val2){
+              return -1;
+            }
+            return 0;
+          });
+          // console.log('Final Data after sorting : ');
+          // console.log(finalData);
+          finalData.push({
+            _id: 0,
+            text: 'Welcome to SportsGeek Chat',
+            // createdAt: new Date(),
+            system: true
+          });
           setMessages(finalData);
         } else {
           showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
@@ -103,35 +125,40 @@ const PublicChatScreen = () => {
   };
 
   const refreshMessages = () => {
-    if(lastId && lastResponseArrived){
-      const headers = { 'Authorization': 'Bearer ' + token };
-      // setLoading(true);
-      lastResponseArrived = false;
-      axios.get(baseurl + '/public-chat/formatted/after-id/' + lastId, { headers })
-        .then((response) => {
-          setLoading(false);
-          lastResponseArrived = true;
-          if (response.status == 200) {
-            const newData = response.data;
-            if (newData.length > 0) {
-              // setLastId(newData[0]._id);
-              lastId = newData[0]._id;
-              // Required for Live AWS Database
-              // newData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
-              // setMessages(data => [...newData, ...data]);
-              setMessages(data => newData.concat( data.filter(value => typeof(value._id) === 'number')) );
-            }
-          } else {
-            showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
-          }
-        })
-        .catch((error) => {
-          setLoading(false);
-          lastResponseArrived = true;
-          showSweetAlert('error', 'Network Error', errorMessage);
-        });
-    }
+    console.log('Refresh in PublicChatScreen');
+    // if(lastId && lastResponseArrived){
+    //   const headers = { 'Authorization': 'Bearer ' + token };
+    //   // setLoading(true);
+    //   lastResponseArrived = false;
+    //   axios.get(baseurl + '/public-chat/formatted/after-id/' + lastId, { headers })
+    //     .then((response) => {
+    //       setLoading(false);
+    //       lastResponseArrived = true;
+    //       if (response.status == 200) {
+    //         const newData = response.data;
+    //         if (newData.length > 0) {
+    //           // setLastId(newData[0]._id);
+    //           lastId = newData[0]._id;
+    //           // Required for Live AWS Database
+    //           // newData.forEach((item) => item.createdAt = convertUTCDateToLocalDate(new Date(item.createdAt)));
+    //           // setMessages(data => [...newData, ...data]);
+    //           setMessages(data => newData.concat( data.filter(value => typeof(value._id) === 'number')) );
+    //         }
+    //       } else {
+    //         showSweetAlert('warning', 'Unable to fetch data!', 'Unable to fetch old Chats.');
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       setLoading(false);
+    //       lastResponseArrived = true;
+    //       showSweetAlert('error', 'Network Error', errorMessage);
+    //     });
+    // }
   };
+
+  const refreshContestLog = (chatData) => {
+
+  }
 
   // helper method that sends a message
   function handleSend(newMessage = []) {
@@ -166,6 +193,9 @@ const PublicChatScreen = () => {
       <>
         <StatusBar backgroundColor="#1F4F99" barStyle="light-content" />
         {loading == true && (<ActivityIndicator size="large" color="#19398A" />)}
+        <View>
+          <Text>Refresh</Text>
+        </View>
         <GiftedChat
           messages={messages}
           onSend={newMessage => handleSend(newMessage[0])}
@@ -175,12 +205,16 @@ const PublicChatScreen = () => {
           maxInputLength={1000}
           renderAvatarOnTop={true}
           scrollToBottom={true}
-          renderSystemMessage= {(a, b, c) => {
-            console.log('-----');
-            console.log(a);
-            console.log(b);
-            console.log(c);
-          }}
+          // renderSystemMessage= {(a) => {
+          //   console.log('-----');
+          //   console.log(a);
+          //   return (
+          //     <Text>A system message</Text>
+          //   );
+          // }}
+          // shouldUpdateMessage= {(a) => {
+          //   console.log('update : ', a);
+          // }}
         />
       </>
     );

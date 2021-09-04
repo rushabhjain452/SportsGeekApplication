@@ -43,7 +43,7 @@ const DeleteScreen = ({ navigation }) => {
     }, [refreshing]);
 
     const displayUser = () => {
-        let userStatus = 1;
+        const userStatus = 1;
         const headers = { 'Authorization': 'Bearer ' + token }
         axios.get(baseurl + '/users/user-with-status/' + userStatus, { headers })
             .then(response => {

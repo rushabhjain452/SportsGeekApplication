@@ -92,7 +92,8 @@ const UpdateMatchResultScreen = (props) => {
                 .then((response) => {
                     setLoading(false);
                     if (response.status == 200) {
-                        showSweetAlert('success', 'Match result updated successfully', "Points will be allocated to the winners shortly.");
+                        // showSweetAlert('success', 'Match result updated successfully', "Points will be allocated to the winners shortly.");
+                        showSweetAlert('success', 'Match result updated successfully', "Points are allocated to the winners.");
                         setParentRefreshing(true);
                         navigation.goBack();
                     }

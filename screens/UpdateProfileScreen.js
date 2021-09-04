@@ -160,8 +160,8 @@ const UpdateProfileScreen = ({ navigation }) => {
             formData.append('genderId', genderId);
             formData.append('updateProfilePicture', isProfilePictureChanged);
             if (isProfilePictureChanged && profilePicture != '') {
-                let picturePath = profilePicture.path;
-                let pathParts = picturePath.split('/');
+                const picturePath = profilePicture.path;
+                const pathParts = picturePath.split('/');
                 formData.append('profilePicture', {
                     name: pathParts[pathParts.length - 1],
                     type: profilePicture.mime,
@@ -218,6 +218,7 @@ const UpdateProfileScreen = ({ navigation }) => {
                                     source={{
                                         uri: avatarPath
                                     }}
+                                    onPress={() => { photoSelectHandler() }}
                                 />) :
                                 (<Avatar
                                     size="large"
@@ -225,6 +226,7 @@ const UpdateProfileScreen = ({ navigation }) => {
                                     title={shortName}
                                     activeOpacity={0.7}
                                     containerStyle={{ color: 'red', backgroundColor: '#adadad', marginTop: 10 }}
+                                    onPress={() => { photoSelectHandler() }}
                                 />)
                         }
                     </View>
