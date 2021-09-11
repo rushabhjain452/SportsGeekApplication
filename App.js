@@ -21,51 +21,16 @@ import {
   DefaultTheme as PaperDefaultTheme,
   DarkTheme as PaperDarkTheme
 } from 'react-native-paper';
- 
-import MainTabScreen from './screens/MainTabScreen';
-import ScheduleScreen from './screens/ScheduleScreen';
-import HelpScreen from './screens/HelpScreen';
-import GenderScreen from './screens/admin/GenderScreen';
-import ContestScreen from './screens/ContestScreen';
-// import { AuthContext } from './components/context';
-
-import RootStackScreen from './screens/RootStackScreen';
-
-import ChangePasswordScreen from './screens/ChangePasswordScreen';
-import UpdateProfileScreen from './screens/UpdateProfileScreen';
-import RoleScreen from './screens/admin/RoleScreen';
-import PlayerTypeScreen from './screens/admin/PlayerTypeScreen';
-import VenueScreen from './screens/admin/VenueScreen';
-import TournamentScreen from './screens/admin/TournamentScreen';
-import TeamScreen from './screens/admin/TeamScreen';
-import UpdateMatchScheduleScreen from './screens/admin/UpdateMatchScheduleScreen';
-import UpdateMatchResultScreen from './screens/admin/UpdateMatchResultScreen';
-import UserAccountApproval from './screens/admin/UserAccountApproval';
-import ListAllUsersScreen from './screens/admin/ListAllUsersScreen';
-import PlayerScreen from './screens/admin/PlayerScreen';
-import MatchesScreen from './screens/admin/MatchesScreen';
-import RechargeScreen from './screens/admin/RechargeScreen';
-import AssignRoleToUserScreen from './screens/admin/AssignRoleToUserScreen';
-import DeleteScreen from './screens/admin/DeleteScreen';
-import UpdateUserScreen from './screens/admin/UpdateUserScreen';
-import ResultWithUsersScreen from './screens/ResultWithUsersScreen';
-import UpdateMatchMinBet from './screens/admin/UpdateMatchMinBet';
-import UpdateMatchMinBetSchedule from './screens/admin/UpdateMatchMinBetSchedule';
-import UsersContestsForLiveMatch from './screens/UsersContestsForLiveMatch';
-import UpdateActiveTournamentScreen from './screens/admin/UpdateActiveTournamentScreen';
-import MatchesScheduleScreenForUpdate from './screens/admin/MatchesScheduleScreenForUpdate';
-import ProfileScreen from './screens/ProfileScreen';
-import ChatHomeScreen from './screens/ChatHomeScreen';
-import RoomScreen from './screens/RoomScreen';
-import PlayerDetailofTeam from './screens/PlayerDetailofTeam';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PlayerDetailScreenForUpdate from './screens/admin/PlayerDetailScreenForUpdate';
-import RemovePublicChatScreen from './screens/admin/RemovePublicChatScreen';
- // const baseurl = 'localhost:8080';
+import axios from 'axios';
+ 
+import RootStack from './src/navigation/RootStack';
+import HomeStack from './src/navigation/HomeStack';
+// import MainTab from './src/navigation/MainTab';
+
+// const baseurl = 'localhost:8080';
  
 //  const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
 
 export const AuthContext = React.createContext();
 
@@ -75,16 +40,12 @@ const App: () => Node = () => {
  
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
-  // const initialLoginState = {
-  //   isLoading: true,
-  //   userName: '',
-  //   userToken: null,
-  //   role: ''
-  // };
   const initialLoginState = {
-    // isLoading: true,
-    username: '',
+    userId: null,
+    username: null,
+    role: null,
     token: null,
+    chatMessages: []
   };
 
   const CustomDefaultTheme = {
@@ -151,7 +112,6 @@ const App: () => Node = () => {
         return {
           ...prevState,
           token: action.token,
-          // isLoading: false,
         };
       case 'LOGIN': 
         return {
@@ -160,7 +120,7 @@ const App: () => Node = () => {
           username: action.username,
           role: action.role,
           token: action.token,
-          // isLoading: false,
+          chatMessages: []
         };
       case 'LOGOUT': 
         return {
@@ -169,19 +129,23 @@ const App: () => Node = () => {
           username: null,
           role: null,
           token: null,
-          // isLoading: false,
+          chatMessages: []
         };
-      case 'REGISTER': 
+      case 'SET_CHAT_MESSAGES': 
         return {
           ...prevState,
-          username: action.id,
-          token: action.token,
-          // isLoading: false,
+          chatMessages: action.chatMessages,
         };
+      default:
+        return prevState;
     }
   };
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+
+  const refreshChatMessages = () => {
+    console.log('Refreshing Chats...');
+  }
  
   const authContext = React.useMemo(() => ({
     // signIn: async(userId, foundUser, role) => {
@@ -236,7 +200,8 @@ const App: () => Node = () => {
     },
     toggleTheme: () => {
       setIsDarkTheme( isDarkTheme => !isDarkTheme );
-    }
+    },
+    refreshChatMessages: refreshChatMessages
   }), []);
  
   // useEffect(() => {
@@ -276,45 +241,10 @@ const App: () => Node = () => {
         <AuthContext.Provider value={{ ...authContext, loginState: loginState }}>
           <NavigationContainer theme={theme}>
             { loginState.token !== null ? (
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Home" component={MainTabScreen} />
-                <Stack.Screen name="changePasswordScreen" component={ChangePasswordScreen} />
-                <Stack.Screen name="GenderScreen" component={GenderScreen} />
-                <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
-                <Stack.Screen name="ContestScreen" component={ContestScreen} />
-                <Stack.Screen name="RoleScreen" component={RoleScreen} />
-                <Stack.Screen name="PlayerTypeSCreen" component={PlayerTypeScreen} />
-                <Stack.Screen name="VenueScreen" component={VenueScreen} />
-                <Stack.Screen name="TournamentScreen" component={TournamentScreen} />
-                <Stack.Screen name="TeamScreen" component={TeamScreen} />
-                <Stack.Screen name="UpdateMatchScheduleScreen" component={UpdateMatchScheduleScreen} />
-                <Stack.Screen name="UpdateMatchResultScreen" component={UpdateMatchResultScreen} />
-                <Stack.Screen name="UserAccountApproval" component={UserAccountApproval} />
-                <Stack.Screen name="ListAllUsersScreen" component={ListAllUsersScreen} />
-                <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
-                <Stack.Screen name="MatchesScreen" component={MatchesScreen} />
-                <Stack.Screen name="RechargeScreen" component={RechargeScreen} />
-                <Stack.Screen name="AssignRoleToUser" component={AssignRoleToUserScreen} />
-                <Stack.Screen name="DeleteScreen" component={DeleteScreen} />
-                <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
-                <Stack.Screen name="HelpScreen" component={HelpScreen} />
-                <Stack.Screen name="ResultWithUsersScreen" component={ResultWithUsersScreen} />
-                <Stack.Screen name="UpdateMatchMinBetSchedule" component={UpdateMatchMinBetSchedule} />
-                <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} />
-                <Stack.Screen name="UpdateMatchMinBet" component={UpdateMatchMinBet} />
-                <Stack.Screen name="UsersContestForLiveMatch" component={UsersContestsForLiveMatch} />
-                <Stack.Screen name="UpdateActiveTournamentScreen" component={UpdateActiveTournamentScreen} />
-                <Stack.Screen name="MatchesScheduleScreenForUpdate" component={MatchesScheduleScreenForUpdate} />
-                <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-                <Stack.Screen name="ChatHomeScreen" component={ChatHomeScreen} />
-                <Stack.Screen name="RoomScreen" component={RoomScreen} />
-                <Stack.Screen name="PlayerDetailofTeam" component={PlayerDetailofTeam} />
-                <Stack.Screen name="PlayerDetailScreenForUpdate" component={PlayerDetailScreenForUpdate} />
-                <Stack.Screen name="RemovePublicChatScreen" component={RemovePublicChatScreen} />
-              </Stack.Navigator>
+              <HomeStack />
             )
             :
-            <RootStackScreen/>
+            <RootStack/>
           }
           </NavigationContainer>
         </AuthContext.Provider>
